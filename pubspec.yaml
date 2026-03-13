@@ -38,6 +38,7 @@ dependencies:
   equatable: ^2.0.8
   icons_plus: ^5.0.0
   bloc_concurrency: ^0.3.0
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:

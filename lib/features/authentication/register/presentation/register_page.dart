@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import '../../../../core/constants/app_images.dart';
+import '../application/bloc/register_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/form_section.dart';
 import '../../../../core/common_widgets/animated_background.dart';
@@ -9,11 +14,10 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/extensions/context_extension.dart';
 
 class RegisterPage extends StatelessWidget {
-  
-  const RegisterPage({ super.key });
+  const RegisterPage({super.key});
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return CommonScaffold(
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -30,23 +34,27 @@ class RegisterPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: AppSizes.size8,
               children: <Widget>[
-                  CommonText(
-                    text: "Join Now!",
-                    fontWeight: FontWeight.bold,
-                    fontSize: AppSizes.font32,
-                  ),
-                  FormSection(
-                    onRegisterTap: (){},
-                    onLoginTap: (){},
-                    emailController: TextEditingController(),
-                    passwordController: TextEditingController(),
-                    confirmPasswordController: TextEditingController()
-                  )
-              ]
-            )
-          ]
-        )
-      )
+                CommonText(
+                  text: "Join Now!",
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppSizes.font32,
+                ),
+                BlocBuilder<RegisterBloc, RegisterState>(
+                  builder: (context, state) {
+                    ImageProvider imageProvider = const AssetImage(AppImages.profile);
+                    if(state is RegisterPickedImage) imageProvider = FileImage(File(state.imagePath));
+                    return FormSection(
+                      confirmPasswordObsecure: state.isConfirmPasswordVisible,
+                      passwordObsecure: state.isPasswordVisible,
+                      imageProvider: imageProvider,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

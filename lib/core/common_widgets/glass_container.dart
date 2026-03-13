@@ -19,6 +19,7 @@ class GlassContainer extends StatelessWidget {
     this.alignmentGeometry,
     this.sigmaX,
     this.sigmaY,
+    this.boxDecoration
    });
 
   final double? width;
@@ -33,6 +34,7 @@ class GlassContainer extends StatelessWidget {
   final AlignmentGeometry? alignmentGeometry;
   final double? sigmaX;
   final double? sigmaY;
+  final Decoration? boxDecoration;
 
   @override
   Widget build(BuildContext context){
@@ -48,7 +50,7 @@ class GlassContainer extends StatelessWidget {
             margin: margin ?? EdgeInsets.zero,
             width: width,
             height: height,
-            decoration: BoxDecoration(
+            decoration: boxDecoration ?? BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

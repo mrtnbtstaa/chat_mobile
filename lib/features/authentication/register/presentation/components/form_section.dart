@@ -10,18 +10,14 @@ class FormSection extends StatelessWidget {
 
   const FormSection({ 
     super.key,
-    required this.onRegisterTap,
-    required this.onLoginTap,
-    required this.emailController,
-    required this.passwordController,
-    required this.confirmPasswordController
+    required this.passwordObsecure,
+    required this.confirmPasswordObsecure,
+    required this.imageProvider
   });
 
-  final VoidCallback onRegisterTap;
-  final VoidCallback onLoginTap;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final TextEditingController confirmPasswordController;
+  final bool passwordObsecure;
+  final bool confirmPasswordObsecure;
+  final ImageProvider imageProvider;
 
   @override
   Widget build(BuildContext context){
@@ -33,12 +29,11 @@ class FormSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             FieldContent(
-              emailController: emailController,
-              passwordController: passwordController,
-              confirmPasswordController: confirmPasswordController,
-              onLoginTap: onLoginTap,
+              passwordObsecure: passwordObsecure,
+              confirmPasswordObsecure: confirmPasswordObsecure,
+              imageProvider: imageProvider,
             ),
-            LoginNowContent(onRegisterTap: onRegisterTap)
+            LoginNowContent()
           ]
         )
       )

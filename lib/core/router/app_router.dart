@@ -1,13 +1,18 @@
-import '../common_widgets/common_text.dart';
-import 'app_routes.dart';
+import 'package:chat/features/authentication/register/infrastructure/services/media_service.dart';
+import 'package:chat/features/authentication/register/presentation/controllers/register_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../features/authentication/login/presentation/login_page.dart';
+import '../../features/authentication/register/application/bloc/register_bloc.dart';
 import '../../features/authentication/register/presentation/register_page.dart';
 import '../../features/chat/chat/presentation/chat_content.dart';
 import '../../features/chat/chat_message/presentation/chat_message_page.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/profile/presentation/profile_content.dart';
 import '../../features/settings/presentation/settings_content.dart';
-import 'package:flutter/material.dart';
+import '../common_widgets/common_text.dart';
+import 'app_routes.dart';
 
 
 class AppRouter {
@@ -19,7 +24,19 @@ class AppRouter {
         settings
       );
       case AppRoutes.register: return _buildPageRoute(
-        RegisterPage(),
+        MultiBlocProvider(
+          providers: [
+            RepositoryProvider(create: (context) => MediaService()),
+            RepositoryProvider(
+              create: (context) => RegisterController(),
+              dispose: (context) => context.dispose(),
+            )
+          ],
+          child: BlocProvider(
+            create: (context) => RegisterBloc(mediaService: context.read<MediaService>()),
+            child: RegisterPage(),
+          ),
+        ),
         settings
       );
       case AppRoutes.chat: return _buildPageRoute(
