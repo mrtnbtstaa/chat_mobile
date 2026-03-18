@@ -3,9 +3,9 @@ import 'package:icons_plus/icons_plus.dart';
 
 import '../../../../core/common_widgets/common_image.dart';
 import '../../../../core/common_widgets/common_text.dart';
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/constants/app_insets.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/style/app_images.dart';
+import '../../../../core/style/app_insets.dart';
+import '../../../../core/style/app_sizes.dart';
 import '../../../../core/extensions/double_extension.dart';
 import 'setting_list_tile.dart';
 import 'settings_switcher.dart';

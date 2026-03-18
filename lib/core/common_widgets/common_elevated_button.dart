@@ -1,8 +1,8 @@
 import 'package:chat/core/common_widgets/common_text.dart';
 import 'package:chat/core/common_widgets/glass_container.dart';
-import 'package:chat/core/constants/app_colors.dart';
-import 'package:chat/core/constants/app_insets.dart';
-import 'package:chat/core/constants/app_sizes.dart';
+import 'package:chat/core/style/app_colors.dart';
+import 'package:chat/core/style/app_insets.dart';
+import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class CommonElevatedButton extends ElevatedButton{
@@ -26,10 +26,11 @@ class CommonElevatedButton extends ElevatedButton{
     this.width,
     this.height,
     this.padding,
-    this.margin
+    this.margin,
+    this.child_
   }) : super(
     onPressed: onButtonPressed,
-    child: GlassContainer(
+    child: child_ ?? GlassContainer(
       padding: padding ?? EdgeInsets.zero,
       margin: margin ?? EdgeInsets.zero,
       width: width ?? 0.0,
@@ -70,5 +71,6 @@ class CommonElevatedButton extends ElevatedButton{
   final double? height;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final Widget? child_;
 
 }

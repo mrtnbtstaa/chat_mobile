@@ -1,4 +1,4 @@
-import 'package:chat/core/constants/app_colors.dart';
+import 'package:chat/core/style/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class BackgroundPainter extends CustomPainter{

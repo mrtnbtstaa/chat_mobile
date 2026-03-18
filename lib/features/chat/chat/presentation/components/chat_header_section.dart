@@ -3,13 +3,13 @@ import 'package:chat/core/extensions/context_extension.dart';
 import 'package:chat/core/router/app_routes.dart';
 
 import '../../../../../core/common_widgets/common_text_field.dart';
-import '../../../../../core/constants/app_images.dart';
+import '../../../../../core/style/app_images.dart';
 import '../../../../../core/extensions/double_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../../../../../core/common_widgets/common_icon.dart';
 import '../../../../../core/common_widgets/glass_container.dart';
-import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/style/app_sizes.dart';
 
 class ChatHeaderSection extends StatelessWidget {
 

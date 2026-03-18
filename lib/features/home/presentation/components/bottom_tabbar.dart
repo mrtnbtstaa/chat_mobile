@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/common_widgets/common_icon.dart';
 import '../../../../core/common_widgets/glass_container.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/style/app_colors.dart';
+import '../../../../core/style/app_sizes.dart';
 import '../../../../core/extensions/int_extension.dart';
 import '../mappers/icon_mapper.dart';
 import 'bottom_tabbar_constants.dart';

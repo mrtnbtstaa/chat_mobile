@@ -5,9 +5,9 @@ import '../../../../../core/extensions/context_extension.dart';
 import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/common_widgets/common_container.dart';
 import '../../../../../core/common_widgets/common_text.dart';
-import '../../../../../core/constants/app_colors.dart';
-import '../../../../../core/constants/app_images.dart';
-import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/style/app_colors.dart';
+import '../../../../../core/style/app_images.dart';
+import '../../../../../core/style/app_sizes.dart';
 
 class ChatItem extends StatelessWidget {
 

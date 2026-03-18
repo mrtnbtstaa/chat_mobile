@@ -1,6 +1,6 @@
 import 'package:chat/core/common_widgets/common_divider.dart';
-import 'package:chat/core/constants/app_colors.dart';
-import 'package:chat/core/constants/app_sizes.dart';
+import 'package:chat/core/style/app_colors.dart';
+import 'package:chat/core/style/app_sizes.dart';
 import 'package:chat/features/profile/presentation/components/user_profile_status.dart';
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,8 @@
-import 'package:chat/core/constants/app_insets.dart';
+import 'package:chat/core/style/app_insets.dart';
 
 import '../../../../core/common_widgets/common_text.dart';
 import '../../../../core/common_widgets/glass_container.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class ProfileHeaderSection extends StatelessWidget {

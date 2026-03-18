@@ -1,4 +1,5 @@
-import 'package:chat/core/constants/app_colors.dart';
+import 'package:chat/core/style/app_colors.dart';
+import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class CommonText extends Text {
@@ -17,17 +18,14 @@ class CommonText extends Text {
     this.textOverflow,
     this.maxLine,
     this.wrap
-  }) : assert(
-    text != "" || text.isNotEmpty,
-    "Text must have value cannot contain blank or empty"
-  ), super(
+  }) : super(
     text,
     maxLines: maxLine,
     softWrap: wrap,
     style: TextStyle(
       color: fontColor ?? AppColors.primaryTextColor,
       fontWeight: fontWeight,
-      fontSize: fontSize,
+      fontSize: fontSize ?? AppSizes.font14,
       decorationColor: decorationColor,
       letterSpacing: letterSpacing ?? 1.0,
       wordSpacing: wordSpacing,

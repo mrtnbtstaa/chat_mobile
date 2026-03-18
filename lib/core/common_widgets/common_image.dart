@@ -1,4 +1,4 @@
-import 'package:chat/core/constants/app_sizes.dart';
+import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class CommonImage extends Image{

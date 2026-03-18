@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/common_widgets/common_list_tile.dart';
 import '../../../../core/common_widgets/glass_container.dart';
-import '../../../../core/constants/app_insets.dart';
+import '../../../../core/style/app_insets.dart';
 
 class SettingListTile extends StatelessWidget {
 

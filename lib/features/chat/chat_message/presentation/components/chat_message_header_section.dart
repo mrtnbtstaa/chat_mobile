@@ -4,9 +4,9 @@ import '../../../../../core/common_widgets/common_avatar.dart';
 import '../../../../../core/common_widgets/common_icon_button.dart';
 import '../../../../../core/common_widgets/common_text.dart';
 import '../../../../../core/common_widgets/glass_container.dart';
-import '../../../../../core/constants/app_images.dart';
-import '../../../../../core/constants/app_insets.dart';
-import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/style/app_images.dart';
+import '../../../../../core/style/app_insets.dart';
+import '../../../../../core/style/app_sizes.dart';
 
 class ChatMessageHeaderSection extends StatelessWidget {
 

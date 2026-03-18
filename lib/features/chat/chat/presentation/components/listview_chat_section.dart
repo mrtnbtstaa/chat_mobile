@@ -1,4 +1,4 @@
-import 'package:chat/core/constants/app_insets.dart';
+import 'package:chat/core/style/app_insets.dart';
 import 'package:flutter/material.dart';
 import 'chat_item.dart';
 

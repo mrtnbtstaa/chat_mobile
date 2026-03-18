@@ -1,8 +1,8 @@
 import '../../../../../core/common_widgets/common_text.dart';
 import '../../../../../core/common_widgets/glass_container.dart';
-import '../../../../../core/constants/app_colors.dart';
-import '../../../../../core/constants/app_insets.dart';
-import '../../../../../core/constants/app_sizes.dart';
+import '../../../../../core/style/app_colors.dart';
+import '../../../../../core/style/app_insets.dart';
+import '../../../../../core/style/app_sizes.dart';
 import '../../../../../core/extensions/context_extension.dart';
 import '../../../../../core/models/chat_message_item.dart';
 import 'package:flutter/material.dart';

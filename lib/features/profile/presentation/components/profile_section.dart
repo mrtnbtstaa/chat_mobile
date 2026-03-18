@@ -6,9 +6,9 @@ import '../../../../core/extensions/double_extension.dart';
 import '../../../../core/common_widgets/common_avatar.dart';
 import '../../../../core/common_widgets/common_container.dart';
 import '../../../../core/common_widgets/common_icon.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/style/app_colors.dart';
+import '../../../../core/style/app_images.dart';
+import '../../../../core/style/app_sizes.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 class ProfileSection extends StatelessWidget {

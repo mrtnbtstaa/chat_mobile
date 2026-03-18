@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/common_widgets/common_text.dart';
 import '../../../../core/common_widgets/glass_container.dart';
-import '../../../../core/constants/app_insets.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/style/app_insets.dart';
+import '../../../../core/style/app_sizes.dart';
 
 class SettingsHeaderSection extends StatelessWidget {
 const SettingsHeaderSection({ super.key });

@@ -1,8 +1,20 @@
-import 'package:chat/core/router/app_router.dart';
-import 'package:chat/core/router/app_routes.dart';
 import 'package:flutter/material.dart';
 
+import 'core/common_widgets/common_loading_indicator.dart';
+import 'core/di/di.dart';
+import 'core/router/app_router.dart';
+import 'core/services/session_manager.dart';
+import 'features/authentication/presentation/login/login_page.dart';
+import 'features/home/presentation/home_page.dart';
+
 void main() {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  initDependencies();
+
+  sl<SessionManager>().initialize();
+
   runApp(const MyApp());
 }
 
@@ -19,7 +31,14 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
       onGenerateRoute: AppRouter.generateRoute,
-      initialRoute: AppRoutes.login,
+      home: ValueListenableBuilder(
+        valueListenable: sl<SessionManager>(),
+        builder:(context, status, child) {
+          if(status == AuthStatus.unauthenticated) return const LoginPage();
+          if(status == AuthStatus.authenticated) return const HomePage();
+          return CommonLoadingIndicator();
+        },
+      ),
     );
   }
 }

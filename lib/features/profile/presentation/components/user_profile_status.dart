@@ -1,6 +1,6 @@
-import 'package:chat/core/constants/app_colors.dart';
-import 'package:chat/core/constants/app_insets.dart';
-import 'package:chat/core/constants/app_sizes.dart';
+import 'package:chat/core/style/app_colors.dart';
+import 'package:chat/core/style/app_insets.dart';
+import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileStatus extends StatelessWidget {

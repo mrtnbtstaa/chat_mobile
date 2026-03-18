@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/common_widgets/common_text_field.dart';
-import '../../../../core/constants/app_sizes.dart';
+import '../../../../core/style/app_sizes.dart';
 import 'package:icons_plus/icons_plus.dart';
 import '../../../../core/common_widgets/glass_container.dart';
 import 'components/chat_message_header_section.dart';

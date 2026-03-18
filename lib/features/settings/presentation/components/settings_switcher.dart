@@ -1,4 +1,4 @@
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/style/app_colors.dart';
 import 'setting_list_tile.dart';
 import 'package:flutter/material.dart';
 

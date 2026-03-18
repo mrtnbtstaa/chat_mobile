@@ -1,5 +1,5 @@
 import 'common_container.dart';
-import '../constants/app_images.dart';
+import '../style/app_images.dart';
 import '../extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 
