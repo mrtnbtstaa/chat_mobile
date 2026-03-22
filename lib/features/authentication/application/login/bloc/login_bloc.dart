@@ -1,8 +1,10 @@
 
 import 'dart:async';
 
+import 'package:chat/core/services/session_manager.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../../../core/di/di.dart';
 import '../../../../../core/usecases/base_usecase.dart';
 import '../../../domain/entities/auth_entity.dart';
 import '../../../domain/params/login_param.dart';
@@ -84,7 +86,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     return result.fold(
       (failure) => emit(state.copyWith(errorMessage: failure.message, loginStatus: LoginStatus.error)), 
-      (entity) => emit(state.copyWith(userEntity: entity, loginStatus: LoginStatus.success))
+      (entity){
+        sl<SessionManager>().login();
+        emit(state.copyWith(userEntity: entity, loginStatus: LoginStatus.success));
+      }
     );
 
   }

@@ -1,9 +1,7 @@
-import 'package:chat/core/router/app_routes.dart';
 import 'package:chat/features/authentication/domain/enums/login_status.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../application/login/bloc/login_bloc.dart';
 import 'components/form_section.dart';
@@ -41,10 +39,7 @@ class LoginPage extends StatelessWidget {
               BlocConsumer<LoginBloc, LoginState>(
                 // listenWhen: (previous, current) => previous.loginStatus != current.loginStatus,
                 listener: (context, state) {
-                  if(state.loginStatus == LoginStatus.success){
-                    if(context.mounted) context.go(AppRoutes.home);
-                  }
-                  else if(state.loginStatus == LoginStatus.error){
+                  if(state.loginStatus == LoginStatus.error){
                     ScaffoldMessenger.of(context)
                     ..removeCurrentSnackBar()
                     ..showSnackBar(SnackBar(
