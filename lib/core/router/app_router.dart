@@ -1,101 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../features/authentication/application/login/bloc/login_bloc.dart';
-import '../../features/authentication/application/register/bloc/register_bloc.dart';
 import '../../features/authentication/domain/entities/auth_entity.dart';
 import '../../features/authentication/domain/params/login_param.dart';
-import '../../features/authentication/infrastructure/services/media_service.dart';
 import '../../features/authentication/presentation/login/controllers/login_controller.dart';
 import '../../features/authentication/presentation/login/login_page.dart';
-import '../../features/authentication/presentation/register/controllers/register_controller.dart';
-import '../../features/authentication/presentation/register/register_page.dart';
-import '../../features/chat/chat/presentation/chat_content.dart';
-import '../../features/chat/chat_message/presentation/chat_message_page.dart';
 import '../../features/home/presentation/home_page.dart';
-import '../../features/profile/presentation/profile_content.dart';
-import '../../features/settings/presentation/settings_content.dart';
-import '../common_widgets/common_text.dart';
+import '../../features/splash/presentation/splash_page.dart';
 import '../di/di.dart';
+import '../services/session_manager.dart';
 import '../usecases/base_usecase.dart';
 import 'app_routes.dart';
 
 
-class AppRouter {
+final GoRouter router = GoRouter(
+  initialLocation: AppRoutes.splash,
+  refreshListenable: sl<SessionManager>(),
+  redirect: (context, state) {
 
-  static Route<dynamic> generateRoute(RouteSettings settings){
-    switch(settings.name){
-      case AppRoutes.login: return _buildPageRoute(
-        MultiBlocProvider(
-          providers: [
-            RepositoryProvider(
-              create: (context) => LoginController(),
-              dispose: (controller) => controller.dispose(),
-            )
-          ],
+    final authStatus = sl<SessionManager>().value;
+    // If we are still initializing, stay on the splash
+    if(authStatus == AuthStatus.unknown) return AppRoutes.splash;
+
+    // If not logged in and not on the login page, force move to login
+    if(authStatus == AuthStatus.unauthenticated) return AppRoutes.login;
+
+    // If logged in and trying to go to login or splash, move to home 
+    if(authStatus == AuthStatus.authenticated) return AppRoutes.home;
+
+    // Return null allows the user to stay on the current page
+    return null;
+  },
+  routes: <RouteBase>[
+    GoRoute(
+      path: AppRoutes.login,
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: RepositoryProvider(
+          create: (context) => LoginController(),
+          dispose: (controller) => controller.dispose(),
           child: BlocProvider(
             create: (context) => LoginBloc(loginUseCase: sl<BaseUsecase<AuthEntity, LoginParam>>()),
-            child: LoginPage(),
+            child: LoginPage()
           )
-        ),
-        settings
-      );
-      case AppRoutes.register: return _buildPageRoute(
-        MultiBlocProvider(
-          providers: [
-            RepositoryProvider(create: (context) => MediaService()),
-            RepositoryProvider<RegisterController>(
-              create: (context) => RegisterController(),
-              dispose: (controller) => controller.dispose(),
-            )
-          ],
-          child: BlocProvider(
-            create: (context) => RegisterBloc(
-              mediaService: context.read<MediaService>()
-            ),
-            child: RegisterPage(),
-          ),
-        ),
-        settings
-      );
-      case AppRoutes.chat: return _buildPageRoute(
-        ChatContent(),
-        settings
-      );
-      case AppRoutes.chatMessage: return _buildPageRoute(
-        ChatMessagePage(),
-        settings
-      );
-      case AppRoutes.profile: return _buildPageRoute(
-        ProfileContent(),
-        settings
-      );
-      case AppRoutes.settings: return _buildPageRoute(
-        SettingsContent(),
-        settings
-      );
-      case AppRoutes.home: return _buildPageRoute(
-        HomePage(),
-        settings
-      );
-      default: return _buildPageRoute(_undefineWidget(), settings);
-    }
-  }
+        )
+      )
+    ),
+    GoRoute(
+      path: AppRoutes.home,
+      pageBuilder:(context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: HomePage()
+      )
+    ),
+    GoRoute(
+      path: AppRoutes.splash,
+      pageBuilder: (context, state) => buildPageWithDefaultTransition(
+        context: context,
+        state: state,
+        child: SplashPage()
+      )
+    )
+  ]
+);
 
-  static PageRouteBuilder<dynamic> _buildPageRoute(Widget page, RouteSettings settings){
-    return PageRouteBuilder(
-      settings: settings,
-      pageBuilder:(context, animation, secondaryAnimation) => page, 
-      transitionDuration: Duration.zero,
-      reverseTransitionDuration: Duration.zero
-    );
-  }
 
-  static Widget _undefineWidget(){
-    return Scaffold(
-      body: Center(
-        child: CommonText(text: "No route found"),
-      ),
-    );
-  }
+CustomTransitionPage buildPageWithDefaultTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child
+}){
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child, 
+    transitionsBuilder:(context, animation, secondaryAnimation, child) {
+      final tween = Tween(begin: const Offset(1.0, 0.0), end: Offset.zero)
+      .chain(CurveTween(curve: Curves.easeInOut));
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+  );
 }
+
+
+

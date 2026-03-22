@@ -40,7 +40,7 @@ class LoginState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       loginStatus: loginStatus ?? this.loginStatus,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
-      userEntity: userEntity ?? this.userEntity
+      userEntity: userEntity
     );
   }
   

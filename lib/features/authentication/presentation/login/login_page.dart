@@ -1,9 +1,11 @@
 import 'package:chat/core/router/app_routes.dart';
+import 'package:chat/features/authentication/domain/enums/login_status.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../application/login/bloc/login_bloc.dart';
-import '../../domain/enums/login_status.dart';
 import 'components/form_section.dart';
 import '../../../../core/common_widgets/animated_background.dart';
 import '../../../../core/common_widgets/common_container.dart';
@@ -18,45 +20,50 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
-      body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Stack(
-          alignment: AlignmentGeometry.center,
-          children: <Widget>[
-            CommonContainer(
-              width: context.width,
-              height: context.height,
-              child: SizedBox.expand(),
-            ),
-            Positioned.fill(child: AnimatedBackground()),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: AppSizes.size8,
-              children: <Widget>[
-                CommonText(
-                  text: "Welcome Back!",
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppSizes.font32,
-                ),
-                BlocConsumer<LoginBloc, LoginState>(
-                  listenWhen: (previous, current) => previous.loginStatus.index != previous.loginStatus.index,
-                  listener: (context, state) {
-                    if(state.loginStatus == LoginStatus.success){context.pushReplacementNamed(AppRoutes.home);}
-                    else if(state.loginStatus == LoginStatus.error){
-                      ScaffoldMessenger.of(context)
-                      ..removeCurrentSnackBar()
-                      ..showSnackBar(SnackBar(
-                        content: CommonText(text: state.errorMessage ?? "Unknown error")
-                      ));
-                    }
-                  },
-                  builder: (context, state) => FormSection()
-                )
-              ]
-            )
-          ]
-        )
-      )
+      body: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          CommonContainer(
+            width: context.width,
+            height: context.height,
+            child: SizedBox.expand(),
+          ),
+          Positioned.fill(child: AnimatedBackground()),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: AppSizes.size8,
+            children: <Widget>[
+              CommonText(
+                text: "Welcome Back!",
+                fontWeight: FontWeight.bold,
+                fontSize: AppSizes.font32,
+              ),
+              BlocConsumer<LoginBloc, LoginState>(
+                listenWhen: (previous, current) => previous.loginStatus != previous.loginStatus,
+                listener: (context, state) {
+                  if(state.loginStatus == LoginStatus.success){
+                    print("Can go login now!");
+                    if(context.mounted) context.go(AppRoutes.home);
+                  }
+                  else if(state.loginStatus == LoginStatus.error){
+                    ScaffoldMessenger.of(context)
+                    ..removeCurrentSnackBar()
+                    ..showSnackBar(SnackBar(
+                      content: CommonText(text: state.errorMessage ?? "Unknown error")
+                    ));
+                  }
+                },
+                builder: (context, state){
+                  if(kDebugMode){
+                    print("\x1B[32mCurrent state: ${state.loginStatus}");
+                  }
+                  return FormSection();
+                }
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

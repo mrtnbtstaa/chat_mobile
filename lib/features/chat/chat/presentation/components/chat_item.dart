@@ -1,7 +1,7 @@
 import 'package:chat/core/common_widgets/common_divider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../../core/extensions/context_extension.dart';
 import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/common_widgets/common_container.dart';
 import '../../../../../core/common_widgets/common_text.dart';
@@ -20,7 +20,7 @@ class ChatItem extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          onTap: () => context.pushNamed(AppRoutes.chatMessage),
+          onTap: () => context.go(AppRoutes.chatMessage),
           leading: Stack(
             children: [
               CircleAvatar(

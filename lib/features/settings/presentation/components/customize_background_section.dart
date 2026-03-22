@@ -37,14 +37,12 @@ const CustomizeBackgroundSection({ super.key });
               text: "Choose Background",
               onTap: (){},
               withTrailing: true,
-              trailing: Flexible(
-                child: Padding(
-                  padding: AppInsets.v4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(AppSizes.size8),
-                    child: CommonImage(
-                      image: AssetImage(AppImages.mountain)
-                    )
+              trailing: Padding(
+                padding: AppInsets.v4,
+                child: ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(AppSizes.size8),
+                  child: CommonImage(
+                    image: AssetImage(AppImages.mountain)
                   )
                 )
               )

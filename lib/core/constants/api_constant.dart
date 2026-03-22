@@ -1,8 +1,12 @@
 class ApiConstant {
 
-  static const String login = "login";
-  static const String register = "register";
-  static const String logout = "logout";
-  static const String refresh = "refresh";
+  // -------------- Authentication API ------------------
+  static const baseAuth = "api/v1/auth/";
+  static const String login = "${baseAuth}login/";
+  static const String register = "${baseAuth}register/";
+  static const String logout = "${baseAuth}logout/";
+  static const String refresh = "${baseAuth}refresh/";
+  static const String verifyToken = "${baseAuth}verify-token/";
+  // -------------- Authentication API ------------------
 
 }

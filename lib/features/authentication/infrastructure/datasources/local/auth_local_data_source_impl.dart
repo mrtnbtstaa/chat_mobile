@@ -1,5 +1,4 @@
 import 'package:chat/features/authentication/infrastructure/datasources/local/i_local_auth_data_source.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/token_dto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthLocalDataSourceImpl implements ILocalAuthDataSource{
@@ -12,7 +11,7 @@ class AuthLocalDataSourceImpl implements ILocalAuthDataSource{
   static const String _refreshKey = "refresh_token";
 
   @override
-  Future<void> clearAll() {
+  Future<void> clearTokens() {
     return flutterSecureStorage.deleteAll();
   }
   
@@ -27,10 +26,9 @@ class AuthLocalDataSourceImpl implements ILocalAuthDataSource{
   }
   
   @override
-  Future<TokenDto> cacheToken(String accessToken, String refreshToken) async {
+  Future<void> cacheToken(String accessToken, String refreshToken) async {
     await flutterSecureStorage.write(key: _accessKey, value: accessToken);
     await flutterSecureStorage.write(key: _refreshKey, value: refreshToken);
-    return TokenDto(accessToken: accessToken, refreshToken: refreshToken);
   }
 
  

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'core/common_widgets/common_loading_indicator.dart';
 import 'core/di/di.dart';
+import 'core/resources/app_config.dart';
+import 'core/resources/environment.dart';
 import 'core/router/app_router.dart';
 import 'core/services/session_manager.dart';
-import 'features/authentication/presentation/login/login_page.dart';
-import 'features/home/presentation/home_page.dart';
+import 'core/utils/flutter_secure_storage_manager.dart';
 
-void main() {
-
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  AppConfig.initialize(
+    baseUrl: Environment.getBaseUrl,
+    environment: Environment.getEnv,
+  );
 
   initDependencies();
 
-  sl<SessionManager>().initialize();
+  FlutterSecureStorageManager.initialize(sl<FlutterSecureStorage>());
+  await sl<SessionManager>().initialize();
 
   runApp(const MyApp());
 }
@@ -24,23 +30,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,                             
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: true,
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      onGenerateRoute: AppRouter.generateRoute,
-      home: ValueListenableBuilder(
-        valueListenable: sl<SessionManager>(),
-        builder:(context, status, child) {
-          if(status == AuthStatus.unauthenticated) return const LoginPage();
-          if(status == AuthStatus.authenticated) return const HomePage();
-          return CommonLoadingIndicator();
-        },
       ),
     );
   }
 }
-
-

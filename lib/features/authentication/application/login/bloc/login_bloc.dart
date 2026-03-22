@@ -1,11 +1,12 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import '../../../../../core/usecases/base_usecase.dart';
 import '../../../domain/entities/auth_entity.dart';
 import '../../../domain/params/login_param.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/extensions/validator_builder_extension.dart';
@@ -19,10 +20,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final BaseUsecase<AuthEntity, LoginParam> _loginUsecase;
 
   LoginBloc({required BaseUsecase<AuthEntity, LoginParam> loginUseCase}) : _loginUsecase = loginUseCase,
-     super(LoginState()) {
+    super(LoginState()) {
     on<OnUsernameChanged>(_onUsernameChanged);
     on<OnPasswordChanged>(_onPasswordChanged);
-    on<TogglePasswordVisibility>((event, emit) => emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible)));
+    on<TogglePasswordVisibility>((event, emit) => emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible, loginStatus: LoginStatus.initial)));
     on<LoginSubmitted>(_loginSubmitted);
   }
 
@@ -32,7 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     .required()
     .build();
 
-    emit(state.copyWith(username: event.username, usernameError: () => usernameError));
+    emit(state.copyWith(username: event.username, usernameError: () => usernameError, loginStatus: LoginStatus.initial));
   }
 
   FutureOr<void> _onPasswordChanged(OnPasswordChanged event, Emitter<LoginState> emit) {
@@ -41,10 +42,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     .required()
     .build();
 
-    emit(state.copyWith(password: event.password, passwordError: () => passwordError));
+    emit(state.copyWith(password: event.password, passwordError: () => passwordError, loginStatus: LoginStatus.initial));
   }
 
   FutureOr<void> _loginSubmitted(LoginSubmitted event, Emitter<LoginState> emit) async {
+
+    if(kDebugMode){
+      print("Login submitted triggered!");
+    }
 
     final usernameError = event.username.
     validate("Username")
@@ -78,8 +83,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final result = await _loginUsecase(LoginParam(username: event.username, password: event.password));
 
     return result.fold(
-      (failure) => emit(state.copyWith(errorMessage: failure.message)), 
-      (entity) => emit(state.copyWith(userEntity: entity))
+      (failure) => emit(state.copyWith(errorMessage: failure.message, loginStatus: LoginStatus.error)), 
+      (entity) => emit(state.copyWith(userEntity: entity, loginStatus: LoginStatus.success))
     );
 
   }

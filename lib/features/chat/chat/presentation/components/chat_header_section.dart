@@ -1,6 +1,6 @@
-import 'package:chat/core/common_widgets/common_avatar.dart';
-import 'package:chat/core/extensions/context_extension.dart';
-import 'package:chat/core/router/app_routes.dart';
+import '../../../../../core/common_widgets/common_avatar.dart';
+import '../../../../../core/router/app_routes.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../core/common_widgets/common_text_field.dart';
 import '../../../../../core/style/app_images.dart';
@@ -33,34 +33,28 @@ class ChatHeaderSection extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: AppSizes.size8, horizontal: AppSizes.size8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: () => context.pushNamed(AppRoutes.profile),
+              onTap: () => context.go(AppRoutes.profile),
               child: CommonAvatar(path: AppImages.profile),
             ),
-            Flexible(
+            Expanded(
               child: CommonTextField(
-                height: AppSizes.size48,
                 padding: EdgeInsets.only(left: AppSizes.size8),
-                contentPadding: EdgeInsets.only(left: AppSizes.size16, right: AppSizes.size8),
+                contentPadding: EdgeInsets.only(top: 12.0, bottom: 12.0),
                 hintText: "Search...",
                 onChanged: (val){},
                 controller: TextEditingController(),
               ),
             ),
             AppSizes.size8.width(),
-            Row(
-              spacing: AppSizes.size12,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: onGroupTap,
-                  child: CommonIcon(
-                    iconData: BoxIcons.bx_group,
-                    iconSize: AppSizes.size32
-                  ),
-                )
-              ]
+            GestureDetector(
+              onTap: onGroupTap,
+              child: CommonIcon(
+                iconData: BoxIcons.bx_group,
+                iconSize: AppSizes.size32
+              ),
             )
           ]
         )

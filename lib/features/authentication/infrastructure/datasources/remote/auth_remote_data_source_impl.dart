@@ -1,22 +1,32 @@
-import 'package:chat/features/authentication/infrastructure/datasources/remote/i_remote_auth_data_source.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/token_dto.dart';
+import 'package:chat/features/authentication/infrastructure/dtos/request/verify_token_request_dto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../../core/constants/api_constant.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/network/network_client.dart';
+import '../../dtos/request/refresh_token_request_dto.dart';
+import '../../dtos/request/login_request_dto.dart';
 import '../../dtos/response/login_response_dto.dart';
+import '../../dtos/response/refresh_token_response_dto.dart';
+import 'i_remote_auth_data_source.dart';
 
 class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataSource {
+  
 
   AuthRemoteDataSourceImpl({super.client});
 
   @override
-  Future<Either<Failure, LoginResponseDto>> login(Map<String, dynamic> data) async =>
+  Future<Either<Failure, LoginResponseDto>> login(LoginRequestDto loginRequestDto) async =>
   await post<LoginResponseDto>(
     ApiConstant.login,
-    body: data,
-    onSuccess: (json) => LoginResponseDto.fromJson(json)
+    body: loginRequestDto.toJson(),
+    onSuccess: (json) {
+        if(kDebugMode){
+          print("Json: $json and fromJson: ${LoginResponseDto.fromJson(json)}");
+        }
+      return LoginResponseDto.fromJson(json);
+    }
   );
   
   @override
@@ -37,13 +47,19 @@ class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataS
   );
   
   @override
-  Future<Either<Failure, TokenDto>> refresh(Map<String, dynamic> data) async =>
-  await post<TokenDto>(
+  Future<Either<Failure, RefreshTokenResponseDto>> refresh(RefreshTokenRequestDto refreshTokenDto) async =>
+  await post<RefreshTokenResponseDto>(
     ApiConstant.refresh,
-    body: data,
-    onSuccess: (json) => TokenDto.fromJson(json)
+    body: refreshTokenDto.toJson(),
+    onSuccess: (json) => RefreshTokenResponseDto.fromJson(json)
   );
-  
 
+  @override
+  Future<Either<Failure, Unit>> verify(VerifyTokenRequestDto verifyTokenDto) async =>
+  await post<Unit>(
+    ApiConstant.verifyToken,
+    body: verifyTokenDto.toJson(),
+    onSuccess: (_) => unit
+  );
 
 }

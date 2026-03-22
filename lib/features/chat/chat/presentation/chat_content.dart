@@ -50,8 +50,8 @@ class _ChatContentState extends State<ChatContent> {
       body: GestureDetector(
         onTap: () => context.unfocus(),
         child: Stack(
-          fit: StackFit.passthrough,
-          alignment: Alignment.bottomCenter,
+          fit: StackFit.expand,
+          alignment: Alignment.topCenter,
           children: <Widget>[
             CommonContainerBackground(),
             GlassContainer(

@@ -1,10 +1,10 @@
 import 'package:chat/core/common_widgets/common_text.dart';
 import 'package:chat/core/common_widgets/glass_container.dart';
-import 'package:chat/core/extensions/context_extension.dart';
 import 'package:chat/core/router/app_routes.dart';
 import 'package:chat/core/style/app_insets.dart';
 import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterNowContent extends StatelessWidget {
 
@@ -22,7 +22,7 @@ class RegisterNowContent extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () => context.pushNamed(AppRoutes.register),
+          onTap: () => context.go(AppRoutes.register),
           child: GlassContainer(
             padding: AppInsets.a8,
             child: CommonText(

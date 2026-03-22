@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:chat/core/errors/server_failure.dart';
 import 'package:chat/core/interceptors/auth_interceptor.dart';
-import 'package:chat/core/interceptors/interceptor_adapter.dart';
 import 'package:chat/core/services/session_manager.dart';
 import 'package:chat/features/authentication/infrastructure/datasources/local/auth_local_data_source_impl.dart';
 import 'package:chat/features/authentication/infrastructure/datasources/remote/auth_remote_data_source_impl.dart';
 import 'package:chat/features/authentication/infrastructure/datasources/remote/i_remote_auth_data_source.dart';
+import 'package:chat/features/authentication/infrastructure/dtos/request/login_request_dto.dart';
+import 'package:chat/features/authentication/infrastructure/dtos/request/refresh_token_request_dto.dart';
 import 'package:chat/features/authentication/infrastructure/dtos/response/login_response_dto.dart';
 import 'package:chat/features/authentication/infrastructure/dtos/request/logout_request_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/token_dto.dart';
+import 'package:chat/features/authentication/infrastructure/dtos/response/refresh_token_response_dto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,7 +30,7 @@ class MockRetry extends Mock{
 }
 
 class TestInterceptor extends AuthInterceptor{
-  TestInterceptor(super.flutterSecureStorage, super.sessionManager, super.remoteAuthDataSource, {required this.refreshResult});
+  TestInterceptor(super.flutterSecureStorage, super.sessionManager, {required this.refreshResult});
 
   final bool refreshResult;
 
@@ -67,7 +68,7 @@ void main() async {
     authRemoteDataSourceImpl = AuthRemoteDataSourceImpl(client: mockHttpClient);
     localDataSourceImpl = AuthLocalDataSourceImpl(flutterSecureStorage: mockFlutterSecureStorage);
     sessionManager = SessionManager(localDataSourceImpl);
-    authInterceptor = AuthInterceptor(mockFlutterSecureStorage, sessionManager, mockAuthRemoteDataSource);
+    authInterceptor = AuthInterceptor(mockFlutterSecureStorage, sessionManager);
     mockSessionManager = MockSessionManager();
   });
 
@@ -94,7 +95,7 @@ void main() async {
       .thenAnswer((_) async => http.Response(successfulResponse, 200));
 
       // Act
-      final result = await authRemoteDataSourceImpl.login(tLoginRequest);
+      final result = await authRemoteDataSourceImpl.login(LoginRequestDto(username: "tin", password: "123"));
 
       // Assert
       expect(result.isRight(), true);
@@ -117,7 +118,7 @@ void main() async {
       }), 401));
 
       // Act
-      final result = await authRemoteDataSourceImpl.login(tLoginRequest);
+      final result = await authRemoteDataSourceImpl.login(LoginRequestDto(username: "tin", password: "123"));
 
       //Assert
       expect(result.isLeft(), true);
@@ -294,7 +295,7 @@ void main() async {
         .thenAnswer((_) async => http.Response(successfulResponse, 200));
 
         // Act
-        final result = await authRemoteDataSourceImpl.login(tLoginRequest);
+        final result = await authRemoteDataSourceImpl.login(LoginRequestDto(username: "123", password: "123"));
 
         // Assert
         expect(result.isRight(), true);
@@ -352,14 +353,8 @@ void main() async {
       when(() => mockFlutterSecureStorage.deleteAll())
       .thenAnswer((_) async => {});
 
-
-      Future<http.Response> retryRequest() async {
-        return http.Response("Unauthorized", 401);
-      }
-
-
       // Act
-      await authInterceptor.interceptResponse(response: response, retryRequest: retryRequest);
+      await authInterceptor.interceptResponse(response: response);
 
       //Arrange
       verify(() => mockFlutterSecureStorage.deleteAll()).called(1);
@@ -406,18 +401,11 @@ void main() async {
       final interceptor = TestInterceptor(
         mockFlutterSecureStorage,
         mockSessionManager,
-        mockAuthRemoteDataSource,
         refreshResult: false
       );
 
-
-      Future<http.Response> retryRequest() async {
-        return http.Response("ok", 200);
-      }
-      final adapter = InterceptorAdapter(interceptor, retry: retryRequest);
-
       // Act
-      final result = await adapter.interceptResponse(response: response);
+      final result = await authInterceptor.interceptResponse(response: response);
 
       // Assert
       expect(result.statusCode, 200);
@@ -432,7 +420,7 @@ void main() async {
       // Arrange
       final response = Response("Unauthorized", 401);
       final retryResponse = Response("ok", 200);
-      final tTokenDTO = TokenDto(accessToken: 'new_access_token', refreshToken: 'new_refresh_token');
+      final tTokenDTO = RefreshTokenResponseDto(accessToken: 'new_access_token', refreshToken: 'new_refresh_token');
 
       final mockRetry = MockRetry();
 
@@ -451,18 +439,17 @@ void main() async {
       final interceptor = TestInterceptor(
         mockFlutterSecureStorage,
         mockSessionManager,
-        mockAuthRemoteDataSource,
         refreshResult: true
       );
 
       // Act
-      final result = await interceptor.interceptResponse(response: response, retryRequest: mockRetry.call);
+      final result = await interceptor.interceptResponse(response: response);
 
 
       // Assert
       expect(result.statusCode, 200);
 
-      verify(() => mockAuthRemoteDataSource.refresh({"refresh_token": "old_refresh_token"})).called(1);
+      verify(() => mockAuthRemoteDataSource.refresh(RefreshTokenRequestDto("old_refresh_token"))).called(1);
       verify(() => mockFlutterSecureStorage.write(key: 'access_token', value: 'new_access_token')).called(1);
       verify(() => mockRetry.call()).called(1);
 
@@ -481,16 +468,14 @@ void main() async {
       final interceptor = TestInterceptor(
         mockFlutterSecureStorage,
         mockSessionManager,
-        mockAuthRemoteDataSource,
         refreshResult: false,
       );
 
-      final adapter = InterceptorAdapter(interceptor, retry: () async => http.Response("Should not be called", 200));
 
       final response = http.Response("Unauthorized", 401);
 
       // Act 
-      final result = await adapter.interceptResponse(
+      final result = await interceptor.interceptResponse(
         response: response,
       );
 

@@ -1,10 +1,11 @@
-import 'package:chat/core/common_widgets/common_text.dart';
-import 'package:chat/core/common_widgets/glass_container.dart';
-import 'package:chat/core/style/app_insets.dart';
-import 'package:chat/core/style/app_sizes.dart';
-import 'package:chat/core/extensions/context_extension.dart';
-import 'package:chat/core/router/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../../core/common_widgets/common_text.dart';
+import '../../../../../core/common_widgets/glass_container.dart';
+import '../../../../../core/router/app_routes.dart';
+import '../../../../../core/style/app_insets.dart';
+import '../../../../../core/style/app_sizes.dart';
 
 class LoginNowContent extends StatelessWidget {
 
@@ -22,7 +23,7 @@ class LoginNowContent extends StatelessWidget {
           text: "Already have an account?",
         ),
         GestureDetector(
-          onTap: () => context.pushNamed(AppRoutes.login),
+          onTap: () => context.go(AppRoutes.login),
           child: GlassContainer(
             padding: AppInsets.a8,
             child: CommonText(
