@@ -1,6 +1,7 @@
 import 'package:chat/features/chat/chat/application/bloc/chat_bloc.dart';
 import 'package:chat/features/chat/chat/domain/entities/chat_entity.dart';
 import 'package:chat/features/chat/chat/domain/params/user_id_param.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -25,11 +26,16 @@ final GoRouter router = GoRouter(
     // If we are still initializing, stay on the splash
     if (authStatus == AuthStatus.unknown) return AppRoutes.splash;
 
-    // If not logged in and not on the login page, force move to login
-    if (authStatus == AuthStatus.unauthenticated) return AppRoutes.login;
+    // If not authenticated, route to login
+    if(authStatus == AuthStatus.unauthenticated) return AppRoutes.login;
 
-    // If logged in and trying to go to login or splash, move to home
-    if (authStatus == AuthStatus.authenticated) return AppRoutes.home;
+    // If authenticated, route to home 
+    if(authStatus == AuthStatus.authenticated){
+      if(kDebugMode){
+        print("Should route to home page!");
+      }
+      return AppRoutes.home;
+    }
 
     // Return null allows the user to stay on the current page
     return null;

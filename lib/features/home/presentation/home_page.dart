@@ -1,5 +1,7 @@
+import 'package:chat/core/utils/shared_preferences_manager.dart';
 import 'package:chat/features/chat/chat/presentation/chat_content.dart';
 import 'package:chat/features/home/presentation/components/bottom_tabbar_constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/common_widgets/common_scaffold.dart';
@@ -36,6 +38,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context){
+    if(kDebugMode){
+      print("My user id: ${SharedPreferencesManager().getUserId()}");
+    }
     return CommonScaffold(
       body: Builder(
         builder: (context) {

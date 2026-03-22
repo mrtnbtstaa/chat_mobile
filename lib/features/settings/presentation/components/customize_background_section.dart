@@ -1,3 +1,5 @@
+import 'package:chat/core/events/auth_events.dart';
+import 'package:chat/core/events/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
@@ -61,6 +63,11 @@ const CustomizeBackgroundSection({ super.key });
               iconData: BoxIcons.bx_color,
               text: "Customize Glass Color",
               onTap: (){},
+            ),
+            SettingListTile(
+              iconData: BoxIcons.bx_log_out,
+              text: "Logout",
+              onTap: () => EventBus().publish(LogoutEvent())
             )
           ]
         )

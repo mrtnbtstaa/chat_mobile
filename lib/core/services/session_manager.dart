@@ -19,14 +19,18 @@ class SessionManager extends ValueNotifier<AuthStatus> {
     final token = await _localAuthDataSource.getAccessToken();
 
     if(token != null && token.isNotEmpty){
-      try{
+        
         // Call the verify token usecase
-        await sl<BaseUsecase<Unit, AccessTokenParam>>()(AccessTokenParam(accessToken: token));
-        value = AuthStatus.authenticated;
-      }catch(e){
-        await _localAuthDataSource.clearTokens();
-        logout();
-      }
+        final result = await sl<BaseUsecase<Unit, AccessTokenParam>>()(AccessTokenParam(accessToken: token));
+
+        result.fold(
+          (failure) {
+            logout();
+          },
+          (_) {
+            value = AuthStatus.authenticated;
+          }
+        );
 
     }else{
       value = AuthStatus.unauthenticated;
@@ -38,9 +42,10 @@ class SessionManager extends ValueNotifier<AuthStatus> {
   }
 
   void login() => value = AuthStatus.authenticated;
-  void logout() async {
-    SharedPreferencesManager.instance?.remove("user_id");
-    await _localAuthDataSource.clearTokens();
+  void logout() {
+    SharedPreferencesManager().removeUserId();
     value = AuthStatus.unauthenticated;
   }
+
+
 }

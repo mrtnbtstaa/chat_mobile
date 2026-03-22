@@ -103,7 +103,7 @@ abstract class NetworkClient {
   ) async {
     return _request(
       () => http.get(
-        _uriParser("$endpoint/$id"), 
+        _uriParser("$endpoint$id"), 
         headers: headers ?? {'Content-Type': 'application/json'},
       ), 
       onSuccess: onSuccess,
@@ -159,10 +159,10 @@ abstract class NetworkClient {
     try{
 
 
-      if(kDebugMode){
-        print("Response Status: ${response.statusCode}");
-        print("Response Status: ${response.body}");
-      }
+      // if(kDebugMode){
+      //   print("Response Status: ${response.statusCode}");
+      //   print("Response Status: ${response.body}");
+      // }
 
       // Deserialize the response from the server
       final responseBody = response.body.isEmpty
@@ -178,7 +178,7 @@ abstract class NetworkClient {
         return right(onSuccess(apiResponse.data));
       }else if(apiResponse is ErrorResponse){
         // Return a server failure which includes the details
-        print("Error: ${apiResponse.error.message}, ${apiResponse.error.details[0].field}");
+        print("\x1B[31mIssue: ${apiResponse.error.message}\n\x1B[31mField: ${apiResponse.error.details[0].field}");
         return left(
           ServerFailure(
             message: apiResponse.error.message,
@@ -195,7 +195,6 @@ abstract class NetworkClient {
       
 
     }catch(e){
-      print("!!!!Server failure: $e");
       return left(ServerFailure(
         message: e.toString(),
         statusCode: statusCode

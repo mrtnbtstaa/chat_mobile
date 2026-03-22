@@ -38,6 +38,8 @@ class AuthInterceptor extends InterceptorContract {
   @override
   FutureOr<BaseRequest> interceptRequest({required BaseRequest request}) async {
 
+    print("URL: ${request.url}");
+
     // To avoid adding headers to the whitelisted
     if(_isWhiteListed(request.url.path)) return request;
 
@@ -51,12 +53,7 @@ class AuthInterceptor extends InterceptorContract {
 
     // Check if the token is not null or not empty
     if(accessToken != null && accessToken.isNotEmpty){
-      request.headers.update(
-        "Authorization", 
-        (value) => "Bearer $accessToken",
-        ifAbsent: () => "Bearer $accessToken"
-      );
-        // request.headers["Authorization"] = "Bearer $accessToken";
+      request.headers["Authorization"] = "Bearer $accessToken";
     }
 
 

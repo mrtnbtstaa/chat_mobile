@@ -1,4 +1,3 @@
-import 'package:chat/core/utils/shared_preferences_manager.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/errors/failure.dart';
@@ -32,7 +31,7 @@ class AuthRepositoryImpl implements IAuthRepository {
     // Call the datasource login and capture the result
     final result = await authRemoteDataSource.login(request);
 
-    return result.fold(
+    return await result.fold(
       (failure) => left(failure),
       (dto) async {
         // Saved access and refresh token to flutter secure storage
@@ -40,8 +39,6 @@ class AuthRepositoryImpl implements IAuthRepository {
           dto.tokens.accessToken,
           dto.tokens.refreshToken
         );
-        // Saved user_id to the sharedPreferenceManager
-        SharedPreferencesManager.instance?.setString(dto.userId);
         return right(dto.toEntity());
       }
     );
@@ -55,8 +52,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
     // Call the datasource register and capture the result
     final result = await authRemoteDataSource.register(request.toJson());
-
-    return result.fold(
+    return await result.fold(
       (failure){
         return left(failure);
       },
@@ -70,7 +66,7 @@ class AuthRepositoryImpl implements IAuthRepository {
     final request = LogoutRequestDto(refreshToken: refreshToken);
     // Call the datasource logout and capture the result
     final result = await authRemoteDataSource.logout(request.toJson());
-    return result.fold(
+    return await result.fold(
       (failure) => left(failure),
       (_) => right(unit)
     );
@@ -84,7 +80,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 
     // Call the datasource refresh and capture the result
     final result = await authRemoteDataSource.refresh(request);
-    return result.fold(
+    return await result.fold(
       (failure) => left(failure),
       (dto) => right(dto.toEntity())
     );
@@ -99,8 +95,8 @@ class AuthRepositoryImpl implements IAuthRepository {
     // Call the datasource verify and capture the result
     final result = await authRemoteDataSource.verify(request);
 
-    return result.fold(
-      (failure) => left(failure), 
+    return await result.fold(
+      (failure)  => left(failure), 
       (_) => right(unit)
     );
 

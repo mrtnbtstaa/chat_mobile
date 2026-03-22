@@ -21,12 +21,7 @@ class ListviewChatSection extends StatelessWidget {
     return Expanded(
       child: Padding(
         padding: AppInsets.v4,
-        child: FutureBuilder(
-          future: sl<BaseUsecase<List<ChatEntity>, UserIdParam>>().call(UserIdParam(userId: SharedPreferencesManager.instance?.getString("user_id") ?? "")),
-          builder:(context, index) {
-            return ChatItem();
-          },
-        ),
+        child: ChatItem(),
       )
     );
   }

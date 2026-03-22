@@ -1,35 +1,32 @@
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesManager {
-  
+
   final String userIdKey = "user_id";
 
-  final SharedPreferences sharedPreferences;
+  static SharedPreferences? _prefs;
 
-  const SharedPreferencesManager._({required this.sharedPreferences});
+  // Singleton instance
+  static final SharedPreferencesManager _instance = SharedPreferencesManager._internal();
 
-  static SharedPreferencesManager? _instance;
+  // Factory returns the same instance
+  factory SharedPreferencesManager() => _instance;
 
+  SharedPreferencesManager._internal();
 
-  static void initialize(SharedPreferences sharedPreference)  {
-    _instance ??= SharedPreferencesManager._(sharedPreferences: sharedPreference);
+  static Future<void> initialize() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  static SharedPreferencesManager? get instance {
-    if(_instance == null) throw Exception("SharedPreferencesManager is not initialized. Call initialize first");
-    return _instance;
+  Future<bool> setUserId(String value) async {
+    return await _prefs?.setString(userIdKey, value) ?? false;
   }
 
-  Future<void> setString(String value) async {
-    await sharedPreferences.setString(userIdKey, value);
+  String? getUserId() {
+    return _prefs?.getString(userIdKey);
   }
 
-  String getString(String key) {
-    return sharedPreferences.getString(key) ?? "";
-  }
-
-  void remove(String key){
-    sharedPreferences.remove(key);
-  }
+  void removeUserId() => _prefs?.remove(userIdKey);
 
 }

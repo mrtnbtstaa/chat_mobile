@@ -1,13 +1,12 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../features/authentication/domain/params/access_token_param.dart';
-import '../../features/chat/chat/application/usecases/list_chat_usecase.dart';
-import '../../features/chat/chat/domain/entities/chat_entity.dart';
-import '../../features/chat/chat/domain/params/user_id_param.dart';
-import '../../features/chat/chat/domain/repositories/i_chat_repository.dart';
-import '../../features/chat/chat/infrastructure/datasources/remote/chat_remote_data_source_impl.dart';
-import '../../features/chat/chat/infrastructure/datasources/remote/i_chat_remote_data_source.dart';
-import '../../features/chat/chat/infrastructure/repositories/chat_repository_impl.dart';
+import 'package:chat/features/authentication/application/usecase/logout_usecase.dart';
+import 'package:chat/features/authentication/domain/params/access_token_param.dart';
+import 'package:chat/features/chat/chat/application/usecases/list_chat_usecase.dart';
+import 'package:chat/features/chat/chat/domain/entities/chat_entity.dart';
+import 'package:chat/features/chat/chat/domain/params/user_id_param.dart';
+import 'package:chat/features/chat/chat/domain/repositories/i_chat_repository.dart';
+import 'package:chat/features/chat/chat/infrastructure/datasources/remote/chat_remote_data_source_impl.dart';
+import 'package:chat/features/chat/chat/infrastructure/datasources/remote/i_chat_remote_data_source.dart';
+import 'package:chat/features/chat/chat/infrastructure/repositories/chat_repository_impl.dart';
 
 import '../../features/authentication/application/usecase/refresh_token_usecase.dart';
 import '../../features/authentication/domain/entities/token_entity.dart';
@@ -60,10 +59,10 @@ void _registerAuthDependencies(){
   ), instanceName: 'interceptedClient');
 
 
-  sl.registerLazySingleton<Client>(() => Client(), instanceName: 'refreshClient');
+  sl.registerLazySingleton<Client>(() => Client(), instanceName: 'cleanClient');
 
   // Data sources
-  sl.registerLazySingleton<IRemoteAuthDataSource>(() => AuthRemoteDataSourceImpl(client: sl<Client>(instanceName: 'refreshClient')));
+  sl.registerLazySingleton<IRemoteAuthDataSource>(() => AuthRemoteDataSourceImpl(client: sl<Client>(instanceName: 'cleanClient')));
   sl.registerLazySingleton<ILocalAuthDataSource>(() => AuthLocalDataSourceImpl(flutterSecureStorage: sl<FlutterSecureStorage>()));
   
   // Repositories
@@ -74,6 +73,7 @@ void _registerAuthDependencies(){
   sl.registerLazySingleton<BaseUsecase<Unit, RegisterParam>>(() => RegisterUsecase(authRepository: sl()));
   sl.registerLazySingleton<BaseUsecase<TokenEntity, RefreshTokenParam>>(() => RefreshTokenUsecase(authRepository: sl()));
   sl.registerLazySingleton<BaseUsecase<Unit, AccessTokenParam>>(() => VerifyTokenUsecase(authRepository: sl()));
+  sl.registerLazySingleton<BaseUsecase<Unit, String>>(() => LogoutUsecase(authRepository: sl()));
 }
 
 
