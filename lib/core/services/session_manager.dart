@@ -18,15 +18,20 @@ class SessionManager extends ValueNotifier<AuthStatus> {
     final token = await _localAuthDataSource.getAccessToken();
 
     if(token != null && token.isNotEmpty){
-      try{
         
         // Call the verify token usecase
-        await sl<BaseUsecase<Unit, AccessTokenParam>>()(AccessTokenParam(accessToken: token));
-        value = AuthStatus.authenticated;
-      }catch(e){
-        await _localAuthDataSource.clearTokens();
-        logout();
-      }
+        final result = await sl<BaseUsecase<Unit, AccessTokenParam>>()(AccessTokenParam(accessToken: token));
+
+        result.fold(
+          (failure) async {
+            if(kDebugMode){print("verify token error: ${failure.message} and ${failure.error}");}
+            await _localAuthDataSource.clearTokens();
+            logout();
+          },
+          (_) {
+            value = AuthStatus.authenticated;
+          }
+        );
 
     }else{
       value = AuthStatus.unauthenticated;
