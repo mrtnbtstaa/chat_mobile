@@ -1,4 +1,13 @@
-import 'package:chat/features/authentication/domain/params/access_token_param.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../features/authentication/domain/params/access_token_param.dart';
+import '../../features/chat/chat/application/usecases/list_chat_usecase.dart';
+import '../../features/chat/chat/domain/entities/chat_entity.dart';
+import '../../features/chat/chat/domain/params/user_id_param.dart';
+import '../../features/chat/chat/domain/repositories/i_chat_repository.dart';
+import '../../features/chat/chat/infrastructure/datasources/remote/chat_remote_data_source_impl.dart';
+import '../../features/chat/chat/infrastructure/datasources/remote/i_chat_remote_data_source.dart';
+import '../../features/chat/chat/infrastructure/repositories/chat_repository_impl.dart';
 
 import '../../features/authentication/application/usecase/refresh_token_usecase.dart';
 import '../../features/authentication/domain/entities/token_entity.dart';
@@ -28,12 +37,18 @@ import '../usecases/base_usecase.dart';
 final sl = GetIt.instance;
 
 void initDependencies() {
+  _externalDependencies();
   _registerAuthDependencies();
+  _chatDependencies();
+}
+
+void _externalDependencies(){
+  // External
+  sl.registerLazySingleton(() => const FlutterSecureStorage());
 }
 
 void _registerAuthDependencies(){
-  // Core & External
-  sl.registerLazySingleton(() => const FlutterSecureStorage());
+
   sl.registerLazySingleton(() => SessionManager(sl<ILocalAuthDataSource>()));
 
   // Auth interceptor
@@ -59,4 +74,18 @@ void _registerAuthDependencies(){
   sl.registerLazySingleton<BaseUsecase<Unit, RegisterParam>>(() => RegisterUsecase(authRepository: sl()));
   sl.registerLazySingleton<BaseUsecase<TokenEntity, RefreshTokenParam>>(() => RefreshTokenUsecase(authRepository: sl()));
   sl.registerLazySingleton<BaseUsecase<Unit, AccessTokenParam>>(() => VerifyTokenUsecase(authRepository: sl()));
+}
+
+
+void _chatDependencies(){
+
+  // Data sources
+  sl.registerLazySingleton<IChatRemoteDataSource>(() => ChatRemoteDataSourceImpl(client: sl<Client>(instanceName: 'interceptedClient')));
+
+  // Repositories
+  sl.registerLazySingleton<IChatRepository>(() => ChatRepositoryImpl(chatRemoteDataSource: sl()));
+
+  // Usecases
+  sl.registerLazySingleton<BaseUsecase<List<ChatEntity>, UserIdParam>>(() => ListChatUsecase(chatRepository: sl()));
+
 }

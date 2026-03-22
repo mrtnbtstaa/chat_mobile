@@ -27,9 +27,9 @@ class AuthInterceptor extends InterceptorContract {
 
   bool _isWhiteListed(String path){
     final List<String> whitelist = [
-      ApiConstant.login, 
-      ApiConstant.register, 
-      ApiConstant.refresh, 
+      ApiConstant.loginApi, 
+      ApiConstant.registerApi, 
+      ApiConstant.refreshApi, 
     ];
 
     return whitelist.any((pattern) => path.contains(pattern));

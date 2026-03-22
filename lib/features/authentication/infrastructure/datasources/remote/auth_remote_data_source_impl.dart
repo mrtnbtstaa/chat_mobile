@@ -19,7 +19,7 @@ class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataS
   @override
   Future<Either<Failure, LoginResponseDto>> login(LoginRequestDto loginRequestDto) async =>
   await post<LoginResponseDto>(
-    ApiConstant.login,
+    ApiConstant.loginApi,
     body: loginRequestDto.toJson(),
     onSuccess: (json) {
         if(kDebugMode){
@@ -32,7 +32,7 @@ class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataS
   @override
   Future<Either<Failure, Unit>> register(Map<String, dynamic> data) async =>
   await post<Unit>(
-    ApiConstant.register,
+    ApiConstant.registerApi,
     body: data,
     onSuccess: (_) => unit,
     statusCode: 201
@@ -41,7 +41,7 @@ class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataS
   @override
   Future<Either<Failure, Unit>> logout(Map<String, dynamic> data) async =>
   await post<Unit>(
-    ApiConstant.logout,
+    ApiConstant.logoutApi,
     body: data,
     onSuccess: (_) => unit
   );
@@ -49,7 +49,7 @@ class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataS
   @override
   Future<Either<Failure, RefreshTokenResponseDto>> refresh(RefreshTokenRequestDto refreshTokenDto) async =>
   await post<RefreshTokenResponseDto>(
-    ApiConstant.refresh,
+    ApiConstant.refreshApi,
     body: refreshTokenDto.toJson(),
     onSuccess: (json) => RefreshTokenResponseDto.fromJson(json)
   );
@@ -57,7 +57,7 @@ class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataS
   @override
   Future<Either<Failure, Unit>> verify(VerifyTokenRequestDto verifyTokenDto) async =>
   await post<Unit>(
-    ApiConstant.verifyToken,
+    ApiConstant.verifyTokenApi,
     body: verifyTokenDto.toJson(),
     onSuccess: (_) => unit
   );

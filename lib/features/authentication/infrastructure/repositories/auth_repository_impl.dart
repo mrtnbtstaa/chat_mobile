@@ -1,6 +1,5 @@
-import 'package:chat/features/authentication/infrastructure/dtos/request/verify_token_request_dto.dart';
+import 'package:chat/core/utils/shared_preferences_manager.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:http/http.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../domain/entities/auth_entity.dart';
@@ -8,10 +7,11 @@ import '../../domain/entities/token_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
 import '../datasources/local/i_local_auth_data_source.dart';
 import '../datasources/remote/i_remote_auth_data_source.dart';
-import '../dtos/request/refresh_token_request_dto.dart';
 import '../dtos/request/login_request_dto.dart';
 import '../dtos/request/logout_request_dto.dart';
+import '../dtos/request/refresh_token_request_dto.dart';
 import '../dtos/request/register_request_dto.dart';
+import '../dtos/request/verify_token_request_dto.dart';
 
 class AuthRepositoryImpl implements IAuthRepository {
 
@@ -40,6 +40,8 @@ class AuthRepositoryImpl implements IAuthRepository {
           dto.tokens.accessToken,
           dto.tokens.refreshToken
         );
+        // Saved user_id to the sharedPreferenceManager
+        SharedPreferencesManager.instance?.setString(dto.userId);
         return right(dto.toEntity());
       }
     );
@@ -56,7 +58,6 @@ class AuthRepositoryImpl implements IAuthRepository {
 
     return result.fold(
       (failure){
-        print("Message: ${failure.message}, error: ${failure.error}");
         return left(failure);
       },
       (unit) => Right(unit)

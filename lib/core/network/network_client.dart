@@ -78,7 +78,7 @@ abstract class NetworkClient {
         final file = http.MultipartFile.fromString('profile_image', imagePath);
         request.files.add(file);
       }catch(e){
-        return Left(ServerFailure(message: "Could not processed image", statusCode: 400));
+        return Left(ServerFailure(message: "Could not processed image", statusCode: 500));
       }
     }
 
@@ -98,7 +98,7 @@ abstract class NetworkClient {
       final int statusCode = 200,
       final Map<String, String>? headers,
       required T Function(dynamic) onSuccess,
-      required int id
+      required String id
     }
   ) async {
     return _request(
