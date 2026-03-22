@@ -24,10 +24,10 @@ final GoRouter router = GoRouter(
     // If we are still initializing, stay on the splash
     if(authStatus == AuthStatus.unknown) return AppRoutes.splash;
 
-    // If not logged in and not on the login page, force move to login
+    // If not authenticated, route to login
     if(authStatus == AuthStatus.unauthenticated) return AppRoutes.login;
 
-    // If logged in and trying to go to login or splash, move to home 
+    // If authenticated, route to home 
     if(authStatus == AuthStatus.authenticated) return AppRoutes.home;
 
     // Return null allows the user to stay on the current page

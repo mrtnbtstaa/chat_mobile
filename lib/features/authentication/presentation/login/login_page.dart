@@ -39,10 +39,9 @@ class LoginPage extends StatelessWidget {
                 fontSize: AppSizes.font32,
               ),
               BlocConsumer<LoginBloc, LoginState>(
-                listenWhen: (previous, current) => previous.loginStatus != previous.loginStatus,
+                // listenWhen: (previous, current) => previous.loginStatus != current.loginStatus,
                 listener: (context, state) {
                   if(state.loginStatus == LoginStatus.success){
-                    print("Can go login now!");
                     if(context.mounted) context.go(AppRoutes.home);
                   }
                   else if(state.loginStatus == LoginStatus.error){

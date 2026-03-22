@@ -1,3 +1,4 @@
+import 'package:chat/features/authentication/application/usecase/logout_usecase.dart';
 import 'package:chat/features/authentication/domain/params/access_token_param.dart';
 
 import '../../features/authentication/application/usecase/refresh_token_usecase.dart';
@@ -28,10 +29,10 @@ import '../usecases/base_usecase.dart';
 final sl = GetIt.instance;
 
 void initDependencies() {
-  _registerAuthDependencies();
+  _authDependencies();
 }
 
-void _registerAuthDependencies(){
+void _authDependencies(){
   // Core & External
   sl.registerLazySingleton(() => const FlutterSecureStorage());
   sl.registerLazySingleton(() => SessionManager(sl<ILocalAuthDataSource>()));
@@ -59,4 +60,5 @@ void _registerAuthDependencies(){
   sl.registerLazySingleton<BaseUsecase<Unit, RegisterParam>>(() => RegisterUsecase(authRepository: sl()));
   sl.registerLazySingleton<BaseUsecase<TokenEntity, RefreshTokenParam>>(() => RefreshTokenUsecase(authRepository: sl()));
   sl.registerLazySingleton<BaseUsecase<Unit, AccessTokenParam>>(() => VerifyTokenUsecase(authRepository: sl()));
+  sl.registerLazySingleton<BaseUsecase<Unit, String>>(() => LogoutUsecase(authRepository: sl()));
 }

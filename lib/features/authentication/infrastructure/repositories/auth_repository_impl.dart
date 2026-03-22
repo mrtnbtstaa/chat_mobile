@@ -56,7 +56,6 @@ class AuthRepositoryImpl implements IAuthRepository {
 
     return result.fold(
       (failure){
-        print("Message: ${failure.message}, error: ${failure.error}");
         return left(failure);
       },
       (unit) => Right(unit)
@@ -70,8 +69,14 @@ class AuthRepositoryImpl implements IAuthRepository {
     // Call the datasource logout and capture the result
     final result = await authRemoteDataSource.logout(request.toJson());
     return result.fold(
-      (failure) => left(failure),
-      (_) => right(unit)
+      (failure) async {
+        await authLocalDataSource.clearTokens();
+        return left(failure);
+      },
+      (_) async {
+        await authLocalDataSource.clearTokens();
+        return right(unit);
+      }
     );
   }
   

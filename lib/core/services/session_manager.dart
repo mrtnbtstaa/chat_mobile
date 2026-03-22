@@ -24,10 +24,8 @@ class SessionManager extends ValueNotifier<AuthStatus> {
 
         result.fold(
           (failure) async {
-            if(kDebugMode){print("verify token error: ${failure.message} and ${failure.error}");}
-            await _localAuthDataSource.clearTokens();
             logout();
-          },
+        },
           (_) {
             value = AuthStatus.authenticated;
           }
