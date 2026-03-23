@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat/core/services/session_manager.dart';
 import 'package:flutter/foundation.dart';
 
@@ -26,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<OnUsernameChanged>(_onUsernameChanged);
     on<OnPasswordChanged>(_onPasswordChanged);
     on<TogglePasswordVisibility>((event, emit) => emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible, loginStatus: LoginStatus.initial)));
-    on<LoginSubmitted>(_loginSubmitted);
+    on<LoginSubmitted>(_loginSubmitted, transformer: droppable());
   }
 
   FutureOr<void> _onUsernameChanged(OnUsernameChanged event, Emitter<LoginState> emit) {
@@ -56,9 +57,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final usernameError = event.username.
     validate("Username")
     .required()
+    .isAlphanumeric()
     .build();
 
-    final passwordError = event.username
+    final passwordError = event.password
     .validate("Password")
     .required()
     .build();
@@ -70,23 +72,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         state.copyWith(
           usernameError: () => usernameError,
           passwordError: () => passwordError,
-          loginStatus: LoginStatus.error
+          loginStatus: LoginStatus.initial
         )
       );
       return;
     }
+    
+    print("Never run!");
 
     emit(state.copyWith(
       loginStatus: LoginStatus.loading,
-      errorMessage: ""
     ));
 
     // Execute the usecase
     final result = await _loginUsecase(LoginParam(username: event.username, password: event.password));
 
-    return result.fold(
-      (failure) => emit(state.copyWith(errorMessage: failure.message, loginStatus: LoginStatus.error)), 
-      (entity){
+    return await result.fold(
+      (failure) {
+        if(kDebugMode){
+          print("\x1B[32mCurrent code: ${failure.code}");
+        }
+        emit(state.copyWith(loginStatus: LoginStatus.error, code: failure.code));
+      }, 
+      (entity) {
         sl<SessionManager>().login();
         emit(state.copyWith(userEntity: entity, loginStatus: LoginStatus.success));
       }

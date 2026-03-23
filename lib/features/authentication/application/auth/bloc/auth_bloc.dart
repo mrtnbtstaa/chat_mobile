@@ -1,9 +1,11 @@
 import 'dart:async';
 
-import 'package:chat/core/events/auth_events.dart';
-import 'package:chat/core/events/event_bus.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:chat/core/contracts/i_token_storage.dart';
+import 'package:chat/core/di/di.dart';
+import 'package:chat/core/services/session_manager.dart';
 import 'package:chat/core/usecases/base_usecase.dart';
-import 'package:chat/core/utils/flutter_secure_storage_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
@@ -13,23 +15,28 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final BaseUsecase<Unit, String> _logoutUseCase;
-  AuthBloc({required BaseUsecase<Unit, String> logoutUseCase}) : _logoutUseCase = logoutUseCase, super(AuthInitial()) {
-    
-    EventBus().on<LogoutEvent>().listen((event){
-      add(LogoutRequested());
-    });
-
-    on<LogoutRequested>(_onLogoutRequested);
+  final ITokenStorage _tokenStorage;
+  AuthBloc({required BaseUsecase<Unit, String> logoutUseCase, required ITokenStorage tokenStorage}) 
+  : _logoutUseCase = logoutUseCase, _tokenStorage = tokenStorage,
+  super(AuthInitial()) {
+    on<LogoutRequested>(_onLogoutRequested, transformer: droppable());
   }
 
   FutureOr<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
-
-    final refreshToken = await FlutterSecureStorageManager.instance?.getRefreshToken() ?? "";
+    
+    final refreshToken = await _tokenStorage.getRefreshToken() ?? "";
+    if(kDebugMode && refreshToken.isNotEmpty){
+      print("Logout requested event fired!");
+    }
     final result = await _logoutUseCase(refreshToken);
 
     result.fold(
-      (failure) => emit(AuthError()),
-      (_) => emit(Unauthenticated())
+      (failure) async{
+        emit(AuthError());
+      },
+      (_) async {
+        await sl<SessionManager>().logout();
+      }
     );
 
   }

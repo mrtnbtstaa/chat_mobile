@@ -78,7 +78,7 @@ abstract class NetworkClient {
         final file = http.MultipartFile.fromString('profile_image', imagePath);
         request.files.add(file);
       }catch(e){
-        return Left(ServerFailure(message: "Could not processed image", statusCode: 400));
+        return Left(ServerFailure(message: "Could not processed image", statusCode: 500));
       }
     }
 
@@ -98,12 +98,12 @@ abstract class NetworkClient {
       final int statusCode = 200,
       final Map<String, String>? headers,
       required T Function(dynamic) onSuccess,
-      required int id
+      required String id
     }
   ) async {
     return _request(
       () => http.get(
-        _uriParser("$endpoint/$id"), 
+        _uriParser("$endpoint$id"), 
         headers: headers ?? {'Content-Type': 'application/json'},
       ), 
       onSuccess: onSuccess,
@@ -160,14 +160,19 @@ abstract class NetworkClient {
 
 
       if(kDebugMode){
-        print("Response Status: ${response.statusCode}");
-        print("Response Status: ${response.body}");
+        print("\x1B[31mResponse Status: ${response.statusCode}");
+        print("\x1B[31mResponse Status: ${response.body}");
       }
 
       // Deserialize the response from the server
       final responseBody = response.body.isEmpty
         ? <String, dynamic>{}
         : jsonDecode(response.body);
+
+
+      if(kDebugMode){
+        print("\x1B[31mResponse Body: $responseBody");
+      }
 
 
       // Determine if the server returned a `success` or `error` payload structure
@@ -178,12 +183,13 @@ abstract class NetworkClient {
         return right(onSuccess(apiResponse.data));
       }else if(apiResponse is ErrorResponse){
         // Return a server failure which includes the details
-        print("Error: ${apiResponse.error.message}, ${apiResponse.error.details[0].field}");
+        print("\x1B[31mIssue: ${apiResponse.error.message}\n\x1B[31mField: ${apiResponse.error.details[0].field}, ${apiResponse.error.details[0].issue}");
         return left(
           ServerFailure(
             message: apiResponse.error.message,
             statusCode: response.statusCode,
-            error: apiResponse.error.details
+            error: apiResponse.error.details,
+            code: apiResponse.error.code
           )
         );
       }else{
@@ -195,10 +201,13 @@ abstract class NetworkClient {
       
 
     }catch(e){
-      print("!!!!Server failure: $e");
+      if(kDebugMode){
+        print("Server Failure: $e");
+      }
       return left(ServerFailure(
         message: e.toString(),
-        statusCode: statusCode
+        statusCode: statusCode,
+        code: "INTERNAL_SERVER_ERROR"
       ));
     }
   }

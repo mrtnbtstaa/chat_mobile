@@ -2,8 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class FlutterSecureStorageManager {
 
-  final String accessTokenKey = "access_token";
-  final String refreshTokenKey = "refresh_token";
+  final String _accessTokenKey = "access_token";
+  final String _refreshTokenKey = "refresh_token";
 
   static FlutterSecureStorageManager? _instance;
 
@@ -16,11 +16,11 @@ class FlutterSecureStorageManager {
   }
 
   static FlutterSecureStorageManager? get instance {
-    if(_instance == null) throw Exception("FlutterSecureStorageManager is not initialized. call initialize() first.");
+    if(_instance == null) throw Exception("FlutterSecureStorageManager is not initialized. Call initialize() first.");
     return _instance;
   } 
 
-  Future<String?> getAccessToken() => flutterSecureStorage.read(key: accessTokenKey);
-  Future<String?> getRefreshToken() => flutterSecureStorage.read(key: refreshTokenKey);
+  Future<String?> getAccessToken() async => await flutterSecureStorage.read(key: _accessTokenKey);
+  Future<String?> getRefreshToken() async => await flutterSecureStorage.read(key: _refreshTokenKey);
   Future<void> delete() => flutterSecureStorage.deleteAll();
 }

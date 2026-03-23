@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chat/core/extensions/int_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_interceptor/http_interceptor.dart';
@@ -9,6 +8,7 @@ import '../../features/authentication/domain/entities/token_entity.dart';
 import '../../features/authentication/domain/params/refresh_token_param.dart';
 import '../constants/api_constant.dart';
 import '../di/di.dart';
+import '../extensions/int_extension.dart';
 import '../services/session_manager.dart';
 import '../usecases/base_usecase.dart';
 
@@ -27,9 +27,9 @@ class AuthInterceptor extends InterceptorContract {
 
   bool _isWhiteListed(String path){
     final List<String> whitelist = [
-      ApiConstant.login, 
-      ApiConstant.register, 
-      ApiConstant.refresh, 
+      ApiConstant.loginApi, 
+      ApiConstant.registerApi, 
+      ApiConstant.refreshApi, 
     ];
 
     return whitelist.any((pattern) => path.contains(pattern));
@@ -38,11 +38,11 @@ class AuthInterceptor extends InterceptorContract {
   @override
   FutureOr<BaseRequest> interceptRequest({required BaseRequest request}) async {
 
+
     // To avoid adding headers to the whitelisted
     if(_isWhiteListed(request.url.path)) return request;
 
     if(_isRefreshing){
-      print("Request for ${request.url.path} is waiting for token refresh...");
       await _refreshCompleter?.future;
     }
 
@@ -51,12 +51,7 @@ class AuthInterceptor extends InterceptorContract {
 
     // Check if the token is not null or not empty
     if(accessToken != null && accessToken.isNotEmpty){
-      request.headers.update(
-        "Authorization", 
-        (value) => "Bearer $accessToken",
-        ifAbsent: () => "Bearer $accessToken"
-      );
-        // request.headers["Authorization"] = "Bearer $accessToken";
+      request.headers["Authorization"] = "Bearer $accessToken";
     }
 
 

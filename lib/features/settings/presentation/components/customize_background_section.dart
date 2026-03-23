@@ -1,6 +1,8 @@
 import 'package:chat/core/events/auth_events.dart';
 import 'package:chat/core/events/event_bus.dart';
+import 'package:chat/features/authentication/application/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import '../../../../core/common_widgets/common_image.dart';
@@ -67,7 +69,7 @@ const CustomizeBackgroundSection({ super.key });
             SettingListTile(
               iconData: BoxIcons.bx_log_out,
               text: "Logout",
-              onTap: () => EventBus().publish(LogoutEvent())
+              onTap: () => context.read<AuthBloc>().add(LogoutRequested())
             )
           ]
         )

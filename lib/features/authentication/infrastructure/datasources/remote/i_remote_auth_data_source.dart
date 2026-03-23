@@ -1,15 +1,17 @@
-import 'package:chat/core/errors/failure.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/request/refresh_token_request_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/request/login_request_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/request/verify_token_request_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/response/login_response_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/response/refresh_token_response_dto.dart';
+import 'package:chat/features/authentication/infrastructure/dtos/request/logout_request_dto.dart';
+
+import '../../../../../core/errors/failure.dart';
+import '../../dtos/request/refresh_token_request_dto.dart';
+import '../../dtos/request/login_request_dto.dart';
+import '../../dtos/request/verify_token_request_dto.dart';
+import '../../dtos/response/login_response_dto.dart';
+import '../../dtos/response/refresh_token_response_dto.dart';
 import 'package:fpdart/fpdart.dart';
 
 abstract interface class IRemoteAuthDataSource {
   Future<Either<Failure, LoginResponseDto>> login(LoginRequestDto loginRequestDto);
   Future<Either<Failure, Unit>> register(Map<String, dynamic> data);
-  Future<Either<Failure, Unit>> logout(Map<String, dynamic> data);
+  Future<Either<Failure, Unit>> logout(LogoutRequestDto logoutRequestDto);
   Future<Either<Failure, RefreshTokenResponseDto>> refresh(RefreshTokenRequestDto refreshTokenDto);
   Future<Either<Failure, Unit>> verify(VerifyTokenRequestDto verifyTokenDto);
 }

@@ -6,7 +6,6 @@ class VerifyTokenRequestDto {
     required this.accessToken
   });
 
-
   Map<String, dynamic> toJson() => {
     "token": accessToken
   };

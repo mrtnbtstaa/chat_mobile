@@ -1,3 +1,4 @@
+import 'package:chat/core/common_widgets/common_show_dialog_builder.dart';
 import 'package:chat/features/authentication/domain/enums/login_status.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,23 +38,19 @@ class LoginPage extends StatelessWidget {
                 fontSize: AppSizes.font32,
               ),
               BlocConsumer<LoginBloc, LoginState>(
-                // listenWhen: (previous, current) => previous.loginStatus != current.loginStatus,
+                listenWhen: (previous, current) => previous.loginStatus != current.loginStatus,
                 listener: (context, state) {
                   if(state.loginStatus == LoginStatus.error){
-                    ScaffoldMessenger.of(context)
-                    ..removeCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
-                      content: CommonText(text: state.errorMessage ?? "Unknown error")
-                    ));
+                    commonShowDialogBuilder(context, state.code ?? "");
                   }
                 },
                 builder: (context, state){
                   if(kDebugMode){
-                    print("\x1B[32mCurrent state: ${state.loginStatus}");
+                    print("\x1B[32mCurrent state: ${state.loginStatus} and ${state.code}");
                   }
                   return FormSection();
                 }
-              )
+              ),
             ],
           ),
         ],

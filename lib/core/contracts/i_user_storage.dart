@@ -1,4 +1,4 @@
-abstract interface class IUserLocalDataSource {
+abstract interface class IUserStorage {
 
   Future<void> saveUserId(String userId);
   Future<String?> getUserId();
