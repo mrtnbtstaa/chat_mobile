@@ -1,25 +1,29 @@
-import 'package:chat/features/authentication/domain/entities/token_entity.dart';
-import 'package:chat/features/authentication/infrastructure/datasources/local/i_local_auth_data_source.dart';
-import 'package:chat/features/authentication/infrastructure/datasources/remote/i_remote_auth_data_source.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/request/access_token_request_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/request/logout_request_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/request/register_request_dto.dart';
+import 'package:chat/core/contracts/i_token_storage.dart';
+import 'package:chat/core/contracts/i_user_storage.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../domain/entities/auth_entity.dart';
+import '../../domain/entities/token_entity.dart';
 import '../../domain/repositories/i_auth_repository.dart';
+import '../datasources/remote/i_remote_auth_data_source.dart';
 import '../dtos/request/login_request_dto.dart';
-import 'package:fpdart/fpdart.dart';
+import '../dtos/request/logout_request_dto.dart';
+import '../dtos/request/refresh_token_request_dto.dart';
+import '../dtos/request/register_request_dto.dart';
+import '../dtos/request/verify_token_request_dto.dart';
 
 class AuthRepositoryImpl implements IAuthRepository {
 
-  final IRemoteAuthDataSource authRemoteDataSource;
-  final ILocalAuthDataSource authLocalDataSource;
+  final IRemoteAuthDataSource _authRemoteDataSource;
+  final ITokenStorage _tokenStorage;
+  final IUserStorage _userStorage;
 
-  const AuthRepositoryImpl({
-    required this.authRemoteDataSource,
-    required this.authLocalDataSource
-  });
+  const AuthRepositoryImpl(
+    this._authRemoteDataSource,
+    this._tokenStorage,
+    this._userStorage
+  );
 
   @override
   Future<Either<Failure, AuthEntity>> login(String username, String password) async {
@@ -28,16 +32,24 @@ class AuthRepositoryImpl implements IAuthRepository {
     final request = LoginRequestDto(username: username, password: password);
 
     // Call the datasource login and capture the result
-    final result = await authRemoteDataSource.login(request.toJson());
+    final result = await _authRemoteDataSource.login(request);
 
-    // Mapped the result to UserEntity()
-    return result.fold(
-      (failure) => left(failure),
+    return await result.fold(
+      (failure) async => left(failure),
       (dto) async {
         // Saved access and refresh token to flutter secure storage
-        await authLocalDataSource.cacheToken(
+        await _tokenStorage.cacheToken(
           dto.tokens.accessToken,
           dto.tokens.refreshToken
+        );
+
+        await _userStorage.saveUser(
+          dto.userId,
+          dto.username,
+          dto.firstname,
+          dto.lastname,
+          dto.profile,
+          dto.isOnline
         );
         return right(dto.toEntity());
       }
@@ -51,10 +63,10 @@ class AuthRepositoryImpl implements IAuthRepository {
     final request = RegisterRequestDto(username: username, password: password, confirmPassword: confirmPassword, profile: profile);
 
     // Call the datasource register and capture the result
-    final result = await authRemoteDataSource.register(request.toJson());
+    final result = await _authRemoteDataSource.register(request.toJson());
 
-    return result.fold(
-      (failure) => left(failure),
+    return await result.fold(
+      (failure) async => left(failure),
       (unit) => Right(unit)
     );
   }
@@ -64,23 +76,41 @@ class AuthRepositoryImpl implements IAuthRepository {
     // Create a request DTO
     final request = LogoutRequestDto(refreshToken: refreshToken);
     // Call the datasource logout and capture the result
-    final result = await authRemoteDataSource.logout(request.toJson());
-    return result.fold(
-      (failure) => left(failure),
-      (_) => right(unit)
+    final result = await _authRemoteDataSource.logout(request);
+    return await result.fold(
+      (failure) async => left(failure),
+      (_) async => right(unit)
     );
   }
   
   @override
   Future<Either<Failure, TokenEntity>> refreshToken(String refreshToken) async {
+
     // Create a request DTO
-    final request = AccessTokenRequestDto(refreshToken);
-     // Call the datasource refresh and capture the result
-    final result = await authRemoteDataSource.refresh(request.toJson());
-    return result.fold(
+    final request = RefreshTokenRequestDto(refreshToken);
+
+    // Call the datasource refresh and capture the result
+    final result = await _authRemoteDataSource.refresh(request);
+    return await result.fold(
       (failure) => left(failure),
       (dto) => right(dto.toEntity())
     );
+  }
+  
+  @override
+  Future<Either<Failure, Unit>> verifyToken(String accessToken) async {
+    
+    // Create a request DTO
+    final request = VerifyTokenRequestDto(accessToken: accessToken);
+
+    // Call the datasource verify and capture the result
+    final result = await _authRemoteDataSource.verify(request);
+
+    return await result.fold(
+      (failure) => left(failure), 
+      (_) => right(unit)
+    );
+
   }
   
 

@@ -88,6 +88,7 @@ class CommonTextField extends StatelessWidget {
                     )
                   ),
                   errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
                   hintText: hintText,
                   hintStyle: TextStyle(
                     letterSpacing: AppSizes.size2,
@@ -95,7 +96,6 @@ class CommonTextField extends StatelessWidget {
                     color: AppColors.primaryTextColor
                   ),
                   hintFadeDuration: 1000.milliseconds(),
-                  filled: true,
                   fillColor: Colors.transparent,
                   focusColor: Colors.transparent,
                   hoverColor: Colors.transparent
@@ -120,70 +120,58 @@ class CommonTextField extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Column(
-          children: [
-            GlassContainer(
-              padding: padding ?? AppInsets.hv8,
-              child: TextFormField(
-                controller: controller,
-                validator: validator,
-                style: TextStyle(
-                  color: AppColors.primaryTextColor
-                ),
-                textInputAction: textInputAction ?? TextInputAction.next,
-                keyboardType: textInputType ?? TextInputType.text,
-                onChanged: onChanged,
-                obscureText: isObsecure,
-                decoration: InputDecoration(
-                  errorText: errorText,
-                  prefixIcon: prefixIconWidget,
-                  suffixIcon: hasSuffixIcon ? IconButton(
-                    onPressed: onSuffixButtonPressed,
-                    icon: Icon(iconSuffixData, color: AppColors.primaryTextColor),
-                  ) : SizedBox.shrink(),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
-                    borderSide: BorderSide(
-                      color: Colors.transparent
-                    )
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
-                    borderSide: BorderSide(
-                      color: Colors.transparent
-                    )
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
-                    borderSide: BorderSide(
-                      color: AppColors.secondaryColor
-                    )
-                  ),
-                  errorBorder: InputBorder.none,
-                  hintText: hintText,
-                  hintStyle: TextStyle(
-                    letterSpacing: AppSizes.size2,
-                    fontSize: AppSizes.font14,
-                    color: AppColors.primaryTextColor
-                  ),
-                  hintFadeDuration: 1000.milliseconds(),
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  hoverColor: Colors.transparent
-                )
+      child: GlassContainer(
+        padding: padding ?? AppInsets.hv8,
+        child: TextFormField(
+          controller: controller,
+          validator: validator,
+          style: TextStyle(
+            color: AppColors.primaryTextColor
+          ),
+          textInputAction: textInputAction ?? TextInputAction.next,
+          keyboardType: textInputType ?? TextInputType.text,
+          onChanged: onChanged,
+          obscureText: isObsecure,
+          decoration: InputDecoration(
+            contentPadding: contentPadding ?? EdgeInsets.zero,
+            prefixIcon: prefixIconWidget,
+            suffixIcon: hasSuffixIcon ? IconButton(
+              onPressed: onSuffixButtonPressed,
+              icon: Icon(iconSuffixData, color: AppColors.primaryTextColor),
+            ) : SizedBox.shrink(),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
+              borderSide: BorderSide(
+                color: Colors.transparent
               )
             ),
-            // Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: CommonText(
-            //     text: errorText ?? "Hehehe",
-            //     fontColor: AppColors.errorRed
-            //   )
-            // )
-          ]
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
+              borderSide: BorderSide(
+                color: Colors.transparent
+              )
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
+              borderSide: BorderSide(
+                color: AppColors.secondaryColor
+              )
+            ),
+            errorBorder: InputBorder.none,
+            hintText: hintText,
+            hintStyle: TextStyle(
+              letterSpacing: AppSizes.size2,
+              fontSize: AppSizes.font14,
+              color: AppColors.primaryTextColor
+            ),
+            hintFadeDuration: 1000.milliseconds(),
+            focusedErrorBorder: InputBorder.none,
+            errorStyle: TextStyle(color: AppColors.bgColor02),
+            filled: true,
+            fillColor: Colors.transparent,
+            focusColor: Colors.transparent,
+            hoverColor: Colors.transparent
+          )
         )
       )
     );

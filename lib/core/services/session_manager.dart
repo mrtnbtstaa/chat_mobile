@@ -1,23 +1,57 @@
-import 'package:chat/features/authentication/infrastructure/datasources/local/i_local_auth_data_source.dart';
+import 'package:chat/core/contracts/i_token_storage.dart';
+import 'package:chat/core/contracts/i_user_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
+
+import '../../features/authentication/domain/params/access_token_param.dart';
+import '../di/di.dart';
+import '../usecases/base_usecase.dart';
 
 enum AuthStatus {authenticated, unauthenticated, unknown}
 
 class SessionManager extends ValueNotifier<AuthStatus> {
-  final ILocalAuthDataSource _localAuthDataSource;
-  SessionManager(this._localAuthDataSource) : super(AuthStatus.unknown);
+
+  final ITokenStorage _tokenStorage;
+  final IUserStorage _userStorage;
+
+  SessionManager(this._tokenStorage, this._userStorage) : super(AuthStatus.unknown);
 
   Future<void> initialize() async {
-    final token = await _localAuthDataSource.getAccessToken();
+
+    final token = await _tokenStorage.getAccessToken();
 
     if(token != null && token.isNotEmpty){
-      value = AuthStatus.authenticated;
+        
+        // Call the verify token usecase
+        final result = await sl<BaseUsecase<Unit, AccessTokenParam>>()(AccessTokenParam(accessToken: token));
+
+        result.fold(
+          (failure) {
+            logout();
+          },
+          (_) {
+            value = AuthStatus.authenticated;
+          }
+        );
+
     }else{
       value = AuthStatus.unauthenticated;
+    }
+    if(kDebugMode){
+      print("Current auth status: $value");
     }
 
   }
 
   void login() => value = AuthStatus.authenticated;
-  void logout() => value = AuthStatus.unauthenticated;
+  Future<void> logout() async {
+    if(kDebugMode){
+      print("Logout method triggered!");
+    }
+    await _userStorage.clearUser();
+    await _tokenStorage.clearTokens();
+    value = AuthStatus.unauthenticated;
+  }
+
+
 }

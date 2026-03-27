@@ -1,14 +1,14 @@
 import 'package:chat/features/authentication/domain/entities/token_entity.dart';
 
-class TokenDto extends TokenEntity{
+class RefreshTokenResponseDto extends TokenEntity{
 
-  const TokenDto({
+  const RefreshTokenResponseDto({
     required super.accessToken,
     required super.refreshToken
   });
 
-  factory TokenDto.fromJson(Map<String, dynamic> json){
-    return TokenDto(accessToken: json["access_token"], refreshToken: json["refresh_token"]);
+  factory RefreshTokenResponseDto.fromJson(Map<String, dynamic> json){
+    return RefreshTokenResponseDto(accessToken: json["access_token"], refreshToken: json["refresh_token"]);
   }
 
   Map<String, dynamic> toJson() => {

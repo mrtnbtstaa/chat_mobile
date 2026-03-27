@@ -1,4 +1,8 @@
+import 'package:chat/core/events/auth_events.dart';
+import 'package:chat/core/events/event_bus.dart';
+import 'package:chat/features/authentication/application/auth/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import '../../../../core/common_widgets/common_image.dart';
@@ -37,14 +41,12 @@ const CustomizeBackgroundSection({ super.key });
               text: "Choose Background",
               onTap: (){},
               withTrailing: true,
-              trailing: Flexible(
-                child: Padding(
-                  padding: AppInsets.v4,
-                  child: ClipRRect(
-                    borderRadius: BorderRadiusGeometry.circular(AppSizes.size8),
-                    child: CommonImage(
-                      image: AssetImage(AppImages.mountain)
-                    )
+              trailing: Padding(
+                padding: AppInsets.v4,
+                child: ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(AppSizes.size8),
+                  child: CommonImage(
+                    image: AssetImage(AppImages.mountain)
                   )
                 )
               )
@@ -63,6 +65,11 @@ const CustomizeBackgroundSection({ super.key });
               iconData: BoxIcons.bx_color,
               text: "Customize Glass Color",
               onTap: (){},
+            ),
+            SettingListTile(
+              iconData: BoxIcons.bx_log_out,
+              text: "Logout",
+              onTap: () => context.read<AuthBloc>().add(LogoutRequested())
             )
           ]
         )

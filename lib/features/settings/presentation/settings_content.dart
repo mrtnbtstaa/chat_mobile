@@ -17,6 +17,8 @@ const SettingsContent({ super.key });
   Widget build(BuildContext context){
     return CommonScaffold(
       body: Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.bottomCenter,
         children: <Widget>[
           CommonContainerBackground(),
           GlassContainer(

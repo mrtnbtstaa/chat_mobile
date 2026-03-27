@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chat/core/router/app_routes.dart';
 import 'package:chat/features/authentication/application/register/bloc/register_bloc.dart';
 import 'package:chat/features/authentication/domain/enums/register_status.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/style/app_images.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class RegisterPage extends StatelessWidget {
                 BlocConsumer<RegisterBloc, RegisterState>(
                   listener: (context, state) {
                     if(state.registerStatus == RegisterStatus.success){
-                      context.pushNamed(AppRoutes.home);
+                      context.go(AppRoutes.home);
                     }else if(state.registerStatus == RegisterStatus.error){
                       // ScaffoldMessenger.of(context)
                       // ..removeCurrentSnackBar()
