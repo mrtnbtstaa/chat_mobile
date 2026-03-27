@@ -22,7 +22,7 @@ class FieldContent extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     final controllers = context.read<LoginController>();
-    final loginBloc = context.read<LoginBloc>();
+    final loginBloc = context.watch<LoginBloc>();
     final state = loginBloc.state;
     final bool isLoading = state.loginStatus == LoginStatus.loading;
     return Form(
@@ -35,27 +35,32 @@ class FieldContent extends StatelessWidget {
             text: "Username",
             onChanged: (username) => loginBloc.add(OnUsernameChanged(username: username)),
             controller: controllers.usernameController,
-            errorText: state.usernameError ?? "",
+            errorText: loginBloc.state.usernameError ?? "",
           ),
           CommonTextField(
             hintText: "********",
             onChanged: (password) => loginBloc.add(OnPasswordChanged(password: password)),
             text: "Password",
             controller: controllers.passwordController,
-            isObsecure: !state.isPasswordVisible,
+            isObsecure: !loginBloc.state.isPasswordVisible,
             hasSuffixIcon: true,
-            iconSuffixData: state.isPasswordVisible ? Iconsax.eye_bold : Iconsax.eye_slash_bold,
+            iconSuffixData: loginBloc.state.isPasswordVisible ? Iconsax.eye_bold : Iconsax.eye_slash_bold,
             onSuffixButtonPressed: () => loginBloc.add(TogglePasswordVisibility()),
             textInputAction: TextInputAction.done,
-            errorText: state.passwordError ?? "",
+            errorText: loginBloc.state.passwordError ?? "",
           ),
           CommonElevatedButton(
             width: context.width,
             height: AppSizes.size64,
             elevatedPadding: AppInsets.h4,
-            onButtonPressed: () => isLoading ? null : {
+            onButtonPressed: () => isLoading ? null : {              // commonShowDialog(context),
               if(controllers.formKey.currentState?.validate() ?? true){
-                loginBloc.add(LoginSubmitted(username: controllers.usernameController.text, password: controllers.passwordController.text))
+                loginBloc.add(
+                  LoginSubmitted(
+                    username: controllers.usernameController.text,
+                    password: controllers.passwordController.text
+                  )
+                )
               }
             },
             child_: GlassContainer(

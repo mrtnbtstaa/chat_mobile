@@ -1,5 +1,5 @@
 import 'package:chat/features/authentication/infrastructure/dtos/response/login_response_dto.dart';
-import 'package:chat/features/authentication/infrastructure/dtos/token_dto.dart';
+import 'package:chat/features/authentication/infrastructure/dtos/response/refresh_token_response_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 void main(){
 
@@ -7,7 +7,7 @@ void main(){
     // Arrange
     final dto = LoginResponseDto(
       userId: "123",
-      tokens: TokenDto(accessToken: "access123", refreshToken: "refresh123"),
+      tokens: RefreshTokenResponseDto(accessToken: "access123", refreshToken: "refresh123"),
       username: "martin18",
       profile: "qweqw.png"
     );

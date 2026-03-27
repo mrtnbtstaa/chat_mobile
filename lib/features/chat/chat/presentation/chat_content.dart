@@ -8,50 +8,17 @@ import '../../../../core/common_widgets/common_scaffold.dart';
 import 'components/chat_header_section.dart';
 import 'components/listview_chat_section.dart';
 
-class ChatContent extends StatefulWidget {
-
-  const ChatContent({ super.key });
-
-  @override
-  State<ChatContent> createState() => _ChatContentState();
-}
-
-class _ChatContentState extends State<ChatContent> {
-
-  late ScrollController _scrollController;
-  
-  @override
-  void initState() {
-    _scrollController = ScrollController()..addListener(_onScroll);
-    super.initState();
-  }
-
-  void _onScroll(){
-    if(_isBottom){} // Call bloc to load more chat
-  }
-
-  bool get _isBottom{
-    if(!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    // Only trigger when 90% through the list
-    return currentScroll >= (maxScroll * 0.9);
-  }
+class ChatContent extends StatelessWidget {
+const ChatContent({ super.key });
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return CommonScaffold(
       body: GestureDetector(
         onTap: () => context.unfocus(),
         child: Stack(
-          fit: StackFit.passthrough,
-          alignment: Alignment.bottomCenter,
+          fit: StackFit.expand,
+          alignment: Alignment.topCenter,
           children: <Widget>[
             CommonContainerBackground(),
             GlassContainer(
@@ -63,16 +30,13 @@ class _ChatContentState extends State<ChatContent> {
                 child: Column(
                   children: <Widget>[
                     ChatHeaderSection(
-                      onSearchTap: (){},
-                      onGroupTap: (){},
+                      onSearchTap: () {},
+                      onGroupTap: () {}
                     ),
-                    PrimaryScrollController(
-                      controller: _scrollController,
-                      child: ListviewChatSection()
-                    )
+                    ListviewChatSection(),
                   ]
                 )
-              )
+              ),
             )
           ]
         )

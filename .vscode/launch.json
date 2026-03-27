@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "App (Dev)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define-from-file", "config/dev.json"]
+        },
+        {
+            "name": "App (Prod)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define-from-file", "config/prod.json"]
+        },
+        {
+            "name": "Phone 1",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define-from-file", "config/dev.json"],
+            "deviceId": "emulator-5554"
+        },
+        {
+            "name": "Phone 2",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define-from-file", "config/dev.json"],
+            "deviceId": "emulator-5556"
+        },
+    ],
+    "compounds": [
+        {
+            "name": "All Devices",
+            "configurations": ["Phone 1", "Phone 2"]
+        }
+    ]
+}

@@ -45,7 +45,7 @@ class GlassContainer extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: sigmaX ?? 6.0, sigmaY: sigmaY ?? 6.0),
           child: Container(
-            alignment: alignmentGeometry ?? Alignment.center,
+            alignment: alignmentGeometry,
             padding: padding ?? EdgeInsets.zero,
             margin: margin ?? EdgeInsets.zero,
             width: width,

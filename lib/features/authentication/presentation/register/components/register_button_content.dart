@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:chat/features/authentication/domain/enums/register_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +29,6 @@ class RegisterButtonContent extends StatelessWidget {
       height: AppSizes.size64,
       elevatedPadding: AppInsets.h4,
       onButtonPressed: () => isLoading ? null : {
-        log("${controllers.username.text}, ${controllers.password.text}, ${controllers.confirmPassword.text}"),
         if(controllers.formKey.currentState?.validate() ?? true){
           context.read<RegisterBloc>().add(RegisterSubmitted(
             username: controllers.username.text,

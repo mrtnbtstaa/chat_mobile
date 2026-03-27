@@ -61,20 +61,20 @@ class BottomTabbar extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: e.index == currentIndex ? AppColors.circleColor : Colors.transparent,
                           borderRadius: BorderRadius.circular(AppSizes.size8)
-                        ),
-                      ),
+                        )
+                      )
                     ),
                     CommonIcon(
                       iconData: IconMapper.getIcon(e.iconKey),
-                      iconColor: e.index == currentIndex ? AppColors.primaryTextColor : AppColors.primaryTextColor.withValues(alpha: 0.5),
-                    ),
-                  ],
-                ),
+                      iconColor: e.index == currentIndex ? AppColors.primaryTextColor : AppColors.primaryTextColor.withValues(alpha: 0.5)
+                    )
+                  ]
+                )
               )
-            ],
+            ]
           )
-        ).toList(),
-      ),
+        ).toList()
+      )
     );
   }
 }

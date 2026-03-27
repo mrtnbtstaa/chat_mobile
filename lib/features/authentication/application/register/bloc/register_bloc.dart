@@ -16,8 +16,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   final MediaService _mediaService; 
 
-  RegisterBloc({required MediaService mediaService}) : 
-    _mediaService = mediaService,
+  RegisterBloc({required MediaService mediaService}) : _mediaService = mediaService,
     super(RegisterState()) {
     on<TogglePasswordVisibility>((event, emit) => emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible)));
     on<ToggleConfirmPasswordVisibility>((event, emit) => emit(state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible)));
@@ -63,7 +62,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       return; // Exit early to not process the API
     }
 
-    // If valid show the loading and call the API
+    // If valid show the loading
     emit(state.copyWith(
       registerStatus: RegisterStatus.loading,
       errorMessage: ""
