@@ -1,4 +1,6 @@
 import 'package:chat/core/common_widgets/common_divider.dart';
+import 'package:chat/core/extensions/string_extension.dart';
+import 'package:chat/features/chat/chat/domain/entities/sub_entities/chat_result_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,15 +15,21 @@ class ChatItem extends StatelessWidget {
 
   const ChatItem({ 
     super.key,
+    required this.chatEntity,
   });
+
+  final ChatResultEntity chatEntity;
 
   @override
   Widget build(BuildContext context){
     return Column(
       children: [
         ListTile(
-          onTap: () => context.go(AppRoutes.chatMessage),
+          onTap: () {
+            context.pushNamed(AppRoutes.chatMessage, extra: chatEntity);
+          },
           leading: Stack(
+            alignment: Alignment.topCenter,
             children: [
               CircleAvatar(
                 backgroundImage: AssetImage(AppImages.profile),
@@ -35,23 +43,24 @@ class ChatItem extends StatelessWidget {
                   width: 12.0,
                   height: 12.0,
                   boxDecoration: BoxDecoration(
-                    color: Colors.green,
+                    color: chatEntity.recipient.isOnline ?AppColors.accentColor : AppColors.errorRed,
                     shape: BoxShape.circle
                   )
                 )
               )
             ]
           ),
-          title: CommonText(text: "John Doe"),
+          title: CommonText(text: chatEntity.recipient.displayFullName.capitalize),
           subtitle: CommonText(
-            text: "Hello world qwewqewqeqweqwewqeqwewqeqwewqeqwewqewqe",
+            text: "${chatEntity.recipient.username}: ${chatEntity.lastMessage?.text ?? 'Start a conversation'}",
             wrap: true,
             textOverflow: TextOverflow.ellipsis,
           ),
           trailing: Stack(
             clipBehavior: Clip.none,
             children: [
-              CommonText(text: "09:30 PM"),
+              CommonText(text: chatEntity.lastMessage?.lastMessageAt ?? ""),
+              chatEntity.unreadCount != 0 ?
               Positioned(
                 right: -AppSizes.size8,
                 top: -AppSizes.size16 - 2,
@@ -63,9 +72,10 @@ class ChatItem extends StatelessWidget {
                     color: AppColors.errorRed,
                     shape: BoxShape.circle
                   ),
-                  child: CommonText(text: "2"),
+                  child: CommonText(text: chatEntity.unreadCount.toString()),
                 )
               )
+              : SizedBox.shrink()
             ]
           )
         ),

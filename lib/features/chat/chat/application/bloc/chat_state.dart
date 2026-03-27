@@ -1,16 +1,27 @@
 part of 'chat_bloc.dart';
 
 sealed class ChatState extends Equatable {
-  const ChatState();
+
+  final ChatEntity? chatEntity;
+
+  const ChatState({this.chatEntity});
   
   @override
-  List<Object> get props => [];
+  List<Object> get props => [?chatEntity];
 }
 
 final class ChatInitial extends ChatState {}
 final class ChatLoading extends ChatState {}
-final class ChatSuccess extends ChatState {
-  const ChatSuccess();
+final class ChatConnected extends ChatState{
+
+  const ChatConnected({super.chatEntity});
+
+  ChatConnected copyWith({
+    ChatEntity? chatEntity
+  }){
+    return ChatConnected(chatEntity: chatEntity ?? this.chatEntity);
+  }
+
 }
 final class ChatError extends ChatState {
 

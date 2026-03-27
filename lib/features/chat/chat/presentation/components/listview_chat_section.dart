@@ -1,28 +1,43 @@
-import 'package:chat/core/di/di.dart';
+import 'package:chat/core/common_widgets/common_loading_indicator.dart';
 import 'package:chat/core/style/app_insets.dart';
-import 'package:chat/core/usecases/base_usecase.dart';
-import 'package:chat/core/utils/shared_preferences_manager.dart';
 import 'package:chat/features/chat/chat/application/bloc/chat_bloc.dart';
-import 'package:chat/features/chat/chat/domain/entities/chat_entity.dart';
-import 'package:chat/features/chat/chat/domain/params/user_id_param.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'chat_item.dart';
 
 class ListviewChatSection extends StatelessWidget {
 
-  const ListviewChatSection({ 
-    super.key
-  });
+  const ListviewChatSection({super.key});
 
   @override
-  Widget build(BuildContext context){
-    final chatBloc = context.read<ChatBloc>();
+  Widget build(BuildContext context) {
     return Expanded(
-      child: Padding(
-        padding: AppInsets.v4,
-        child: ChatItem(),
-      )
+      child: BlocBuilder<ChatBloc, ChatState>(
+        builder: (context, state) {
+          
+          if(state is ChatLoading){
+            return Center(
+              child: CommonLoadingIndicator(),
+            );
+          }
+
+          if(state is ChatConnected){
+            final results = state.chatEntity?.results;
+            return ListView.builder(
+              padding: AppInsets.v4,
+              shrinkWrap: true,
+              itemCount: results?.length,
+              itemBuilder: (context, index) {
+                final chat = results?[index];
+                return ChatItem(chatEntity: chat!);
+              },
+            );
+          }
+
+          return SizedBox.shrink();
+
+        },
+      ),
     );
   }
 }

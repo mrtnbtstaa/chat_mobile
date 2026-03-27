@@ -7,20 +7,35 @@ class UserLocalDataSourceImpl implements IUserStorage {
 
   UserLocalDataSourceImpl(this._storage);
 
-  final _userIdKey = "user_id";
-
   @override
-  Future<void> clearUserId() async {
-    await _storage.remove(_userIdKey);
+  Future<void> clearUser() async {
+    await _storage.clear();
   }
 
   @override
-  Future<String?> getUserId() async {
-    return await _storage.getString(_userIdKey);
+  Future<String?> getUserInfo(String key) async {
+    return await _storage.getString(key);
   }
-
+  
   @override
-  Future<void> saveUserId(String userId) async {
-    await _storage.saveString(_userIdKey, userId);
+  Future<void> saveUser(
+    String userId,
+    String username,
+    String firstname,
+    String lastname,
+    String? profileImage,
+    bool isOnline
+  ) async {
+    await _storage.saveString("user_id", userId);
+    await _storage.saveString("username", userId);
+    await _storage.saveString("first_name", userId);
+    await _storage.saveString("last_name", userId);
+    await _storage.saveString("profile_image", userId);
+    await _storage.saveBool("is_online", isOnline);
   }
+  
+  @override
+  Future<bool?> getUserStatus(String key) async => await _storage.getBool(key);
+
+ 
 }

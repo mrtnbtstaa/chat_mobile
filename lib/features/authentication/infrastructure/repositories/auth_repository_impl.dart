@@ -43,7 +43,14 @@ class AuthRepositoryImpl implements IAuthRepository {
           dto.tokens.refreshToken
         );
 
-        await _userStorage.saveUserId(dto.userId);
+        await _userStorage.saveUser(
+          dto.userId,
+          dto.username,
+          dto.firstname,
+          dto.lastname,
+          dto.profile,
+          dto.isOnline
+        );
         return right(dto.toEntity());
       }
     );

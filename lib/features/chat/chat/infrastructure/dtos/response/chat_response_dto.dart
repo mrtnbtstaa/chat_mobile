@@ -1,5 +1,5 @@
 import 'package:chat/features/chat/chat/domain/entities/chat_entity.dart';
-import 'package:chat/features/chat/chat/domain/entities/sub_entities/chat_result_entity.dart';
+import 'package:chat/features/chat/chat/infrastructure/dtos/response/chat_result_response_dto.dart';
 
 class ChatResponseDto extends ChatEntity {
 
@@ -10,12 +10,13 @@ class ChatResponseDto extends ChatEntity {
   });
 
   factory ChatResponseDto.fromJson(Map<String, dynamic> json){
+
+    print("Chat response dto: ${json["results"]}");
+
     return ChatResponseDto(
       previous: json["previous"] ?? "",
       next: json["next"] ?? "",
-      results: json["results"] != null ? 
-      (json["results"] as List).map((i) => ChatResultEntity.fromJson(i)).toList()
-      : []
+      results: (json["results"] as List).map((c) => ChatResultResponseDto.fromJson(c)).toList()
     );
   }
 

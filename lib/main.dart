@@ -14,6 +14,7 @@ import 'core/router/app_router.dart';
 import 'core/services/session_manager.dart';
 import 'core/utils/flutter_secure_storage_manager.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,7 +29,6 @@ void main() async {
   FlutterSecureStorageManager.initialize(sl<FlutterSecureStorage>());
   await SharedPreferencesManager.initialize();
   await sl<SessionManager>().initialize();
-  await FlutterSecureStorageManager.instance?.delete();
 
   runApp(
     BlocProvider(
@@ -39,6 +39,8 @@ void main() async {
       child: const MyApp()
     )
   );
+
+  
 }
 
 class MyApp extends StatelessWidget {

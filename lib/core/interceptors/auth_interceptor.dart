@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat/core/contracts/i_token_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_interceptor/http_interceptor.dart';
@@ -17,13 +18,11 @@ class AuthInterceptor extends InterceptorContract {
   bool _isRefreshing = false;
   Completer<bool>? _refreshCompleter;
 
-  final FlutterSecureStorage flutterSecureStorage;
+  final ITokenStorage tokenStorage;
   final SessionManager sessionManager;
 
-  final String _accessTokenKey = "access_token";
-  final String _refreshTokenKey = "refresh_token";
 
-  AuthInterceptor(this.flutterSecureStorage, this.sessionManager);
+  AuthInterceptor(this.tokenStorage, this.sessionManager);
 
   bool _isWhiteListed(String path){
     final List<String> whitelist = [
@@ -40,27 +39,28 @@ class AuthInterceptor extends InterceptorContract {
 
 
     // To avoid adding headers to the whitelisted
-    if(_isWhiteListed(request.url.path)) return request;
+    // if(_isWhiteListed(request.url.path)) return request;
 
     if(_isRefreshing){
       await _refreshCompleter?.future;
     }
 
     // Get the access token from the flutterSecureStorage
-    final accessToken = await flutterSecureStorage.read(key: _accessTokenKey);
+    final accessToken = await tokenStorage.getAccessToken();
 
     // Check if the token is not null or not empty
     if(accessToken != null && accessToken.isNotEmpty){
-      request.headers["Authorization"] = "Bearer $accessToken";
+      request.headers.update(
+        "Authorization", 
+        (value) => "Bearer $accessToken",
+        ifAbsent: () => "Bearer $accessToken"
+      );
     }
 
+  // print("ACCESS TOKEN: $accessToken");
+  // print("REQUEST: ${request.url}");
+  // print("HEADERS: ${request.headers}");
 
-    // Force overwrite headers
-    // request.headers.update(
-    //   "Authorization", 
-    //   (value) => "Bearer $accessToken",
-    //   ifAbsent: () => "Bearer $accessToken"
-    // );
     return request;
   }
 
@@ -84,7 +84,7 @@ class AuthInterceptor extends InterceptorContract {
     try{
 
     // Get the refresh token from FlutterSecureStorage
-    final refreshToken = await flutterSecureStorage.read(key: _refreshTokenKey);
+    final refreshToken = await tokenStorage.getRefreshToken();
 
     if(refreshToken == null){
       _handleLogout();
@@ -105,8 +105,7 @@ class AuthInterceptor extends InterceptorContract {
         if(kDebugMode){
           print("Saving the new access ${entity.accessToken} and refresh token ${entity.refreshToken}");
         }
-        await flutterSecureStorage.write(key: _accessTokenKey, value: entity.accessToken);
-        await flutterSecureStorage.write(key: _refreshTokenKey, value: entity.refreshToken);
+        await tokenStorage.cacheToken(entity.accessToken, entity.refreshToken);
         await Future.delayed(200.milliseconds());
         _refreshCompleter?.complete(true);
         return true;
@@ -131,8 +130,8 @@ class AuthInterceptor extends InterceptorContract {
   }
 
 
-  void _handleLogout(){
-    flutterSecureStorage.deleteAll();
+  Future<void> _handleLogout() async {
+    await tokenStorage.clearTokens();
     sessionManager.logout();
   }
 }

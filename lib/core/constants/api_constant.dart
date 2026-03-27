@@ -1,5 +1,7 @@
 class ApiConstant {
 
+  // static const String _baseUrl = 
+
   // -------------- Authentication API ------------------
   static const String _baseAuthApi = "api/v1/auth/";
   static const String loginApi = "${_baseAuthApi}login/";
@@ -13,10 +15,13 @@ class ApiConstant {
   // -------------- Chat API ------------------
   static const String _baseChatApi = "api/v1/chats/";
   static const listChatApi = _baseChatApi;
+  static const String chatMessageApi = "${_baseChatApi}messages/";
+  static const String listChatMessagesApi = "${_baseChatApi}messages/";
   // -------------- Chat API ------------------
 
   // -------------- WS API ------------------
   static const String directChatWs = "ws/chat/direct/";
+  static const String chatInboxWs = "ws/chat/inbox/";
   // -------------- WS API ------------------
 
 }

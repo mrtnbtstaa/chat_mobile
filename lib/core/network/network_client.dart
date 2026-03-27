@@ -7,15 +7,16 @@ import 'package:chat/core/resources/app_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 
 abstract class NetworkClient {
 
   String get _baseUrl => AppConfig.instance?.baseUrl ?? "";
 
-  final http.Client _client;
+  final Client _client;
 
-  NetworkClient({http.Client? client}) : _client = client ?? http.Client();
+  NetworkClient({Client? client}) : _client = client ?? Client();
 
   Future<Either<Failure, T>> _request<T>(
     Future<http.Response> Function() request, {
@@ -98,17 +99,30 @@ abstract class NetworkClient {
       final int statusCode = 200,
       final Map<String, String>? headers,
       required T Function(dynamic) onSuccess,
-      required String id
+      String? id
     }
   ) async {
+
+    if(id != null && id.isNotEmpty){
+      return _request(
+        () => _client.get(
+          _uriParser("$endpoint$id"), 
+          headers: headers ?? {'Content-Type': 'application/json'},
+        ), 
+        onSuccess: onSuccess,
+        statusCode: statusCode
+      );
+    }
+
     return _request(
-      () => http.get(
-        _uriParser("$endpoint$id"), 
+      () => _client.get(
+        _uriParser(endpoint), 
         headers: headers ?? {'Content-Type': 'application/json'},
       ), 
       onSuccess: onSuccess,
       statusCode: statusCode
     );
+
   }
 
   // Future<Either<Failure, Map<String, dynamic>>> put(
@@ -147,7 +161,14 @@ abstract class NetworkClient {
 
 
 
-  Uri _uriParser(String endpoint) => Uri.parse("$_baseUrl/$endpoint");
+  Uri _uriParser(String endpoint){
+    // If it's already a full URL, just return the endpoint
+    if(endpoint.startsWith('http')){
+      return Uri.parse(endpoint);
+    }
+    // Combined the baseUrl with endpoint
+    return Uri.parse("$_baseUrl/$endpoint");
+  }
 
   Either<Failure, T> _handleResponse<T>(
     http.Response response, 
@@ -170,9 +191,9 @@ abstract class NetworkClient {
         : jsonDecode(response.body);
 
 
-      if(kDebugMode){
-        print("\x1B[31mResponse Body: $responseBody");
-      }
+      // if(kDebugMode){
+      //   print("\x1B[31mResponse Body: $responseBody");
+      // }
 
 
       // Determine if the server returned a `success` or `error` payload structure

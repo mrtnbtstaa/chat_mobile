@@ -13,6 +13,19 @@ class ChatEntity extends Equatable{
     required this.results
   });
 
+
+  ChatEntity copyWith({
+    String? previous,
+    String? next,
+    List<ChatResultEntity>? results,
+  }) {
+    return ChatEntity(
+      previous: previous ?? this.previous,
+      next: next ?? this.next,
+      results: results ?? this.results,
+    );
+  }
+
   @override
   List<Object?> get props => [previous, next, results];
 

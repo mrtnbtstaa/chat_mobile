@@ -48,7 +48,7 @@ class SessionManager extends ValueNotifier<AuthStatus> {
     if(kDebugMode){
       print("Logout method triggered!");
     }
-    await _userStorage.clearUserId();
+    await _userStorage.clearUser();
     await _tokenStorage.clearTokens();
     value = AuthStatus.unauthenticated;
   }

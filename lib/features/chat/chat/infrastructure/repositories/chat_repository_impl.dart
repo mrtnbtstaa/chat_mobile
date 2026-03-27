@@ -8,20 +8,18 @@ import 'package:fpdart/fpdart.dart';
 
 class ChatRepositoryImpl implements IChatRepository{
 
-  final IChatRemoteDataSource chatRemoteDataSource;
+  final IChatRemoteDataSource _chatRemoteDataSource;
 
-  const ChatRepositoryImpl({
-    required this.chatRemoteDataSource
-  });
+  ChatRepositoryImpl(this._chatRemoteDataSource);
 
   @override
-  Future<Either<Failure, List<ChatEntity>>> chats(String userId) async {
+  Future<Either<Failure, ChatEntity>> chats() async {
 
-    final result = await chatRemoteDataSource.getChats(userId);
+    final result = await _chatRemoteDataSource.getChats();
 
     return result.fold(
       (failure) => left(failure), 
-      (map) => right(map.map((m) => m.toEntity()).toList())
+      (dto) => right(dto.toEntity())
     );
 
   }
