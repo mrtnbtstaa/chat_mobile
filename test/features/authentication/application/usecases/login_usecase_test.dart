@@ -23,10 +23,10 @@ void main() async {
   group("Login Usecase Execution", (){
 
     
-  const tLoginParam = LoginParam(username: "tin", password: "123");
+  const tLoginParam = LoginParam(email: "tin", password: "123");
   const tAuthEntity = AuthEntity(
     userId: "1",
-    username: "martin",
+    email: "martin",
     tokens: TokenEntity(accessToken: "access123", refreshToken: "refresh123"),
     profile: "image.png"
   );

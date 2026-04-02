@@ -4,7 +4,6 @@ class ChatRecipientResponseDto extends ChatRecipient{
   
   const ChatRecipientResponseDto({
     required super.userId,
-    required super.username,
     required super.displayFullName,
     super.profileImage,
     required super.isOnline
@@ -16,7 +15,6 @@ class ChatRecipientResponseDto extends ChatRecipient{
 
     return ChatRecipientResponseDto(
       userId: recipient["user_id"],
-      username: recipient["username"],
       displayFullName: recipient["display_full_name"],
       profileImage: recipient["profile_image"] ?? "",
       isOnline: recipient["is_online"]

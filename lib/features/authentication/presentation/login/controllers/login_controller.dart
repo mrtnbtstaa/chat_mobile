@@ -2,12 +2,12 @@ import 'package:flutter/widgets.dart';
 
 class LoginController {
 
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   void dispose(){
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
   }
 

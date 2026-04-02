@@ -43,7 +43,7 @@ class UserProfileStatus extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: fontWeight ?? FontWeight.w700,
                       fontSize: AppSizes.font16,
-                      color: descriptionColor ?? AppColors.accentColor
+                      color: descriptionColor ?? AppColors.lSurfaceLow
                     )
                   )
                 ]

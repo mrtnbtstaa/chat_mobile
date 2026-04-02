@@ -7,9 +7,8 @@ class LoginResponseDto extends AuthEntity {
 
   const LoginResponseDto({
     required super.userId,
-    required super.username,
-    required super.firstname,
-    required super.lastname,
+    required super.fullName,
+    required super.email,
     required super.tokens,
     required this.isOnline,
     super.profile,
@@ -18,9 +17,8 @@ class LoginResponseDto extends AuthEntity {
   factory LoginResponseDto.fromJson(Map<String, dynamic> json){
     return LoginResponseDto(
       userId: json["user_id"],
-      username: json["username"],
-      firstname: json["first_name"],
-      lastname: json["last_name"],
+      fullName: json["full_name"],
+      email: json["email"],
       tokens: RefreshTokenResponseDto.fromJson(json["tokens"]),
       isOnline: json["is_online"],
       profile: json["profile"] ?? "",

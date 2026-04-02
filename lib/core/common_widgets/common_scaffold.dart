@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../extensions/context_extension.dart';
 
 class CommonScaffold extends StatelessWidget {
 
@@ -59,13 +60,13 @@ class CommonScaffold extends StatelessWidget {
     if(appBar != null){
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.light,
+          statusBarBrightness: context.isDarkMode ? Brightness.light : Brightness.dark,
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light
+          statusBarIconBrightness: context.isDarkMode ? Brightness.light : Brightness.dark
         ),
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: backgroundColor,
+          backgroundColor: context.currentTheme.scaffoldBackgroundColor,
           body: body,
           appBar: appBar,
           floatingActionButton: floatingActionButton,
@@ -92,13 +93,13 @@ class CommonScaffold extends StatelessWidget {
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.light,
+          statusBarBrightness: context.isDarkMode ? Brightness.light : Brightness.dark,
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light
+          statusBarIconBrightness: context.isDarkMode ? Brightness.light : Brightness.dark
         ),
         child: Scaffold(
           key: scaffoldKey,
-          backgroundColor: backgroundColor,
+          backgroundColor: context.currentTheme.scaffoldBackgroundColor,
           body: body,
           floatingActionButton: floatingActionButton,
           drawer: drawer,

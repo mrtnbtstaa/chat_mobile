@@ -21,7 +21,7 @@ void main(){
     expect(result.userId, "1");
     expect(result.tokens.accessToken, "access123");
     expect(result.tokens.refreshToken, "refresh123");
-    expect(result.username, "martin");
+    expect(result.email, "martin");
     expect(result.profile, "image.png");
   });
 }

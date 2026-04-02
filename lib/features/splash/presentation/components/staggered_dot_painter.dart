@@ -15,8 +15,8 @@ class StaggeredDotPainter extends CustomPainter{
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        AppColors.circleColor.withValues(alpha: 0.4),
-        AppColors.bgColor.withValues(alpha: 0.3),
+        AppColors.primaryBrandColor.withValues(alpha: 0.4),
+        AppColors.primaryBrandColor.withValues(alpha: 0.3),
       ]
     )
     .createShader(Rect.fromLTWH(0, 0, size.width, size.height));

@@ -12,6 +12,6 @@ class LoginUsecase implements BaseUsecase<AuthEntity, LoginParam>{
   const LoginUsecase({required this.authRepository});
 
   @override
-  Future<Either<Failure, AuthEntity>> call(LoginParam param) async => await authRepository.login(param.username, param.password);
+  Future<Either<Failure, AuthEntity>> call(LoginParam param) async => await authRepository.login(param.email, param.password);
 
 }

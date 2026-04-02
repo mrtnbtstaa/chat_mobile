@@ -14,8 +14,8 @@ const UserStatusSection({ super.key });
       children: <Widget>[
         UserProfileStatus(),
         UserProfileStatus(
-          color: AppColors.disabledHintTextColor,
-          descriptionColor: AppColors.primaryTextColor,
+          color: AppColors.lSurfaceLow,
+          descriptionColor: AppColors.lSurfaceLow,
           title: "About:",
           description: "Love to travel and explore new places.",
           fontWeight: FontWeight.w400,

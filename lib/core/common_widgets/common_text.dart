@@ -1,10 +1,10 @@
-import 'package:chat/core/style/app_colors.dart';
-import 'package:chat/core/style/app_sizes.dart';
+import '../extensions/context_extension.dart';
+import '../style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
-class CommonText extends Text {
-  
-  CommonText({
+class CommonText extends StatelessWidget {
+
+  const CommonText({ 
     super.key,
     required this.text,
     this.fontColor,
@@ -18,22 +18,27 @@ class CommonText extends Text {
     this.textOverflow,
     this.maxLine,
     this.wrap
-  }) : super(
-    text,
-    maxLines: maxLine,
-    softWrap: wrap,
-    style: TextStyle(
-      color: fontColor ?? AppColors.primaryTextColor,
-      fontWeight: fontWeight,
-      fontSize: fontSize ?? AppSizes.font14,
-      decorationColor: decorationColor,
-      letterSpacing: letterSpacing ?? 1.0,
-      wordSpacing: wordSpacing,
-      overflow: textOverflow,
-      decoration: textDecoration
-    ),
-    textAlign: alignment,
-  );
+  });
+
+  @override
+  Widget build(BuildContext context){
+    return Text(
+      text,
+      style: TextStyle(
+        color: fontColor ?? context.textTheme.bodyMedium?.color,
+        fontWeight: fontWeight,
+        fontSize: fontSize ?? AppSizes.font14,
+        decorationColor: decorationColor,
+        letterSpacing: letterSpacing ?? 1.0,
+        wordSpacing: wordSpacing,
+        overflow: textOverflow,
+        decoration: textDecoration
+      ),
+      textAlign: alignment,
+      maxLines: maxLine,
+      softWrap: wrap,
+    );
+  }
 
   final String text;
   final Color? fontColor;
@@ -49,3 +54,4 @@ class CommonText extends Text {
   final bool? wrap;
 
 }
+

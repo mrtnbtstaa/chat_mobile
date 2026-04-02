@@ -6,7 +6,7 @@ import 'package:chat/core/contracts/i_token_storage.dart';
 import 'package:chat/core/di/di.dart';
 import 'package:chat/core/extensions/int_extension.dart';
 import 'package:flutter/foundation.dart';
-import '../../../../../core/resources/app_config.dart';
+import '../../../../../core/config/app_config.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

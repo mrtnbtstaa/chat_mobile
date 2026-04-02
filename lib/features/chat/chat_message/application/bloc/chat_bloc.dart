@@ -52,7 +52,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(ChatLoading(status: SocketStatus.connecting));
 
     try{
-
       final listMessageUseCase = await _chatMessageListUseCase(null);
 
       // Listen to the stream

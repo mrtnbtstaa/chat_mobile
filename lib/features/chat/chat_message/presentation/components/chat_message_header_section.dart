@@ -1,9 +1,12 @@
-import 'package:chat/core/common_widgets/status_indicator.dart';
-import 'package:chat/core/extensions/string_extension.dart';
-import 'package:chat/core/style/app_colors.dart';
-import 'package:chat/features/chat/chat/domain/entities/sub_entities/chat_result_entity.dart';
+import 'package:chat/core/common_widgets/common_container.dart';
+import 'package:chat/core/extensions/double_extension.dart';
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
+import 'package:icons_plus/icons_plus.dart';
+import '../../../../../core/style/app_colors.dart';
+import '../../../../../core/common_widgets/status_indicator.dart';
+import '../../../../../core/extensions/string_extension.dart';
+import '../../../chat/domain/entities/sub_entities/chat_result_entity.dart';
 import '../../../../../core/common_widgets/common_avatar.dart';
 import '../../../../../core/common_widgets/common_icon_button.dart';
 import '../../../../../core/common_widgets/common_text.dart';
@@ -23,18 +26,17 @@ class ChatMessageHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return GlassContainer(
-      borderRadiusGeometry: BorderRadius.circular(0.0),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: AppInsets.a8,
-            child: Row(
-              spacing: AppSizes.size8,
-              children: <Widget>[
-                CommonIconButton(),
-                CommonAvatar(path: AppImages.profile),
-                Column(
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: AppInsets.a8,
+          child: Row(
+            spacing: AppSizes.size8,
+            children: <Widget>[
+              CommonIconButton(onButtonPressed: () => context.pop()),
+              CommonAvatar(path: AppImages.profile),
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CommonText(
@@ -47,18 +49,26 @@ class ChatMessageHeaderSection extends StatelessWidget {
                       children: <Widget>[
                         StatusIndicator(
                           size: AppSizes.size8,
-                          indicatorColor: chatResultEntity.recipient.isOnline ? AppColors.accentColor : AppColors.errorRed,
+                          indicatorColor: chatResultEntity.recipient.isOnline ? AppColors.success : AppColors.error,
                         ),
-                        CommonText(text: chatResultEntity.recipient.isOnline ? "Online" : "Offline")
-                      ],
-                    )
-                  ],
+                        CommonText(
+                          text: chatResultEntity.recipient.isOnline ? "Online" : "Offline",
+                          fontColor: AppColors.primaryBrandColor,
+                        )
+                      ]
+                    ),
+                  ]
                 ),
-              ]
-            ),
-          ),
-        ]
-      )
+              ),
+              CommonIconButton(
+                onButtonPressed: (){},
+                iconData: BoxIcons.bx_search,
+                iconColor: AppColors.primaryBrandColor,
+              )
+            ]
+          )
+        ),
+      ]
     );
   }
 }

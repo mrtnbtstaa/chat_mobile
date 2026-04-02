@@ -3,7 +3,7 @@ class ChatLastMessage{
   final String? messageId;
   final String? text;
   final String? sender;
-  final String? lastMessageAt;
+  final DateTime? lastMessageAt;
 
   const ChatLastMessage({
     required this.messageId,
@@ -17,11 +17,11 @@ class ChatLastMessage{
       messageId: json["message_id"] ?? "",
       text: json["text"] ?? "",
       sender: json["sender"] ?? "",
-      lastMessageAt: json["last_message_at"] ?? ""
+      lastMessageAt: DateTime.parse(json["last_message_at"])
     );
   }
 
-  ChatLastMessage copyWith({String? text, String? lastMessageAt}){
+  ChatLastMessage copyWith({String? text, DateTime? lastMessageAt}){
     return ChatLastMessage(
       messageId: messageId,
       text: text ?? this.text,

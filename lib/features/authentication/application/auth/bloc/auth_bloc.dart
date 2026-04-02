@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat/core/contracts/i_token_storage.dart';
-import 'package:chat/core/di/di.dart';
-import 'package:chat/core/services/session_manager.dart';
-import 'package:chat/core/usecases/base_usecase.dart';
-import 'package:flutter/foundation.dart';
+import '../../../../../core/contracts/i_token_storage.dart';
+import '../../../../../core/di/di.dart';
+import '../../../../../core/services/session_manager.dart';
+import '../../../../../core/usecases/base_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
@@ -24,10 +23,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> _onLogoutRequested(LogoutRequested event, Emitter<AuthState> emit) async {
     
+    emit(AuthLoading());
+
     final refreshToken = await _tokenStorage.getRefreshToken() ?? "";
-    if(kDebugMode && refreshToken.isNotEmpty){
-      print("Logout requested event fired!");
-    }
     final result = await _logoutUseCase(refreshToken);
 
     result.fold(
@@ -35,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthError());
       },
       (_) async {
+        emit(AuthInitial());
         await sl<SessionManager>().logout();
       }
     );

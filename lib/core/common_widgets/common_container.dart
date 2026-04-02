@@ -1,48 +1,43 @@
-import 'package:chat/core/style/app_colors.dart';
+import 'package:chat/core/extensions/context_extension.dart';
+import 'package:chat/core/style/app_insets.dart';
+import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 class CommonContainer extends StatelessWidget {
 
-  const CommonContainer({ 
-    super.key,
-    this.width,
-    this.height,
-    this.padding,
-    this.margin,
-    this.boxDecoration,
-    this.child,
-    this.clip = Clip.none,
-    this.alignmentGeometry
-   });
-
-  final double? width;
-  final double? height;
   final Widget? child;
   final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
+  final double? borderRadius;
+  final Color? backgroundColor;
+  final double? width;
+  final double? height;
   final BoxDecoration? boxDecoration;
-  final Clip clip;
-  final AlignmentGeometry? alignmentGeometry;
+  final BoxShape shape;
+  final BorderRadiusGeometry? radiusGeometry;
 
+  const CommonContainer({
+    super.key,
+    this.child,
+    this.padding,
+    this.borderRadius,
+    this.backgroundColor,
+    this.width,
+    this.height,
+    this.boxDecoration,
+    this.radiusGeometry,
+    this.shape = BoxShape.rectangle
+  });
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Container(
-      alignment: alignmentGeometry ?? Alignment.center,
-      clipBehavior: clip,
       width: width,
       height: height,
-      padding: padding ?? EdgeInsets.zero,
-      margin: margin ?? EdgeInsets.zero,
+      padding: padding ?? AppInsets.a16,
       decoration: boxDecoration ?? BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.bgColor01.withValues(alpha: 0.8),
-            AppColors.bgColor.withValues(alpha: 0.9),
-          ],
-        )
+        shape: shape,
+        color: backgroundColor ?? context.currentTheme.cardTheme.color, 
+        borderRadius: radiusGeometry ?? BorderRadius.circular(borderRadius ?? AppSizes.size16),
       ),
       child: child,
     );

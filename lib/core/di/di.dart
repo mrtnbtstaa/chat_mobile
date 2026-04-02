@@ -1,54 +1,4 @@
-import 'package:chat/features/chat/chat/infrastructure/datasources/inbox_ws_client.dart';
-
-import '../../features/chat/chat_message/infrastructure/datasources/web_sockent_client.dart';
-import '../../features/chat/chat_message/application/usecases/chat_message_usecase.dart';
-import '../../features/chat/chat_message/application/usecases/list_chat_messages_usecase.dart';
-import '../../features/chat/chat_message/domain/entities/chat_message_entity.dart';
-import '../../features/chat/chat_message/domain/entities/paginated_messages.dart';
-import '../../features/chat/chat_message/domain/params/chat_message_param.dart';
-import '../../features/chat/chat_message/domain/repositories/i_chat_message_repository.dart';
-import '../../features/chat/chat_message/infrastructure/datasources/chat_message_remote_data_source.dart';
-import '../../features/chat/chat_message/infrastructure/datasources/i_chat_message_remote_data_source.dart';
-import '../../features/chat/chat_message/infrastructure/repositories/chat_message_repository_impl.dart';
-import '../../features/chat/chat_message/infrastructure/services/chat_socket_service.dart';
-
-import '../contracts/i_local_storage.dart';
-import '../contracts/i_token_storage.dart';
-import '../contracts/i_user_storage.dart';
-import '../../features/authentication/application/usecase/logout_usecase.dart';
-import '../../features/authentication/domain/params/access_token_param.dart';
-import '../../features/authentication/infrastructure/datasources/local/local_shared_prefs_storage.dart';
-import '../../features/authentication/infrastructure/datasources/local/user_local_data_source_impl.dart';
-import '../../features/chat/chat/application/usecases/list_chat_usecase.dart';
-import '../../features/chat/chat/domain/entities/chat_entity.dart';
-import '../../features/chat/chat/domain/repositories/i_chat_repository.dart';
-import '../../features/chat/chat/infrastructure/datasources/remote/chat_remote_data_source_impl.dart';
-import '../../features/chat/chat/infrastructure/datasources/remote/i_chat_remote_data_source.dart';
-import '../../features/chat/chat/infrastructure/repositories/chat_repository_impl.dart';
-
-import '../../features/authentication/application/usecase/refresh_token_usecase.dart';
-import '../../features/authentication/domain/entities/token_entity.dart';
-import '../../features/authentication/domain/params/refresh_token_param.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:get_it/get_it.dart';
-import 'package:http_interceptor/http_interceptor.dart';
-
-import '../../features/authentication/application/usecase/login_usecase.dart';
-import '../../features/authentication/application/usecase/register_usecase.dart';
-import '../../features/authentication/application/usecase/verify_token_usecase.dart';
-import '../../features/authentication/domain/entities/auth_entity.dart';
-import '../../features/authentication/domain/params/login_param.dart';
-import '../../features/authentication/domain/params/register_param.dart';
-import '../../features/authentication/domain/repositories/i_auth_repository.dart';
-import '../../features/authentication/infrastructure/datasources/local/auth_local_data_source_impl.dart';
-import '../../features/authentication/infrastructure/datasources/remote/auth_remote_data_source_impl.dart';
-import '../../features/authentication/infrastructure/datasources/remote/i_remote_auth_data_source.dart';
-import '../../features/authentication/infrastructure/repositories/auth_repository_impl.dart';
-import '../interceptors/auth_interceptor.dart';
-import '../interceptors/expired_retry_token_policy.dart';
-import '../services/session_manager.dart';
-import '../usecases/base_usecase.dart';
+import 'di_exports.dart';
 
 final sl = GetIt.instance;
 
@@ -73,9 +23,8 @@ void _externalDependencies(){
 }
 
 void _registerAuthDependencies(){
-
   sl.registerLazySingleton(() => SessionManager(sl<ITokenStorage>(), sl<IUserStorage>()));
-
+  sl.registerLazySingleton(() => MediaService());
   sl.registerLazySingleton<Client>(() => Client(), instanceName: 'cleanClient');
 
   // Data sources
@@ -97,7 +46,6 @@ void _registerAuthDependencies(){
 
 
 void _chatDependencies(){
-
   // Data sources
   sl.registerLazySingleton<IChatRemoteDataSource>(() => ChatRemoteDataSourceImpl(client: sl<Client>(instanceName: 'interceptedClient'), storage: sl<ITokenStorage>()));
 
@@ -106,11 +54,9 @@ void _chatDependencies(){
 
   // Usecases
   sl.registerLazySingleton<BaseUsecase<ChatEntity, Unit>>(() => ListChatUsecase(sl()));
-
 }
 
 void _chatMessageDependencies(){
-
   // Data sources
   sl.registerLazySingleton<IChatMessageRemoteDataSource>(() => ChatMessageRemoteDataSource(client: sl<Client>(instanceName: 'interceptedClient')));
   sl.registerLazySingleton(() => ChatSocketService(sl<WebSockentClient>(), sl<IUserStorage>()));

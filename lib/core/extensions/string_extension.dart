@@ -4,6 +4,7 @@ extension StringExtension on String {
   .where((word) => word.isNotEmpty)
   .map((word) => "${word[0].toUpperCase()}${word.substring(1).toLowerCase()}")
   .join(' ');
-  
+  String get firstname => split(' ')
+  .where((word) => word.isNotEmpty).first;
 
 }

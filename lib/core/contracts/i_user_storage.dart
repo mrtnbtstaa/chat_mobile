@@ -2,9 +2,8 @@ abstract interface class IUserStorage {
 
   Future<void> saveUser(
     String userId,
-    String username,
-    String firstname,
-    String lastname,
+    String email,
+    String fullName,
     String? profileImage,
     bool isOnline
   );

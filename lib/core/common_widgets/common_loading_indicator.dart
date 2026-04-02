@@ -13,7 +13,7 @@ class CommonLoadingIndicator extends SizedBox {
     width: AppSizes.size24,
     height: AppSizes.size24,
     child: CircularProgressIndicator(
-      color: indicatorColor ?? AppColors.primaryTextColor.withValues(alpha: 0.5),
+      color: indicatorColor ?? AppColors.lSurfaceLow,
       strokeWidth: 3.0,
     )
   );

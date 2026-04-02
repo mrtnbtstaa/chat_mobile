@@ -27,8 +27,8 @@ class SettingsSwitcher extends StatelessWidget {
       trailing: Switch(
         value: true,
         onChanged: (value) {},
-        thumbColor: WidgetStateColor.resolveWith((_) => AppColors.primaryTextColor),
-        trackColor: WidgetStateColor.resolveWith((_) => AppColors.primaryTextColor.withValues(alpha: 0.1)),
+        thumbColor: WidgetStateColor.resolveWith((_) => AppColors.primaryBrandColor),
+        trackColor: WidgetStateColor.resolveWith((_) => AppColors.primaryBrandColor.withValues(alpha: 0.1)),
       ),
     );
   }

@@ -8,7 +8,7 @@ void main(){
     final dto = LoginResponseDto(
       userId: "123",
       tokens: RefreshTokenResponseDto(accessToken: "access123", refreshToken: "refresh123"),
-      username: "martin18",
+      email: "martin18",
       profile: "qweqw.png"
     );
 
@@ -19,7 +19,7 @@ void main(){
     expect(entity.userId, equals(dto.userId));
     expect(entity.tokens.accessToken, equals(dto.tokens.accessToken));
     expect(entity.tokens.refreshToken, equals(dto.tokens.refreshToken));
-    expect(entity.username, equals(dto.username));
+    expect(entity.email, equals(dto.email));
     expect(entity.profile, equals(dto.profile));
 
   });

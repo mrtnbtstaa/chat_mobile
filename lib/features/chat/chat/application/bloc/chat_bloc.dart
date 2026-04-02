@@ -1,12 +1,10 @@
 import 'dart:async';
-
-import 'package:chat/core/contracts/i_user_storage.dart';
-import 'package:chat/core/extensions/datetime_extension.dart';
-import 'package:chat/core/extensions/int_extension.dart';
-import 'package:chat/core/usecases/base_usecase.dart';
-import 'package:chat/features/chat/chat/domain/entities/chat_entity.dart';
-import 'package:chat/features/chat/chat/domain/entities/sub_entities/chat_last_message.dart';
-import 'package:chat/features/chat/chat/infrastructure/datasources/inbox_ws_client.dart';
+import '../../../../../core/contracts/i_user_storage.dart';
+import '../../../../../core/extensions/int_extension.dart';
+import '../../../../../core/usecases/base_usecase.dart';
+import '../../domain/entities/chat_entity.dart';
+import '../../domain/entities/sub_entities/chat_last_message.dart';
+import '../../infrastructure/datasources/inbox_ws_client.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,14 +32,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   FutureOr<void> _onConnectToInbox(ConnectToInbox event, Emitter<ChatState> emit) async {
     
     emit(ChatLoading());
-
+    
     try{
       
-      await Future.delayed(2.seconds());
-
       final result = await _listChatUseCase(unit);
 
-      
       // Listen to the incoming stream
       _messageInboxSubscription?.cancel();
       _messageInboxSubscription = _client.messageStream.listen((data){
@@ -88,9 +83,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         if(room.id == chatId){
 
           // Update the last message to the newtext received from the ws
-          final updatedLastMessage = (room.lastMessage ?? const ChatLastMessage(
-            messageId: '', text: '', sender: '', lastMessageAt: ''
-          )).copyWith(text: newText, lastMessageAt: DateTime.now().formattedTime());
+          final updatedLastMessage = (room.lastMessage ??  ChatLastMessage(
+            messageId: '', text: '', sender: '', lastMessageAt: DateTime.now()
+          )).copyWith(text: newText, lastMessageAt: DateTime.now());
 
           // Finally return the room with the updated last message and unread count
           return room.copyWith(

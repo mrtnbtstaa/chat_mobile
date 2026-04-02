@@ -1,7 +1,10 @@
+import '../../../core/common_widgets/common_material.dart';
+import '../../../core/common_widgets/common_sliver_app_bar.dart';
+import '../../../core/extensions/double_extension.dart';
+import '../../../core/style/app_sizes.dart';
 import '../../chat/chat/presentation/chat_content.dart';
 import 'components/bottom_tabbar_constants.dart';
 import 'package:flutter/material.dart';
-import '../../../core/common_widgets/common_scaffold.dart';
 import '../../profile/presentation/profile_content.dart';
 import '../../settings/presentation/settings_content.dart';
 import 'components/bottom_tabbar.dart';
@@ -35,29 +38,38 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context){
-    return CommonScaffold(
-      body: Builder(
-        builder: (context) {
-          return Stack(
-            alignment: Alignment.bottomCenter,
-            children: <Widget>[
-              TabBarView(
-                controller: _controller,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  ChatContent(),
-                  ProfileContent(),
-                  SettingsContent()
-                ],
-              ),
-              BottomTabbar(
-                controller: _controller,
-                currentIndex: _currentIndex
-              )
-            ]
-          );
-        }
-      )
+    return CommonMaterial(
+      child: CustomScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(child: AppSizes.size16.height()),
+          CommonSliverAppBar(text: "Home"),
+          SliverFillRemaining(
+            child: Builder(
+              builder: (context) {
+                return Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    TabBarView(
+                      controller: _controller,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        ChatContent(),
+                        ProfileContent(),
+                        SettingsContent(),
+                      ],
+                    ),
+                    BottomTabbar(
+                      controller: _controller,
+                      currentIndex: _currentIndex
+                    )
+                  ]
+                );
+              }
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

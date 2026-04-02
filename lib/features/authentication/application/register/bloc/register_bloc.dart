@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat/features/authentication/domain/enums/register_status.dart';
-import 'package:chat/features/authentication/infrastructure/services/media_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../../core/extensions/int_extension.dart';
 import '../../../../../core/extensions/validator_builder_extension.dart';
 part 'register_event.dart';
@@ -14,15 +11,13 @@ part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
-  final MediaService _mediaService; 
 
-  RegisterBloc({required MediaService mediaService}) : _mediaService = mediaService,
-    super(RegisterState()) {
+  RegisterBloc() : super(RegisterState()) {
     on<TogglePasswordVisibility>((event, emit) => emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible)));
     on<ToggleConfirmPasswordVisibility>((event, emit) => emit(state.copyWith(isConfirmPasswordVisible: !state.isConfirmPasswordVisible)));
-    on<RegisterCameraOpened>(_registerCameraOpened);
     on<RegisterSubmitted>(_registerSubmitted, transformer: droppable());
-    on<OnUsernameChanged>(_onUsernameChanged);
+    on<OnFullNameChanged>(_onFullNameChanged);
+    on<OnEmailChanged>(_onEmailChanged);
     on<OnPasswordChanged>(_onPasswordChanged);
     on<OnConfirmPasswordChanged>(_onConfirmPasswordChanged);
   }
@@ -30,10 +25,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   FutureOr<void> _registerSubmitted(RegisterSubmitted event, Emitter<RegisterState> emit) async {
 
-    final usernameError = event.username
-      .validate("Username")
+    final fullNameError = event.fullName
+      .validate("Full Name")
       .required()
-      .isAlphanumeric()
+      .validateFullName()
+      .build();
+
+    final emailError = event.email
+      .validate("Email")
+      .required()
+      .isValidEmail()
       .build();
 
     final passwordError = event.password
@@ -50,12 +51,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       .strongPassword()
       .build();
 
-    final hasError = usernameError.isNotEmpty || passwordError.isNotEmpty || confirmPasswordError.isNotEmpty;
+    final hasError = fullNameError.isNotEmpty || passwordError.isNotEmpty || confirmPasswordError.isNotEmpty;
     
     if(hasError){
       emit(state.copyWith(
         registerStatus: RegisterStatus.error,
-        usernameError: () => usernameError,
+        fullNameError: () => fullNameError,
+        emailError: () => emailError,
         passwordError: () => passwordError,
         confirmPasswordError: () => confirmPasswordError,
       ));
@@ -87,33 +89,18 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   }
 
-  FutureOr<void> _registerCameraOpened(RegisterCameraOpened event, Emitter<RegisterState> emit) async {
-    try{
-      final String? imagePath = await _mediaService.pickImage(ImageSource.gallery);
-      if(imagePath != null){
-        emit(state.copyWith(
-          imagePath: imagePath,
-        ));
-      }
-    }catch(ex){
-      log(ex.toString());
-      emit(state.copyWith(
-        errorMessage: ex.toString(),
-        registerStatus: RegisterStatus.error,
-      ));
-    }
-  }
 
-  FutureOr<void> _onUsernameChanged(OnUsernameChanged event, Emitter<RegisterState> emit) {
-      final error = event.username
-      .validate("Username")
+
+  FutureOr<void> _onFullNameChanged(OnFullNameChanged event, Emitter<RegisterState> emit) {
+      final error = event.fullName
+      .validate("Full Name")
       .required()
-      .isAlphanumeric()
+      .validateFullName()
       .build();
       
       emit(state.copyWith(
-        username: event.username,
-        usernameError: () => error,
+        fullName: event.fullName,
+        fullNameError: () => error,
       ));
   }
 
@@ -151,5 +138,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     .build();
 
     emit(state.copyWith(confirmPasswordError: () => confirmPasswordError, confirmPassword: event.confirmPassword));
+  }
+
+  FutureOr<void> _onEmailChanged(OnEmailChanged event, Emitter<RegisterState> emit) {
+    final emailError = event.email
+    .validate("Email")
+    .required()
+    .isValidEmail()
+    .build();
+
+    emit(state.copyWith(email: event.email, emailError: () => emailError));
   }
 }

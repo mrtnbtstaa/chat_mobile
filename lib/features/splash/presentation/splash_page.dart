@@ -24,7 +24,7 @@ const SplashPage({ super.key });
             child: SafeArea(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: CommonText(text: "Chat v2.0", fontColor: AppColors.bgColor01)
+                child: CommonText(text: "Chat v2.0", fontColor: AppColors.primaryBrandColor)
               ),
             ),
           ),

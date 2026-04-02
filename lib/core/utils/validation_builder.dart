@@ -29,6 +29,15 @@ class ValidationBuilder {
     return this;
   }
 
+  ValidationBuilder isValidEmail(){
+    if(_error != null) return this; // If error already exists
+    final RegExp regex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$');
+    if(_value != null && !regex.hasMatch(_value)){
+      _error = "Invalid email format";
+    }
+    return this;
+  }
+
   ValidationBuilder passwordMatch(String? otherPassword, {String? message}){
     if(_error != null) return this; // If error already exists
     if(_value != null && otherPassword != null){
@@ -43,7 +52,16 @@ class ValidationBuilder {
     if(_error != null) return this; // If error already exists
     final RegExp regex = RegExp(r'^[a-zA-Z0-9]+$');
     if(!regex.hasMatch(_value ?? "")){
-      _error = message ?? "Only letters and numbers are allowed";
+      _error = message ?? "Only characters and numbers are allowed";
+    }
+    return this;
+  }
+
+  ValidationBuilder validateFullName({String? message}){
+    if(_error != null) return this; // If error already exists
+    final RegExp regex = RegExp(r"^(?!.*-.*-)[^\d!@#$%^&*()_+={}\[\]|\\:;<>,.?/]+$");
+    if(!regex.hasMatch(_value ?? "")){
+      _error = message ?? "Please use only letters, hyphens, or apostrophes";
     }
     return this;
   }

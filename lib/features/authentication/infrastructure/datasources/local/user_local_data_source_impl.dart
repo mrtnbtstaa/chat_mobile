@@ -20,16 +20,14 @@ class UserLocalDataSourceImpl implements IUserStorage {
   @override
   Future<void> saveUser(
     String userId,
-    String username,
-    String firstname,
-    String lastname,
+    String email,
+    String fullName,
     String? profileImage,
     bool isOnline
   ) async {
     await _storage.saveString("user_id", userId);
-    await _storage.saveString("username", userId);
-    await _storage.saveString("first_name", userId);
-    await _storage.saveString("last_name", userId);
+    await _storage.saveString("email", email);
+    await _storage.saveString("full_name", fullName);
     await _storage.saveString("profile_image", userId);
     await _storage.saveBool("is_online", isOnline);
   }

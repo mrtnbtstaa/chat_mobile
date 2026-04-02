@@ -1,19 +1,19 @@
 class LoginRequestDto {
 
-  final String username;
+  final String email;
   final String password;
 
   const LoginRequestDto({
-    required this.username,
+    required this.email,
     required this.password
   });
 
   factory LoginRequestDto.fromJson(Map<String, dynamic> json){
-    return LoginRequestDto(username: json["username"], password: json["password"]);
+    return LoginRequestDto(email: json["email"], password: json["password"]);
   }
 
   Map<String, dynamic> toJson() => {
-    "username": username,
+    "email": email,
     "password": password
   };
 

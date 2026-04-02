@@ -1,10 +1,10 @@
 
 class LoginParam{
-  final String username;
+  final String email;
   final String password;
   
   const LoginParam({
-    required this.username,
+    required this.email,
     required this.password
   });
   

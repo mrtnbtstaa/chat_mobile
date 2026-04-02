@@ -18,7 +18,7 @@ class StatusIndicator extends Padding{
       height: size ?? AppSizes.size16,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: indicatorColor ?? AppColors.accentColor
+        color: indicatorColor ?? AppColors.ltextPrimary
       )
     )
   );

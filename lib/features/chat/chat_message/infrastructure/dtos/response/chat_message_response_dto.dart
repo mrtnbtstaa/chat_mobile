@@ -1,28 +1,21 @@
 import 'package:chat/features/chat/chat_message/domain/entities/chat_message_entity.dart';
+import 'package:chat/features/chat/chat_message/domain/entities/sub_entities/message_recipient.dart';
 
 class ChatMessageResponseDto extends ChatMessageEntity {
 
   const ChatMessageResponseDto({
     required super.messageId,
     required super.content,
-    required super.profileImage,
     required super.createdAt,
-    required super.isOnline,
-    required super.sender,
-    required super.senderId,
-    required super.sentByMe
+    required super.messageRecipient
   });
 
   factory ChatMessageResponseDto.fromJson(Map<String, dynamic> json){
     return ChatMessageResponseDto(
       messageId: json["id"],
       content: json["text"],
-      profileImage: json["profile_image"] ?? "",
       createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : DateTime.now(),
-      isOnline: json["is_online"],
-      sender: json["sender"],
-      senderId: json["sender_id"],
-      sentByMe: json["sent_by_me"]
+      messageRecipient: MessageRecipient.fromJson(json)
     );
   }
 

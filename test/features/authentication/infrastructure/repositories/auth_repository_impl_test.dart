@@ -31,13 +31,13 @@ void main() async {
       when(() => mockUserRepository.login(any(), any()))
       .thenAnswer((_) async => Right(AuthEntity(
         userId: "1",
-        username: "martin",
+        email: "martin",
         tokens: TokenEntity(accessToken: "access123", refreshToken: "refresh123"),
         profile: "image.png"
       )));
 
       // Act
-      await loginUsecase(LoginParam(username: "tin", password: "123"));
+      await loginUsecase(LoginParam(email: "tin", password: "123"));
 
       // Assert
       verify(() => mockUserRepository.login("tin", "123")).called(1);

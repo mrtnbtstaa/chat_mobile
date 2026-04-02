@@ -26,10 +26,10 @@ class AuthRepositoryImpl implements IAuthRepository {
   );
 
   @override
-  Future<Either<Failure, AuthEntity>> login(String username, String password) async {
+  Future<Either<Failure, AuthEntity>> login(String email, String password) async {
 
     // Create a request DTO
-    final request = LoginRequestDto(username: username, password: password);
+    final request = LoginRequestDto(email: email, password: password);
 
     // Call the datasource login and capture the result
     final result = await _authRemoteDataSource.login(request);
@@ -45,9 +45,8 @@ class AuthRepositoryImpl implements IAuthRepository {
 
         await _userStorage.saveUser(
           dto.userId,
-          dto.username,
-          dto.firstname,
-          dto.lastname,
+          dto.email,
+          dto.fullName,
           dto.profile,
           dto.isOnline
         );

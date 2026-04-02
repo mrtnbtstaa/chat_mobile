@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-
+import '../../../../core/common_widgets/common_container.dart';
+import '../../../../core/common_widgets/common_text.dart';
+import '../../../../core/extensions/context_extension.dart';
 import '../../../../core/common_widgets/common_icon.dart';
-import '../../../../core/common_widgets/glass_container.dart';
 import '../../../../core/style/app_colors.dart';
 import '../../../../core/style/app_sizes.dart';
-import '../../../../core/extensions/int_extension.dart';
 import '../mappers/icon_mapper.dart';
 import 'bottom_tabbar_constants.dart';
 
@@ -21,11 +21,11 @@ class BottomTabbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return GlassContainer(
+    return CommonContainer(
       height: AppSizes.size64,
-      borderRadiusGeometry: BorderRadius.only(
-        topLeft: Radius.circular(AppSizes.size24),
-        topRight: Radius.circular(AppSizes.size24)
+      padding: EdgeInsets.zero,
+      boxDecoration: BoxDecoration(
+        color: context.isDarkMode ? AppColors.dBaseBackground : AppColors.lSurfaceLow
       ),
       child: TabBar(
         physics: NeverScrollableScrollPhysics(),
@@ -40,36 +40,21 @@ class BottomTabbar extends StatelessWidget {
           (e) => Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              AnimatedContainer(
-                duration: 150.milliseconds(),
-                curve: Curves.easeInOut,
-                transform: Matrix4.translationValues(
-                  0,
-                  e.index == currentIndex ? -AppSizes.size2 : 0,
-                  0
-                ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      top: -7,
-                      child: AnimatedContainer(
-                        duration: 200.milliseconds(),
-                        height: 2.0,
-                        width: 24.0,
-                        decoration: BoxDecoration(
-                          color: e.index == currentIndex ? AppColors.circleColor : Colors.transparent,
-                          borderRadius: BorderRadius.circular(AppSizes.size8)
-                        )
-                      )
-                    ),
-                    CommonIcon(
-                      iconData: IconMapper.getIcon(e.iconKey),
-                      iconColor: e.index == currentIndex ? AppColors.primaryTextColor : AppColors.primaryTextColor.withValues(alpha: 0.5)
-                    )
-                  ]
-                )
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CommonIcon(
+                    iconData: IconMapper.getIcon(e.iconKey),
+                    iconColor: e.index == currentIndex ? AppColors.primaryBrandColor : AppColors.dTextSecondary
+                  ),
+                  CommonText(
+                    text: e.name,
+                    fontColor: e.index == currentIndex ? AppColors.primaryBrandColor : AppColors.dTextSecondary,
+                    fontWeight: e.index == currentIndex ? FontWeight.w700 : FontWeight.normal,
+                    fontSize: AppSizes.font12,
+                    letterSpacing: e.index == currentIndex ? AppSizes.size2 : AppSizes.size1,
+                  )
+                ]
               )
             ]
           )

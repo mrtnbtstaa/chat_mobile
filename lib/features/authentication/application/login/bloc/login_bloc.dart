@@ -24,19 +24,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({required BaseUsecase<AuthEntity, LoginParam> loginUseCase}) : _loginUsecase = loginUseCase,
     super(LoginState()) {
-    on<OnUsernameChanged>(_onUsernameChanged);
+    on<OnEmailChanged>(_onEmailChanged);
     on<OnPasswordChanged>(_onPasswordChanged);
     on<TogglePasswordVisibility>((event, emit) => emit(state.copyWith(isPasswordVisible: !state.isPasswordVisible, loginStatus: LoginStatus.initial)));
     on<LoginSubmitted>(_loginSubmitted, transformer: droppable());
   }
 
-  FutureOr<void> _onUsernameChanged(OnUsernameChanged event, Emitter<LoginState> emit) {
-    final usernameError = event.username.
-    validate("Username")
+  FutureOr<void> _onEmailChanged(OnEmailChanged event, Emitter<LoginState> emit) {
+    final usernameError = event.email.
+    validate("Email")
     .required()
     .build();
 
-    emit(state.copyWith(username: event.username, usernameError: () => usernameError, loginStatus: LoginStatus.initial));
+    emit(state.copyWith(email: event.email, emailError: () => usernameError, loginStatus: LoginStatus.initial));
   }
 
   FutureOr<void> _onPasswordChanged(OnPasswordChanged event, Emitter<LoginState> emit) {
@@ -54,10 +54,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       print("Login submitted triggered!");
     }
 
-    final usernameError = event.username.
-    validate("Username")
+    final emailError = event.email.
+    validate("Email")
     .required()
-    .isAlphanumeric()
     .build();
 
     final passwordError = event.password
@@ -65,12 +64,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     .required()
     .build();
 
-    final hasError = usernameError.isNotEmpty || passwordError.isNotEmpty;
+    final hasError = emailError.isNotEmpty || passwordError.isNotEmpty;
 
     if(hasError){
       emit(
         state.copyWith(
-          usernameError: () => usernameError,
+          emailError: () => emailError,
           passwordError: () => passwordError,
           loginStatus: LoginStatus.initial
         )
@@ -85,7 +84,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     ));
 
     // Execute the usecase
-    final result = await _loginUsecase(LoginParam(username: event.username, password: event.password));
+    final result = await _loginUsecase(LoginParam(email: event.email, password: event.password));
 
     return await result.fold(
       (failure) {

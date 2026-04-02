@@ -23,7 +23,7 @@ Future<void> commonShowDialogBuilder(BuildContext context, String code) async {
         description: findErrorMap.value["description"] ?? "",
         iconData: findErrorIconMap.value,
         height: context.height / 2,
-        iconColor: AppColors.errorRed,
+        iconColor: AppColors.error,
       );
     },
   );

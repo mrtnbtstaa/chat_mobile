@@ -1,4 +1,3 @@
-import 'package:chat/core/common_widgets/common_divider.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/common_widgets/common_text.dart';
@@ -23,60 +22,27 @@ const ProfileSection({ super.key });
           elevation: 8.0,
           shape: CircleBorder(),
           shadowColor: Colors.black.withValues(alpha: 0.5),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.bgColor02,
-                    width: AppSizes.size2
-                  )
-                ),
-                child: CommonAvatar(
-                  path: AppImages.profile,
-                  radius_: AppSizes.size72
-                )
-              ),
-              Positioned(
-                bottom: 10,
-                right: 0,
-                child: CommonContainer(
-                  width: AppSizes.size32,
-                  height: AppSizes.size32,
-                  boxDecoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                    border: Border.all(
-                      color: AppColors.bgColor02,
-                      width: AppSizes.size2
-                    )
-                  ),
-                  child: CommonIcon(
-                    iconData: BoxIcons.bx_check,
-                    iconColor: AppColors.bgColor02
-                  )
-                )
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.lSurfaceLow,
+                width: AppSizes.size4
               )
-            ]
+            ),
+            child: CommonAvatar(
+              path: AppImages.profile,
+              radius_: AppSizes.size72
+            )
           )
         ),
         AppSizes.spacing8.height(),
         CommonText(
           text: "John Doe",
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w800,
           fontSize: AppSizes.font24,
         ),
-        CommonText(
-          text: "19201.bautista.martin.s@gmail.com",
-          fontSize: AppSizes.font16
-        ),
-        CommonDivider(
-          indent_: AppSizes.size16,
-          endIndent_: AppSizes.size16,
-          thickness_: AppSizes.size2,
-        )
+        AppSizes.size32.height(),
       ]
     );
   }

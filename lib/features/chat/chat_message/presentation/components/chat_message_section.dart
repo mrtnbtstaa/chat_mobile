@@ -1,20 +1,18 @@
-import 'dart:ui';
-
-import 'package:chat/core/common_widgets/common_loading_indicator.dart';
-import 'package:chat/core/extensions/datetime_extension.dart';
-import 'package:chat/core/extensions/double_extension.dart';
-import 'package:chat/features/chat/chat_message/application/bloc/chat_bloc.dart';
+import 'package:chat/core/common_widgets/common_container.dart';
+import 'package:chat/features/chat/chat_message/presentation/components/chat_bubble.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../domain/entities/chat_message_entity.dart';
-
+import '../../../../../core/common_widgets/common_loading_indicator.dart';
 import '../../../../../core/common_widgets/common_text.dart';
 import '../../../../../core/common_widgets/glass_container.dart';
+import '../../../../../core/extensions/context_extension.dart';
+import '../../../../../core/extensions/datetime_extension.dart';
+import '../../../../../core/extensions/double_extension.dart';
 import '../../../../../core/style/app_colors.dart';
 import '../../../../../core/style/app_insets.dart';
 import '../../../../../core/style/app_sizes.dart';
-import '../../../../../core/extensions/context_extension.dart';
-import 'package:flutter/material.dart';
+import '../../application/bloc/chat_bloc.dart';
+import '../../domain/entities/chat_message_entity.dart';
 
 class ChatMessageSection extends StatelessWidget {
 
@@ -33,7 +31,6 @@ class ChatMessageSection extends StatelessWidget {
         physics: AlwaysScrollableScrollPhysics(),
         primary: true,
         reverse: true,
-        // shrinkWrap: true,
         itemCount: chatMessageList.length + (state.isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
           
@@ -54,44 +51,28 @@ class ChatMessageSection extends StatelessWidget {
           final previousChat = (index + 1 < chatMessageList.length) ? chatMessageList[index + 1] : null;
       
           if(previousChat == null || !DateUtils.isSameDay(chatDate, previousChat.createdAt)){showDateHeader = true;}
+
+          bool sentByMe = chat.messageRecipient.sentByMe;
       
           return Column(
             children: [
               AppSizes.size8.height(),
               if(showDateHeader)
-              GlassContainer(
+              CommonContainer(
                 padding: AppInsets.a8,
                 child: CommonText(
                   text: chatDate.getGroupDate()
-                )
+                ),
               ),
-              Align(
-                alignment: chat.sentByMe ? Alignment.centerLeft : Alignment.centerRight,
-                child: GlassContainer(
-                  borderRadiusGeometry: chat.sentByMe ? BorderRadius.only(
-                    topLeft: Radius.circular(AppSizes.size16),
-                    topRight: Radius.circular(AppSizes.size16),
-                    bottomLeft: Radius.circular(AppSizes.size16),
-                  ) : BorderRadius.only(
-                    topLeft: Radius.circular(AppSizes.size16),
-                    topRight: Radius.circular(AppSizes.size16),
-                    bottomRight: Radius.circular(AppSizes.size16),
-                  ),
-                  sigmaX: AppSizes.size24,
-                  sigmaY: AppSizes.size24,
-                  colorOne: chat.sentByMe ? Colors.white.withValues(alpha: 0.2) : AppColors.bgColor.withValues(alpha: 0.2),
-                  colorTwo: chat.sentByMe ? Colors.white.withValues(alpha: 0.01) : AppColors.bgColor01.withValues(alpha: 0.1),
-                  colorThree: chat.sentByMe ? Colors.white.withValues(alpha: 0.02) : AppColors.bgColor03.withValues(alpha: 0.1),
-                  width: context.width / 2,
-                  alignmentGeometry: Alignment.centerLeft,
-                  padding: AppInsets.hv16,
-                  child: CommonText(text: chat.content)
-                )
-              ),
-            ],
+              ChatBubble(
+                isMe: sentByMe,
+                content: chat.content,
+                dateSent: chat.createdAt.formattedTime(),
+              )
+            ]
           );
-        },
-      ),
+        }
+      )
     );
   }
 }

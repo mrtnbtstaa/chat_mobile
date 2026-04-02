@@ -1,4 +1,4 @@
-import 'package:chat/core/resources/app_config.dart';
+import 'package:chat/core/config/app_config.dart';
 import 'package:chat/features/chat/chat_message/infrastructure/dtos/response/paginated_chat_message_response_dto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';

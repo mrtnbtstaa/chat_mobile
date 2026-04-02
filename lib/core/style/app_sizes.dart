@@ -23,6 +23,7 @@ class AppSizes {
   static const double size148 = 148;
   static const double size200 = 200;
 
+  static const double spacing2 = 2;
   static const double spacing4 = 4;
   static const double spacing8 = 8;
   static const double spacing16 = 16;

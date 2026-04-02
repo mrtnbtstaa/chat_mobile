@@ -8,12 +8,13 @@ final class RegisterState extends Equatable {
     this.isPasswordVisible = false,
     this.isConfirmPasswordVisible = false,
     this.registerStatus = RegisterStatus.initial,
-    this.imagePath = "",
-    this.username = "",
+    this.fullName = "",
+    this.email = "",
     this.password = "",
     this.confirmPassword = "",
     this.errorMessage = "",
-    this.usernameError,
+    this.fullNameError,
+    this.emailError,
     this.passwordError,
     this.confirmPasswordError
   });
@@ -21,12 +22,13 @@ final class RegisterState extends Equatable {
   final bool isPasswordVisible;
   final bool isConfirmPasswordVisible;
   final RegisterStatus registerStatus;
-  final String imagePath;
-  final String username;
+  final String fullName;
+  final String email;
   final String password;
   final String confirmPassword;
   final String errorMessage;
-  final String? usernameError;
+  final String? fullNameError;
+  final String? emailError;
   final String? passwordError;
   final String? confirmPasswordError;
 
@@ -34,12 +36,13 @@ final class RegisterState extends Equatable {
     bool? isPasswordVisible,
     bool? isConfirmPasswordVisible,
     RegisterStatus? registerStatus,
-    String? imagePath,
-    String? username,
+    String? fullName,
+    String? email,
     String? password,
     String? confirmPassword,
     String? errorMessage,
-    ValueGetter<String?>? usernameError,
+    ValueGetter<String?>? fullNameError,
+    ValueGetter<String?>? emailError,
     ValueGetter<String?>? passwordError,
     ValueGetter<String?>? confirmPasswordError,
   }){
@@ -47,19 +50,20 @@ final class RegisterState extends Equatable {
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
       isConfirmPasswordVisible: isConfirmPasswordVisible ?? this.isConfirmPasswordVisible,
       registerStatus: registerStatus ?? this.registerStatus,
-      imagePath: imagePath ?? this.imagePath,
-      username: username ?? this.username,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
       password: password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
       errorMessage: errorMessage ?? this.errorMessage,
-      usernameError: usernameError != null ? usernameError() : this.usernameError,
+      fullNameError: fullNameError != null ? fullNameError() : this.fullNameError,
+      emailError: emailError != null ? emailError() : this.emailError,
       passwordError: passwordError != null ? passwordError() : this.passwordError,
       confirmPasswordError: confirmPasswordError != null ? confirmPasswordError() : this.confirmPasswordError
     );
   }
   
   @override
-  List<Object> get props => [isPasswordVisible, isConfirmPasswordVisible, registerStatus, imagePath, username, password, confirmPassword, errorMessage, ?usernameError, ?passwordError, ?confirmPasswordError];
+  List<Object> get props => [isPasswordVisible, isConfirmPasswordVisible, registerStatus, fullName, password, confirmPassword, errorMessage, ?fullNameError, ?emailError, ?passwordError, ?confirmPasswordError];
 }
 
 

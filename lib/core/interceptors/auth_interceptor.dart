@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:chat/core/contracts/i_token_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 
 import '../../features/authentication/domain/entities/token_entity.dart';
 import '../../features/authentication/domain/params/refresh_token_param.dart';
-import '../constants/api_constant.dart';
+// import '../constants/api_constant.dart';
 import '../di/di.dart';
 import '../extensions/int_extension.dart';
 import '../services/session_manager.dart';
@@ -24,15 +23,15 @@ class AuthInterceptor extends InterceptorContract {
 
   AuthInterceptor(this.tokenStorage, this.sessionManager);
 
-  bool _isWhiteListed(String path){
-    final List<String> whitelist = [
-      ApiConstant.loginApi, 
-      ApiConstant.registerApi, 
-      ApiConstant.refreshApi, 
-    ];
+  // bool _isWhiteListed(String path){
+  //   final List<String> whitelist = [
+  //     ApiConstant.loginApi, 
+  //     ApiConstant.registerApi, 
+  //     ApiConstant.refreshApi, 
+  //   ];
 
-    return whitelist.any((pattern) => path.contains(pattern));
-  }
+  //   return whitelist.any((pattern) => path.contains(pattern));
+  // }
 
   @override
   FutureOr<BaseRequest> interceptRequest({required BaseRequest request}) async {

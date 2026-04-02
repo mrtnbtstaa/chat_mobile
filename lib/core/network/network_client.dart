@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:chat/core/errors/failure.dart';
 import 'package:chat/core/errors/server_failure.dart';
 import 'package:chat/core/network/api_response.dart';
-import 'package:chat/core/resources/app_config.dart';
+import 'package:chat/core/config/app_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart' as http;

@@ -1,7 +1,6 @@
 import 'package:chat/core/common_widgets/common_text.dart';
-import 'package:chat/core/common_widgets/glass_container.dart';
 import 'package:chat/core/router/app_routes.dart';
-import 'package:chat/core/style/app_insets.dart';
+import 'package:chat/core/style/app_colors.dart';
 import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,16 +17,16 @@ class RegisterNowContent extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: CommonText(
-            text: "Don't have an account?",
+            text: "New to Ethereal?",
           ),
         ),
         GestureDetector(
-          onTap: () => context.go(AppRoutes.register),
-          child: GlassContainer(
-            padding: AppInsets.a8,
-            child: CommonText(
-              text: "Sign up now!"
-            )
+          onTap: () => context.goNamed(AppRoutes.register),
+          child: CommonText(
+            text: "Sign up now!",
+            fontColor: AppColors.primaryBrandColor,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.0,
           )
         )
       ]

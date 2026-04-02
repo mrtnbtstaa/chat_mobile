@@ -16,7 +16,7 @@ class ChatLastMessageResponseDto extends ChatLastMessage{
       messageId: lastMessage["message_id"] ?? "",
       text: lastMessage["text"] ?? "",
       sender: lastMessage["sender"] ?? "",
-      lastMessageAt: lastMessage["last_message_at"] ?? ""
+      lastMessageAt: DateTime.parse(lastMessage["last_message_at"])
     );
   }
 

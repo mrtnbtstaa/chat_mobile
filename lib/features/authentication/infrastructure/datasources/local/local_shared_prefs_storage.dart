@@ -11,7 +11,11 @@ class LocalSharedPrefsStorage implements ILocalStorage {
   @override
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.remove("user_id");
+    await prefs.remove("email");
+    await prefs.remove("full_name");
+    await prefs.remove("profile_image");
+    await prefs.remove("is_online");
   }
 
   @override

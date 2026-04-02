@@ -3,9 +3,9 @@ part of 'login_bloc.dart';
 class LoginState extends Equatable {
 
   const LoginState({
-    this.usernameError,
+    this.emailError,
     this.passwordError,
-    this.username = "",
+    this.email = "",
     this.password = "",
     this.loginStatus = LoginStatus.initial,
     this.isPasswordVisible = false,
@@ -13,9 +13,9 @@ class LoginState extends Equatable {
     this.code
   });
 
-  final String username;
+  final String email;
   final String password;
-  final String? usernameError;
+  final String? emailError;
   final String? passwordError;
   final LoginStatus loginStatus;
   final bool isPasswordVisible;
@@ -23,9 +23,9 @@ class LoginState extends Equatable {
   final String? code;
 
   LoginState copyWith({
-    final String? username,
+    final String? email,
     final String? password,
-    ValueGetter<String?>? usernameError,
+    ValueGetter<String?>? emailError,
     ValueGetter<String?>? passwordError,
     final LoginStatus? loginStatus,
     final bool? isPasswordVisible,
@@ -33,9 +33,9 @@ class LoginState extends Equatable {
     final String? code
   }){
     return LoginState(
-      username: username ?? this.username,
+      email: email ?? this.email,
       password: password ?? this.password,
-      usernameError: usernameError != null ? usernameError() : this.usernameError,
+      emailError: emailError != null ? emailError() : this.emailError,
       passwordError: passwordError != null ? passwordError() : this.passwordError,
       loginStatus: loginStatus ?? this.loginStatus,
       isPasswordVisible: isPasswordVisible ?? this.isPasswordVisible,
@@ -45,6 +45,6 @@ class LoginState extends Equatable {
   }
   
   @override
-  List<Object> get props => [username, password, ?usernameError, ?passwordError, loginStatus, isPasswordVisible, ?userEntity, ?code];
+  List<Object> get props => [email, password, ?emailError, ?passwordError, loginStatus, isPasswordVisible, ?userEntity, ?code];
 }
 
