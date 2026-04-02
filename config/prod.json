@@ -1,5 +1,0 @@
-{
-    "env": "production",
-    "base_url_api": "http://192.168.100.47:8000/",
-    "base_ws_url_api": "ws://localhost:8000"
-}
