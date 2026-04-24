@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat/core/services/session_manager.dart';
+import 'package:chat/features/authentication/domain/value_objects/email.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../../core/di/di.dart';
@@ -31,12 +32,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   FutureOr<void> _onEmailChanged(OnEmailChanged event, Emitter<LoginState> emit) {
-    final usernameError = event.email.
+    final emailError = event.email.
     validate("Email")
     .required()
+    .isValidEmail()
     .build();
 
-    emit(state.copyWith(email: event.email, emailError: () => usernameError, loginStatus: LoginStatus.initial));
+    emit(state.copyWith(email: event.email, emailError: () => emailError, loginStatus: LoginStatus.initial));
   }
 
   FutureOr<void> _onPasswordChanged(OnPasswordChanged event, Emitter<LoginState> emit) {
@@ -77,27 +79,37 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       return;
     }
     
-    print("Never run!");
-
     emit(state.copyWith(
       loginStatus: LoginStatus.loading,
     ));
 
-    // Execute the usecase
-    final result = await _loginUsecase(LoginParam(email: event.email, password: event.password));
+    final emailResult = Email.create(event.email);
 
-    return await result.fold(
-      (failure) {
+    await emailResult.fold(
+      (emailFailure) async {
         if(kDebugMode){
-          print("\x1B[32mCurrent code: ${failure.code}");
+          print("Email: ${emailFailure.message}");
         }
-        emit(state.copyWith(loginStatus: LoginStatus.error, code: failure.code));
+        emit(state.copyWith(
+          loginStatus: LoginStatus.error,
+        ));
       }, 
-      (entity) {
-        sl<SessionManager>().login();
-        emit(state.copyWith(userEntity: entity, loginStatus: LoginStatus.success));
+      (validEmail) async {
+
+        // Execute the login usecase
+        final result = await _loginUsecase(LoginParam(
+          email: validEmail,
+          password: event.password
+        ));
+
+        result.fold(
+          (failure) => emit(state.copyWith(loginStatus: LoginStatus.error, code: failure.code)),
+          (entity) {
+            sl<SessionManager>().login();
+            emit(state.copyWith(userEntity: entity, loginStatus: LoginStatus.success));
+          }
+        );
       }
     );
-
   }
 }

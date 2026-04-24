@@ -1,6 +1,6 @@
 class AppImages {
 
   static const profile = "assets/images/profile.jpg";
-  static const mountain = "assets/images/mountain.jpg";
+  static const placeholder = "assets/images/placeholder_profile.png";
 
 }

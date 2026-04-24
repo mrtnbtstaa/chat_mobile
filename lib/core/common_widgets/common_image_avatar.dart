@@ -36,7 +36,7 @@ class CommonImageAvatar extends StatelessWidget {
                 height: AppSizes.size64 * 2,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage(AppImages.mountain),
+                    image: AssetImage(AppImages.profile),
                     fit: BoxFit.cover
                   ),
                   border: Border.all(

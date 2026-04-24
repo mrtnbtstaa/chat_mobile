@@ -43,13 +43,17 @@ class _AnimatedBackgroundState extends State<StaggeredThreeDotLoader> with Singl
 
   @override
   Widget build(BuildContext context){
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return CustomPaint(
-          painter: StaggeredDotPainter(animations: _dotAnimations),
-        );
-      },
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return CustomPaint(
+            painter: StaggeredDotPainter(
+              animations: _dotAnimations,
+            ),
+          );
+        }
+      ),
     );
   }
 }

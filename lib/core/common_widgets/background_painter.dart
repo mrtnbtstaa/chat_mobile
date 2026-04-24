@@ -17,8 +17,8 @@ class BackgroundPainter extends CustomPainter{
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        AppColors.primaryBrandColor.withValues(alpha: 0.4),
-        AppColors.primaryBrandColor.withValues(alpha: 0.3),
+        AppColors.primaryBrandColor,
+        AppColors.primaryBrandColor,
       ]
     ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
@@ -50,5 +50,5 @@ class BackgroundPainter extends CustomPainter{
   }
   
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant BackgroundPainter oldDelegate) => oldDelegate.offset != offset;
 }

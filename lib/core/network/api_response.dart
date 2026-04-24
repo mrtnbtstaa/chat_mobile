@@ -1,7 +1,8 @@
+
 sealed class ApiResponse {}
 
-final String successStatus = "success";
-final String errorStatus = "error";
+final String _successStatus = "success";
+final String _errorStatus = "error";
 
 class SuccessResponse extends ApiResponse{
 
@@ -12,10 +13,11 @@ class SuccessResponse extends ApiResponse{
   SuccessResponse({
     required this.status,
     required this.message,
-    required this.data
+    this.data
   });
 
   factory SuccessResponse.fromJson(Map<String, dynamic> json){
+    
     return SuccessResponse(
       status: json["status"],
       message: json["message"],
@@ -87,9 +89,9 @@ class ErrorDetail{
 
 ApiResponse handleApiResponse(Map<String, dynamic> json){
   final status = json["status"];
-  if(status == successStatus){
+  if(status == _successStatus){
     return SuccessResponse.fromJson(json);
-  }else if(status == errorStatus){
+  }else if(status == _errorStatus){
     return ErrorResponse.fromJson(json);
   }else{
     throw Exception("Unknown API Status");

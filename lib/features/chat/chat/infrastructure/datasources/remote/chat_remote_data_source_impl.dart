@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
-
 import '../../../../../../core/constants/api_constant.dart';
 import '../../../../../../core/contracts/i_token_storage.dart';
 import '../../../../../../core/errors/failure.dart';
 import '../../../../../../core/network/network_client.dart';
 import '../../dtos/response/chat_response_dto.dart';
+import '../../dtos/response/chat_user_status_response_dto.dart';
 import 'i_chat_remote_data_source.dart';
 
 class ChatRemoteDataSourceImpl extends NetworkClient implements IChatRemoteDataSource{
@@ -21,6 +21,14 @@ class ChatRemoteDataSourceImpl extends NetworkClient implements IChatRemoteDataS
       onSuccess: (json) {
         return ChatResponseDto.fromJson(json);
       },
+    );
+  }
+  
+  @override
+  Future<Either<Failure, ChatUserStatusResponseDto>> getChatStatus() async {
+    return await get<ChatUserStatusResponseDto>(
+      ApiConstant.listChatUserApi,
+      onSuccess: (json) => ChatUserStatusResponseDto.fromJson(json)
     );
   }
   

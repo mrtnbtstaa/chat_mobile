@@ -1,7 +1,5 @@
 part of 'register_bloc.dart';
 
-
-
 final class RegisterState extends Equatable {
 
   const RegisterState({
@@ -63,7 +61,19 @@ final class RegisterState extends Equatable {
   }
   
   @override
-  List<Object> get props => [isPasswordVisible, isConfirmPasswordVisible, registerStatus, fullName, password, confirmPassword, errorMessage, ?fullNameError, ?emailError, ?passwordError, ?confirmPasswordError];
+  List<Object> get props => [
+    isPasswordVisible,
+    isConfirmPasswordVisible,
+    registerStatus,
+    fullName,
+    password,
+    confirmPassword,
+    errorMessage,
+    ?fullNameError,
+    ?emailError,
+    ?passwordError,
+    ?confirmPasswordError
+  ];
 }
 
 

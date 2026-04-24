@@ -18,3 +18,7 @@ final class ChatInboxReceived extends ChatEvent{
   @override
   List<Object> get props => [json];
 }
+
+final class ChatUserStatus extends ChatEvent{
+  const ChatUserStatus();
+}

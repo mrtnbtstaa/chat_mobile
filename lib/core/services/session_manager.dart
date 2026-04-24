@@ -26,7 +26,7 @@ class SessionManager extends ValueNotifier<AuthStatus> {
         final result = await sl<BaseUsecase<Unit, AccessTokenParam>>()(AccessTokenParam(accessToken: token));
 
         result.fold(
-          (failure) {
+          (failure) async {
             logout();
           },
           (_) {

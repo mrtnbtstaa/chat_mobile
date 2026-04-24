@@ -56,7 +56,6 @@ class InboxWsClient {
         final decodedData = jsonDecode(message) as Map<String, dynamic>;
         _messageController.add(decodedData);
 
-        print("Data send to server: $decodedData");
 
       },
       onError: (error){

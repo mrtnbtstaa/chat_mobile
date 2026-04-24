@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../../core/common_widgets/common_text.dart';
@@ -13,14 +14,19 @@ class ListContactSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.read<ChatGroupBloc>().state;
+
+    if(kDebugMode){
+      print("Chat group len: ${state.groupMembers?.length}");
+    }
+
     return Expanded(
       child: ListView.separated(
         shrinkWrap: true,
         physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
-          final contact = state.groupMembers[index];
-          final String currentInitial = contact.fullName[0].toUpperCase();
+          final contact = state.groupMembers?[index];
+          final String currentInitial = contact?.fullName[0].toUpperCase() ?? "";
 
           bool showPrefix = false;
 
@@ -29,8 +35,7 @@ class ListContactSection extends StatelessWidget {
             showPrefix = true;
           } else {
             // Compare with the previous initial
-            final String previousInitial = state.groupMembers[index - 1].fullName[0]
-                .toUpperCase();
+            final String previousInitial = state.groupMembers?[index - 1].fullName[0].toUpperCase() ?? "";
             if (currentInitial != previousInitial) {
               showPrefix = true;
             }
@@ -48,21 +53,15 @@ class ListContactSection extends StatelessWidget {
                 fontColor: AppColors.primaryBrandColor,
               ),
               ContactItem(
-                username: contact.fullName,
-                avatar: contact.profileAvatar,
-                status: contact.status,
-                onChanged: (value){
-                  context.read<ChatGroupBloc>().add(SelectMember(isSelected: value, selectedId: contact.id));
-                },
-                isSelected: contact.isSelected,
+                groupMember: contact,
+                onChanged: (value) => context.read<ChatGroupBloc>().add(SelectMember(isSelected: value, selectedId: contact?.userId ?? "")),
               )
-            ],
+            ]
           );
         },
-        separatorBuilder: (context, index) =>
-            Padding(padding: AppInsets.a8),
-        itemCount: state.groupMembers.length,
-      ),
+        separatorBuilder: (context, index) => Padding(padding: AppInsets.a8),
+        itemCount: state.groupMembers?.length ?? 0,
+      )
     );
   }
 }

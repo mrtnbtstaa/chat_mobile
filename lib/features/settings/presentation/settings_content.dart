@@ -31,6 +31,8 @@ class SettingsContent extends StatelessWidget {
               padding: AppInsets.h8,
               child: CommonElevatedButton(
                 withIcon: true,
+                overlayColor: Colors.transparent,
+                elevatedPadding: AppInsets.h8,
                 backgroundColor: AppColors.error,
                 iconData: IonIcons.log_out,
                 iconColor: AppColors.lSurfaceLow,

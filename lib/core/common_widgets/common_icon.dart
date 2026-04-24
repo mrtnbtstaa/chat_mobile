@@ -16,6 +16,7 @@ class CommonIcon extends StatelessWidget {
     return Icon(
       iconData,
       color: iconColor ?? (context.isDarkMode ? AppColors.dTextSecondary : AppColors.ltextSecondary),
+      size: iconSize,
     );
   }
 

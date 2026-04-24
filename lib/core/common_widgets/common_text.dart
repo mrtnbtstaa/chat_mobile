@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import '../extensions/context_extension.dart';
 import '../style/app_sizes.dart';
-import 'package:flutter/material.dart';
 
 class CommonText extends StatelessWidget {
 

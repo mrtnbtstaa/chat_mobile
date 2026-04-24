@@ -9,11 +9,11 @@ class ChatSocketService {
   ChatSocketService(this._client, this._userStorage);
 
   String? _cachedUserId;
-  String? _cachedUsername;
+  String? _cachedEmail;
 
   Future<void> _prepareUerInfo() async {
     _cachedUserId ??= await _userStorage.getUserInfo("user_id");
-    _cachedUsername ??= await _userStorage.getUserInfo("username");
+    _cachedEmail ??= await _userStorage.getUserInfo("email");
   }
 
   void sendTypingStatus(bool isTyping) async {
@@ -23,7 +23,7 @@ class ChatSocketService {
     final data = {
       "type": "typing", // Keep this consistent with your Django "type" check
       "user_id": _cachedUserId,
-      "username": _cachedUsername,
+      "email": _cachedEmail,
       "is_typing": isTyping
     };
 

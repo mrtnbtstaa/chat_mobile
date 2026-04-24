@@ -1,18 +1,15 @@
-import 'package:chat/core/common_widgets/common_container.dart';
-import 'package:chat/features/chat/chat_message/presentation/components/chat_bubble.dart';
+import 'chat_bubble.dart';
 import 'package:flutter/material.dart';
+import '../../application/bloc/chat_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../../core/common_widgets/common_loading_indicator.dart';
-import '../../../../../core/common_widgets/common_text.dart';
-import '../../../../../core/common_widgets/glass_container.dart';
-import '../../../../../core/extensions/context_extension.dart';
-import '../../../../../core/extensions/datetime_extension.dart';
-import '../../../../../core/extensions/double_extension.dart';
-import '../../../../../core/style/app_colors.dart';
 import '../../../../../core/style/app_insets.dart';
 import '../../../../../core/style/app_sizes.dart';
-import '../../application/bloc/chat_bloc.dart';
 import '../../domain/entities/chat_message_entity.dart';
+import '../../../../../core/common_widgets/common_text.dart';
+import '../../../../../core/extensions/double_extension.dart';
+import '../../../../../core/extensions/datetime_extension.dart';
+import '../../../../../core/common_widgets/common_container.dart';
+import '../../../../../core/common_widgets/common_loading_indicator.dart';
 
 class ChatMessageSection extends StatelessWidget {
 
@@ -34,7 +31,7 @@ class ChatMessageSection extends StatelessWidget {
         itemCount: chatMessageList.length + (state.isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
           
-          // Show the loading indicator if we are loading more data and 
+          // Show the loading indicator if we are loading more data
           if(index == chatMessageList.length && state.isLoadingMore){
             return Padding(
               padding: EdgeInsets.all(16.0),

@@ -1,4 +1,5 @@
 import 'package:chat/features/authentication/domain/entities/auth_entity.dart';
+import 'package:chat/features/authentication/domain/value_objects/email.dart';
 import 'package:chat/features/authentication/infrastructure/dtos/response/refresh_token_response_dto.dart';
 
 class LoginResponseDto extends AuthEntity {
@@ -18,7 +19,7 @@ class LoginResponseDto extends AuthEntity {
     return LoginResponseDto(
       userId: json["user_id"],
       fullName: json["full_name"],
-      email: json["email"],
+      email: Email.fromUniqueString(json["email"]), 
       tokens: RefreshTokenResponseDto.fromJson(json["tokens"]),
       isOnline: json["is_online"],
       profile: json["profile"] ?? "",

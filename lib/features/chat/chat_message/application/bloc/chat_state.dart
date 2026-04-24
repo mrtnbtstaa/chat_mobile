@@ -10,6 +10,7 @@ sealed class ChatState extends Equatable {
   final bool isTyping;
   final String textMessage;
   final String? typingUsername;
+  final bool isSearchEnable;
 
   const ChatState({
     this.messages = const [],
@@ -19,11 +20,12 @@ sealed class ChatState extends Equatable {
     this.isLoadingMore = false,
     this.isTyping = false,
     this.textMessage = "",
-    this.typingUsername
+    this.typingUsername,
+    this.isSearchEnable = false
   });
   
   @override
-  List<Object> get props => [messages, status, ?nextCursor, ?previousCursor, isLoadingMore, isTyping, textMessage, ?typingUsername];
+  List<Object> get props => [messages, status, ?nextCursor, ?previousCursor, isLoadingMore, isTyping, textMessage, ?typingUsername, isSearchEnable];
 }
 
 final class ChatInitial extends ChatState {}
@@ -44,7 +46,8 @@ class ChatConnected extends ChatState {
     super.isLoadingMore,
     super.isTyping,
     super.textMessage,
-    super.typingUsername
+    super.typingUsername,
+    super.isSearchEnable
   });
 
   ChatConnected copyWith({
@@ -55,7 +58,8 @@ class ChatConnected extends ChatState {
     bool? isLoadingMore,
     bool? isTyping,
     String? textMessage,
-    String? typingUsername
+    String? typingUsername,
+    bool? isSearchEnable
   }) {
     return ChatConnected(
       messages: messages ?? this.messages,
@@ -65,7 +69,8 @@ class ChatConnected extends ChatState {
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       isTyping: isTyping ?? this.isTyping,
       textMessage: textMessage ?? this.textMessage,
-      typingUsername: typingUsername
+      typingUsername: typingUsername,
+      isSearchEnable: isSearchEnable ?? this.isSearchEnable
     );
   }
 }

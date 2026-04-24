@@ -32,27 +32,29 @@ class ShimmerAnimatorState extends State<CommonShimmerAnimator> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return ShaderMask(
-          blendMode: BlendMode.srcATop,
-          shaderCallback:(bounds) {
-            return LinearGradient(
-              begin: Alignment(-1.0 + (2 * _controller.value), 0),
-              end: Alignment(1.0 + (2 * _controller.value), 0),
-              stops: const [0.1, 0.25, 0.35],
-              colors: [
-                AppColors.lSurfaceLow,
-                const Color.fromARGB(255, 255, 255, 255),
-                AppColors.lSurfaceLow,
-              ]
-            )
-            .createShader(bounds);
-          },
-          child: widget.child,
-        );
-      },
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return ShaderMask(
+            blendMode: BlendMode.srcATop,
+            shaderCallback:(bounds) {
+              return LinearGradient(
+                begin: Alignment(-1.0 + (2 * _controller.value), 0),
+                end: Alignment(1.0 + (2 * _controller.value), 0),
+                stops: const [0.1, 0.25, 0.35],
+                colors: [
+                  AppColors.lSurfaceLow,
+                  const Color.fromARGB(255, 255, 255, 255),
+                  AppColors.lSurfaceLow,
+                ]
+              )
+              .createShader(bounds);
+            },
+            child: widget.child,
+          );
+        },
+      ),
     );
   }
 }

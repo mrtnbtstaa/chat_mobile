@@ -32,6 +32,7 @@ class ChatConversationItem extends StatelessWidget {
                       text: chatEntity?.recipient.displayFullName ?? "",
                       fontWeight: FontWeight.w600,
                       fontSize: AppSizes.font16,
+                      letterSpacing: 0.3,
                     ),
                     Padding(
                       padding: AppInsets.h16,

@@ -1,9 +1,7 @@
-import 'package:chat/core/extensions/context_extension.dart';
-import 'package:chat/core/style/app_colors.dart';
-import 'package:chat/core/style/app_images.dart';
-import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/widgets.dart';
-
+import '../../../../../core/common_widgets/common_cached_image.dart';
+import '../../../../../core/style/app_colors.dart';
+import '../../../../../core/style/app_sizes.dart';
 import '../../domain/entities/sub_entities/chat_result_entity.dart';
 
 class ChatProfileItem extends StatelessWidget {
@@ -16,17 +14,7 @@ class ChatProfileItem extends StatelessWidget {
   Widget build(BuildContext context){
     return Stack(
       children: [
-        Container(
-          width: context.width / 6,
-          height: context.height / 14,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: AssetImage(AppImages.mountain),
-              fit: BoxFit.cover
-            )
-          ),
-        ),
+        CommonCachedImage(imageUrl: chatEntity?.recipient.profileImage ?? ""),
         Positioned(
           bottom: 2,
           right: 2,

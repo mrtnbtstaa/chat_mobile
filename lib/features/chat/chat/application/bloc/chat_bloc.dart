@@ -1,14 +1,13 @@
 import 'dart:async';
-import '../../../../../core/contracts/i_user_storage.dart';
-import '../../../../../core/extensions/int_extension.dart';
-import '../../../../../core/usecases/base_usecase.dart';
-import '../../domain/entities/chat_entity.dart';
-import '../../domain/entities/sub_entities/chat_last_message.dart';
-import '../../infrastructure/datasources/inbox_ws_client.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
+import '../../../../../core/contracts/i_user_storage.dart';
+import '../../../../../core/usecases/base_usecase.dart';
+import '../../domain/entities/chat_entity.dart';
+import '../../domain/entities/sub_entities/chat_last_message.dart';
+import '../../infrastructure/datasources/inbox_ws_client.dart';
 part 'chat_event.dart';
 part 'chat_state.dart';
 
@@ -17,16 +16,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   final InboxWsClient _client;
   final BaseUsecase<ChatEntity, Unit> _listChatUseCase;
+  final BaseUsecase<ChatEntity, Unit> _listChatUserStatusUseCase;
   final IUserStorage _userStorage;
 
   ChatBloc({
     required BaseUsecase<ChatEntity, Unit> listChatUseCase,
+    required BaseUsecase<ChatEntity, Unit> listChatUserStatusUseCase,
     required InboxWsClient client,
     required IUserStorage userStorage
-  }) : _listChatUseCase = listChatUseCase, _client = client, _userStorage = userStorage,
+  }) : _listChatUseCase = listChatUseCase, _listChatUserStatusUseCase = listChatUserStatusUseCase, _client = client, _userStorage = userStorage,
    super(ChatInitial()) {
     on<ConnectToInbox>(_onConnectToInbox);
     on<ChatInboxReceived>(_onChatInboxReceived);
+    on<ChatUserStatus>(_onChatUserStatus);
   }
 
   FutureOr<void> _onConnectToInbox(ConnectToInbox event, Emitter<ChatState> emit) async {
@@ -40,7 +42,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       // Listen to the incoming stream
       _messageInboxSubscription?.cancel();
       _messageInboxSubscription = _client.messageStream.listen((data){
-        print(data);
         add(ChatInboxReceived(json: data));
       });
 
@@ -48,21 +49,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       await _client.initializeSocketClient(userId.toString());
       return await result.fold(
-        (failure) async {
-          print("Chat Error: ${failure.message}, ${failure.error}, ${failure.code}, ${failure.statusCode}");
-          emit(ChatError(errorMessage: failure.message));
-        },
+        (failure) async => emit(ChatError(errorMessage: failure.message ?? "")),
         (entity){
-          return emit(ChatConnected(chatEntity: entity));
+          emit(ChatConnected(chatEntity: entity, chatUserEntity: state.chatUserEntity));
         }
       );
 
     }catch(e){
       emit(ChatError(errorMessage: e.toString()));
     }
-
-    
-
   }
 
   FutureOr<void> _onChatInboxReceived(ChatInboxReceived event, Emitter<ChatState> emit) async {
@@ -97,13 +92,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         return room;
       }).toList();
 
-      
-      // updatedResults?.sort((a, b){
-      //   final dateA = a.lastMessage?.lastMessageAt ?? a.createdAt.toIso8601String();
-      //   final dateB = b.lastMessage?.lastMessageAt ?? b.createdAt.toIso8601String();
-      //   return dateB.compareTo(dateA);
-      // });
-
       // Emit the state as Chat Connected
       emit((state as ChatConnected).copyWith(chatEntity: currentEntity?.copyWith(
         results: updatedResults,
@@ -114,6 +102,32 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
 
    
+
+  }
+
+  FutureOr<void> _onChatUserStatus(ChatUserStatus event, Emitter<ChatState> emit) async {
+
+    final result = await _listChatUserStatusUseCase(unit);
+
+    emit(ChatLoading());
+
+    try{
+
+      return await result.fold(
+        (failure){
+          if(kDebugMode){
+            print("Chat failure: ${failure.message}, ${failure.code}");
+          }
+          emit(ChatError(errorMessage: failure.message ?? ""));
+        },
+        (entity){
+          emit(ChatConnected(chatUserEntity: entity));
+        }
+      );
+
+    }catch(e){
+      emit(ChatError(errorMessage: e.toString()));
+    }
 
   }
 }

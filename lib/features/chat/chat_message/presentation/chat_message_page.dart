@@ -72,9 +72,9 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                     print("Current socket status: ${state.status}");
                   }
                   if(state.status == SocketStatus.connecting){
-                    return Center(child: CommonLoadingIndicator());
+                    return Expanded(child: Center(child: CommonLoadingIndicator()));
                   }else if(state.status == SocketStatus.offline){
-                    return Center(child: CommonLoadingIndicator(indicatorColor: AppColors.lSurfaceLow));
+                    return Expanded(child: Center(child: CommonLoadingIndicator(indicatorColor: AppColors.lSurfaceLow)));
                   }
                       
                   return PrimaryScrollController(
@@ -93,7 +93,7 @@ class _ChatMessagePageState extends State<ChatMessagePage> {
                   children: <Widget>[
                     Flexible(
                       child: CommonTextField(
-                        hasSuffixIcon: true,
+                        suffixIconColor: AppColors.primaryBrandColor,
                         iconSuffixData: BoxIcons.bx_send,
                         onSuffixButtonPressed: (){
                           final text = messageController.text;

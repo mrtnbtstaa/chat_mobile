@@ -1,6 +1,9 @@
 
+
+import 'package:chat/features/authentication/domain/value_objects/email.dart';
+
 class LoginParam{
-  final String email;
+  final Email email;
   final String password;
   
   const LoginParam({

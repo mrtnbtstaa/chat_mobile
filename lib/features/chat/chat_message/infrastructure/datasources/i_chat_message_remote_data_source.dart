@@ -6,7 +6,7 @@ import 'package:fpdart/fpdart.dart';
 
 abstract interface class IChatMessageRemoteDataSource {
 
-  Future<Either<Failure, ChatMessageResponseDto>> sendMessage(ChatMessageRequestDto chatMessageDto);
+  Future<Either<Failure, Unit>> sendMessage(ChatMessageRequestDto chatMessageDto);
   Future<Either<Failure, PaginatedChatMessageResponseDto<ChatMessageResponseDto>>> getMessages(String? cursorUrl);
   
 }

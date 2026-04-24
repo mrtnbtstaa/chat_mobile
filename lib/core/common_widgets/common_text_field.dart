@@ -23,7 +23,6 @@ class CommonTextField extends StatelessWidget {
     this.initialValue,
     this.fontSize,
     this.prefixIconWidget,
-    this.hasSuffixIcon = false,
     this.iconSuffixData,
     this.onSuffixButtonPressed,
     this.textInputAction,
@@ -36,7 +35,9 @@ class CommonTextField extends StatelessWidget {
     this.validator,
     this.suffixWidget,
     this.prefixIconColor,
-    this.prefixIconData
+    this.suffixIconColor,
+    this.prefixIconData,
+    this.isReadOnly = false
    });
 
 
@@ -62,6 +63,7 @@ class CommonTextField extends StatelessWidget {
             CommonContainer(
               padding: padding ?? AppInsets.hv4,
               child: TextFormField(
+                readOnly: isReadOnly,
                 initialValue: initialValue,
                 controller: controller,
                 validator: validator,
@@ -78,10 +80,10 @@ class CommonTextField extends StatelessWidget {
                     iconData: prefixIconData ?? IonIcons.search,
                     iconColor: prefixIconColor ?? (context.isDarkMode ? AppColors.dTextSecondary : AppColors.ltextSecondary),
                   ),
-                  suffixIcon: hasSuffixIcon ? IconButton(
+                  suffixIcon: IconButton(
                     onPressed: onSuffixButtonPressed,
-                    icon: Icon(iconSuffixData, color: context.isDarkMode ? AppColors.dTextSecondary : AppColors.ltextSecondary),
-                  ) : suffixWidget,
+                    icon: Icon(iconSuffixData, color: suffixIconColor ?? (context.isDarkMode ? AppColors.primaryBrandColor : AppColors.ltextSecondary)),
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
                     borderSide: BorderSide(
@@ -151,10 +153,10 @@ class CommonTextField extends StatelessWidget {
               iconData: prefixIconData ?? IonIcons.search,
               iconColor: prefixIconColor ?? (context.isDarkMode ? AppColors.dTextSecondary : AppColors.ltextSecondary),
             ),
-            suffixIcon: hasSuffixIcon ? IconButton(
+            suffixIcon: IconButton(
               onPressed: onSuffixButtonPressed,
-              icon: Icon(iconSuffixData, color: AppColors.ltextPrimary),
-            ) : SizedBox.shrink(),
+              icon: Icon(iconSuffixData, color: suffixIconColor ?? (context.isDarkMode ? AppColors.primaryBrandColor : AppColors.ltextSecondary)),
+            ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(AppSizes.size16)),
               borderSide: BorderSide(
@@ -203,7 +205,6 @@ class CommonTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final TextEditingController controller;
   final Widget? prefixIconWidget;
-  final bool hasSuffixIcon;
   final IconData? iconSuffixData;
   final VoidCallback? onSuffixButtonPressed;
   final TextInputAction? textInputAction;
@@ -217,4 +218,6 @@ class CommonTextField extends StatelessWidget {
   final Widget? suffixWidget;
   final IconData? prefixIconData;
   final Color? prefixIconColor;
+  final Color? suffixIconColor;
+  final bool isReadOnly;
 }

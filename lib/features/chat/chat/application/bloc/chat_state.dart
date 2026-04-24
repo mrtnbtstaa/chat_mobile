@@ -3,23 +3,28 @@ part of 'chat_bloc.dart';
 sealed class ChatState extends Equatable {
 
   final ChatEntity? chatEntity;
+  final ChatEntity? chatUserEntity;
 
-  const ChatState({this.chatEntity});
+  const ChatState({this.chatEntity, this.chatUserEntity});
   
   @override
-  List<Object> get props => [?chatEntity];
+  List<Object> get props => [?chatEntity, ?chatUserEntity];
 }
 
 final class ChatInitial extends ChatState {}
 final class ChatLoading extends ChatState {}
 final class ChatConnected extends ChatState{
 
-  const ChatConnected({super.chatEntity});
+  const ChatConnected({super.chatEntity, super.chatUserEntity});
 
   ChatConnected copyWith({
-    ChatEntity? chatEntity
+    ChatEntity? chatEntity,
+    ChatEntity? chatUserEntity
   }){
-    return ChatConnected(chatEntity: chatEntity ?? this.chatEntity);
+    return ChatConnected(
+      chatEntity: chatEntity ?? this.chatEntity,
+      chatUserEntity: chatUserEntity ?? this.chatUserEntity
+    );
   }
 
 }
@@ -35,3 +40,4 @@ final class ChatError extends ChatState {
   List<Object> get props => [errorMessage];
 
 }
+

@@ -3,25 +3,16 @@ import 'package:equatable/equatable.dart';
 
 class PaginatedMessages extends Equatable{
 
-  final List<ChatMessageEntity> results;
   final String? next;
   final String? previous;
+  final List<ChatMessageEntity> results;
 
   const PaginatedMessages({
-    required this.results,
     this.next,
-    this.previous
+    this.previous,
+    required this.results
   });
 
   @override
   List<Object?> get props => [results, next, previous];
-
-  factory PaginatedMessages.fromJson(Map<String, dynamic> json){
-    return PaginatedMessages(
-      results: json["results"],
-      next: json["next"],
-      previous: json["previous"]
-    );
-  }
-
 }

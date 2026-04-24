@@ -1,6 +1,5 @@
 import '../../../../../core/common_widgets/common_text.dart';
 import '../../../../../core/extensions/double_extension.dart';
-import '../../../../../core/style/app_colors.dart';
 import '../../../../../core/style/app_sizes.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,7 +13,7 @@ const LoginHeader({ super.key });
       children: <Widget>[
         AppSizes.size32.height(),
         CommonText(
-          text: "Ethereal",
+          text: "Nexus",
           fontWeight: FontWeight.w700,
           fontSize: AppSizes.font32,
         ),
@@ -25,7 +24,7 @@ const LoginHeader({ super.key });
           fontSize: AppSizes.font32,
         ),
         CommonText(
-          text: "Please enter your details to access your curated space.",
+          text: "Please enter your details to start chatting with your friends.",
           fontSize: AppSizes.font16,
         ),
       ],

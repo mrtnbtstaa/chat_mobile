@@ -23,4 +23,16 @@ class ChatRepositoryImpl implements IChatRepository{
     );
 
   }
+  
+  @override
+  Future<Either<Failure, ChatEntity>> getChatStatus() async {
+
+    final result = await _chatRemoteDataSource.getChatStatus();
+
+    return result.fold(
+      (failure) => left(failure),
+      (dto) => right(dto.toEntity())
+    );
+
+  }
 }

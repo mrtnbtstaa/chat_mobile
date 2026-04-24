@@ -1,5 +1,4 @@
 import 'package:chat/core/enum/app_theme.dart';
-import 'package:chat/core/style/app_images.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsManager {

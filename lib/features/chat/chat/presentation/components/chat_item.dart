@@ -1,14 +1,12 @@
-import 'package:chat/core/router/app_routes.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../../core/common_widgets/common_container.dart';
+import '../../../../../core/router/app_routes.dart';
+import '../../../../../core/style/app_insets.dart';
+import '../../../../../core/style/app_sizes.dart';
 import '../../domain/entities/sub_entities/chat_result_entity.dart';
-
 import 'chat_conversation_item.dart';
 import 'chat_profile_item.dart';
-import '../../../../../core/style/app_insets.dart';
-import 'package:flutter/material.dart';
-import '../../../../../core/style/app_sizes.dart';
 
 class ChatItem extends StatelessWidget {
 

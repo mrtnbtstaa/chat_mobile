@@ -49,16 +49,19 @@ class AuthInterceptor extends InterceptorContract {
 
     // Check if the token is not null or not empty
     if(accessToken != null && accessToken.isNotEmpty){
-      request.headers.update(
-        "Authorization", 
-        (value) => "Bearer $accessToken",
-        ifAbsent: () => "Bearer $accessToken"
-      );
+      request.headers["Authorization"] = "Bearer $accessToken";
+      // request.headers.update(
+      //   "Authorization", 
+      //   (value) => "Bearer $accessToken",
+      //   ifAbsent: () => "Bearer $accessToken"
+      // );
     }
 
-  // print("ACCESS TOKEN: $accessToken");
-  // print("REQUEST: ${request.url}");
-  // print("HEADERS: ${request.headers}");
+    // if(kDebugMode){
+    //   print("ACCESS TOKEN: $accessToken");
+    //   print("REQUEST: ${request.url}");
+    //   print("HEADERS: ${request.headers}");
+    // }
 
     return request;
   }

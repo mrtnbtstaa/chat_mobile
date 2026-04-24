@@ -1,15 +1,15 @@
 final Map<String, Map<String, String>> errorMap = {
   "INTERNAL_SERVER_ERROR": {
     "title": "Server Error",
-    "description": "Something went wrong on our end. Please try again later."
+    "description": "Something went wrong on our end. Please wait a moment and try again."
   },
   "THROTTLED": {
     "title": "Too many Requests",
-    "description": "You're moving a bit too fast. Please wait a moment before trying again."
+    "description": "Rate limit exceeded (429). You're moving a bit too fast. Please wait a moment before trying again."
   },
   "PARSE_ERROR": {
-    "title": "Data Error",
-    "description": "We couldn’t process the server response. Please try again."
+    "title": "Data Parse Error",
+    "description": "The synchronization handshake failed due to a malformed payload. The incoming data packet structure is incompatible."
   },
   "BAD_REQUEST": {
     "title": "Invalid Information",
@@ -25,6 +25,6 @@ final Map<String, Map<String, String>> errorMap = {
   },
   "UNAUTHORIZED_": {
     "title": "Login Failed",
-    "description": "We couldn't verify your credentials. Please check your username and password"
+    "description": "We couldn't verify your credentials. Please check your email and password."
   }
 };

@@ -16,9 +16,6 @@ class ChatMessageEntity extends Equatable {
   });
 
   factory ChatMessageEntity.fromJson(Map<String, dynamic> json){
-
-    print("Entity from json: $json");
-
     return ChatMessageEntity(
       messageId: json["id"],
       content: json["text"],

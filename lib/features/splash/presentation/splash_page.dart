@@ -28,7 +28,9 @@ const SplashPage({ super.key });
               ),
             ),
           ),
-          Positioned.fill(child: AnimatedBackground()),
+          Positioned.fill(
+            child: AnimatedBackground()
+          ),
           Positioned.fill(
             child: StaggeredThreeDotLoader()
           ),

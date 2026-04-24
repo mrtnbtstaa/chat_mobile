@@ -1,10 +1,17 @@
+import 'package:chat/features/chat/chat_group/models/entities/paginated_group_member.dart';
+import 'package:chat/features/profile/change_password/application/bloc/change_password_bloc.dart';
+import 'package:chat/features/profile/change_password/domain/params/password_param.dart';
+
+import '../../features/profile/profile/application/bloc/profile_bloc.dart';
+import '../../features/profile/profile/domain/entities/profile_entity.dart';
+import '../../features/profile/profile/domain/params/profile_param.dart';
+import '../../features/profile/profile/services/media_service.dart';
+import '../../features/profile/change_password/presentation/change_password_page.dart';
 import '../../features/chat/chat_group/application/bloc/chat_group_bloc.dart';
 import '../../features/chat/chat_group/models/entities/group_member_entity.dart';
 import '../../features/chat/chat_group/presentation/pages/chat_group_page.dart';
 import '../../features/chat/chat_group/presentation/pages/chat_group_details_page.dart';
-
 import '../../features/settings/presentation/pages/appearance_page.dart';
-
 import '../contracts/i_user_storage.dart';
 import '../../features/authentication/application/register/bloc/register_bloc.dart';
 import '../../features/authentication/presentation/register/controllers/register_controller.dart';
@@ -12,11 +19,9 @@ import '../../features/authentication/presentation/register/register_page.dart';
 import '../../features/chat/chat/infrastructure/datasources/inbox_ws_client.dart';
 import '../../features/chat/chat_message/domain/entities/paginated_messages.dart';
 import '../../features/chat/chat_message/infrastructure/services/chat_socket_service.dart';
-
 import '../../features/chat/chat/domain/entities/sub_entities/chat_result_entity.dart';
 import '../../features/chat/chat_message/infrastructure/datasources/web_sockent_client.dart';
 import '../../features/chat/chat_message/application/bloc/chat_bloc.dart';
-import '../../features/chat/chat_message/domain/entities/chat_message_entity.dart';
 import '../../features/chat/chat_message/domain/params/chat_message_param.dart';
 import '../../features/chat/chat_message/presentation/chat_message_page.dart';
 import '../../features/chat/chat_message/presentation/controllers/message_controller.dart';
@@ -24,11 +29,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../features/authentication/application/login/bloc/login_bloc.dart';
 import '../../features/authentication/domain/entities/auth_entity.dart';
 import '../../features/authentication/domain/params/login_param.dart';
-import '../../features/authentication/presentation/login/controllers/login_controller.dart';
 import '../../features/authentication/presentation/login/login_page.dart';
 import '../../features/chat/chat/application/bloc/chat_bloc.dart' as chat_bloc;
 import '../../features/chat/chat/domain/entities/chat_entity.dart';
@@ -43,13 +46,14 @@ final GoRouter router = GoRouter(
   initialLocation: AppRoutes.splash,
   refreshListenable: sl<SessionManager>(),
   redirect: (context, state) {
-
     final authStatus = sl<SessionManager>().value;
     // If we are still initializing, stay on the splash
     if (authStatus == AuthStatus.unknown) return AppRoutes.splash;
 
     // Define which routes anyone can see
-    final isPublicRoute = state.matchedLocation == AppRoutes.login || state.matchedLocation == AppRoutes.register;
+    final isPublicRoute =
+        state.matchedLocation == AppRoutes.login ||
+        state.matchedLocation == AppRoutes.register;
 
     // If not authenticated, route to login
     if (authStatus == AuthStatus.unauthenticated) {
@@ -76,15 +80,11 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child: RepositoryProvider(
-          create: (context) => LoginController(),
-          dispose: (controller) => controller.dispose(),
-          child: BlocProvider(
-            create: (context) => LoginBloc(
-              loginUseCase: sl<BaseUsecase<AuthEntity, LoginParam>>(),
-            ),
-            child: LoginPage(),
+        child: BlocProvider(
+          create: (context) => LoginBloc(
+            loginUseCase: sl<BaseUsecase<AuthEntity, LoginParam>>(),
           ),
+          child: LoginPage(),
         ),
       ),
     ),
@@ -110,12 +110,23 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => _buildPageWithDefaultTransition(
         context: context,
         state: state,
-        child: BlocProvider(
-          create: (context) => chat_bloc.ChatBloc(
-            listChatUseCase: sl<BaseUsecase<ChatEntity, Unit>>(),
-            client: sl<InboxWsClient>(),
-            userStorage: sl<IUserStorage>(),
-          )..add(chat_bloc.ConnectToInbox()),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => chat_bloc.ChatBloc(
+                listChatUseCase: sl<BaseUsecase<ChatEntity, Unit>>(instanceName: 'listChat'),
+                listChatUserStatusUseCase: sl<BaseUsecase<ChatEntity, Unit>>(instanceName: 'listUserStatus'),
+                client: sl<InboxWsClient>(),
+                userStorage: sl<IUserStorage>(),
+              )..add(chat_bloc.ConnectToInbox())..add(chat_bloc.ChatUserStatus()),
+            ),
+            BlocProvider(
+              create: (context) => ProfileBloc(
+                mediaService: sl<MediaService>(),
+                uploadUsecase: sl<BaseUsecase<ProfileEntity, ProfileParam>>(),
+              ),
+            ),
+          ],
           child: HomePage(),
         ),
       ),
@@ -144,7 +155,7 @@ final GoRouter router = GoRouter(
               create: (context) => ChatBloc(
                 client: sl<WebSockentClient>(),
                 receiverId: chatResult.recipient.userId,
-                chatMessageUsecase: sl<BaseUsecase<ChatMessageEntity, ChatMessageParam>>(),
+                chatMessageUsecase: sl<BaseUsecase<Unit, ChatMessageParam>>(),
                 chatMessageListUseCase: sl<BaseUsecase<PaginatedMessages, String?>>(),
                 chatSocketService: sl<ChatSocketService>(),
               )..add(ConnectToChat()),
@@ -173,7 +184,9 @@ final GoRouter router = GoRouter(
           context: context,
           state: state,
           child: BlocProvider(
-            create: (context) => ChatGroupBloc()..add(LoadMembers()),
+            create: (context) => ChatGroupBloc(
+              listGroupChatUseCase: sl<BaseUsecase<PaginatedGroupMember, String?>>()
+            )..add(LoadMembers()),
             child: ChatGroupPage(),
           ),
         );
@@ -189,6 +202,22 @@ final GoRouter router = GoRouter(
           context: context,
           state: state,
           child: ChatGroupDetailsPage(members: members),
+        );
+      },
+    ),
+    GoRoute(
+      name: AppRoutes.changePassword,
+      path: AppRoutes.changePassword,
+      pageBuilder: (context, state) {
+        return _buildPageWithDefaultTransition(
+          context: context,
+          state: state,
+          child: BlocProvider(
+            create: (context) => ChangePasswordBloc(
+              changePasswordUsecase: sl<BaseUsecase<Unit, PasswordParam>>()
+            ),
+            child: ChangePasswordPage(),
+          ),
         );
       },
     ),

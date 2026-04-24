@@ -1,10 +1,9 @@
-import 'package:chat/core/common_widgets/common_container.dart';
-import 'package:chat/core/common_widgets/common_text.dart';
-import 'package:chat/core/extensions/context_extension.dart';
-import 'package:chat/core/style/app_colors.dart';
-import 'package:chat/core/style/app_insets.dart';
-import 'package:chat/core/style/app_sizes.dart';
 import 'package:flutter/widgets.dart';
+import '../../../../../core/common_widgets/common_container.dart';
+import '../../../../../core/common_widgets/common_text.dart';
+import '../../../../../core/style/app_colors.dart';
+import '../../../../../core/style/app_insets.dart';
+import '../../../../../core/style/app_sizes.dart';
 
 class ChatBubble extends StatelessWidget {
 
@@ -30,9 +29,11 @@ class ChatBubble extends StatelessWidget {
           crossAxisAlignment: isMe ? CrossAxisAlignment.start : CrossAxisAlignment.end,
           children: <Widget>[
             CommonContainer(
-              width: context.width / 1.3,
               backgroundColor: isMe ? AppColors.primaryBrandColor : AppColors.dSurfaceMedium,
-              child: CommonText(text: content),
+              child: CommonText(
+                text: content,
+                fontColor: AppColors.dTextPrimary,
+              ),
             ),
             CommonText(
               text: dateSent,

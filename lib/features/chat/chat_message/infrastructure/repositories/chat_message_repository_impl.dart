@@ -1,5 +1,4 @@
 import 'package:chat/core/errors/failure.dart';
-import 'package:chat/features/chat/chat_message/domain/entities/chat_message_entity.dart';
 import 'package:chat/features/chat/chat_message/domain/entities/paginated_messages.dart';
 import 'package:chat/features/chat/chat_message/domain/repositories/i_chat_message_repository.dart';
 import 'package:chat/features/chat/chat_message/infrastructure/datasources/i_chat_message_remote_data_source.dart';
@@ -14,12 +13,10 @@ class ChatMessageRepositoryImpl implements IChatMessageRepository{
   const ChatMessageRepositoryImpl(this._chatMessageRemoteDataSource);
 
   @override
-  Future<Either<Failure, ChatMessageEntity>> sendMessage(String content, String recipientId) async {
+  Future<Either<Failure, Unit>> sendMessage(String content, String recipientId) async {
 
     // Create a request DTO
     final messageDto = ChatMessageRequestDto(text: content, recipientId: recipientId);
-    
-    print("Message request DTO: ${messageDto.toJson()}");
 
     // Get the message and capture the result
     final result = await _chatMessageRemoteDataSource.sendMessage(messageDto);
@@ -35,7 +32,7 @@ class ChatMessageRepositoryImpl implements IChatMessageRepository{
         if(kDebugMode){
           print("Success sa repository");
         }
-        return right(dto.toEntity());
+        return right(unit);
       }
     );
 
@@ -43,11 +40,14 @@ class ChatMessageRepositoryImpl implements IChatMessageRepository{
   
   @override
   Future<Either<Failure, PaginatedMessages>> messages(String? cursorUrl) async {
+    if(kDebugMode){
+      print("Sending a message!");
+    }
     final result = await _chatMessageRemoteDataSource.getMessages(cursorUrl);
     return await result.fold(
       (failure) {
         if(kDebugMode){
-          print("Failure: ${failure.message}, ${failure.error}, ${failure.statusCode}");
+          print("Failure 123213: ${failure.message}, ${failure.error}, ${failure.statusCode}, ${failure.code}");
         }
         return left(failure);
       }, 

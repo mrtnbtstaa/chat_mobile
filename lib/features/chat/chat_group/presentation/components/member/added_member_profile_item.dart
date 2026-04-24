@@ -1,7 +1,5 @@
+import 'package:chat/core/common_widgets/common_cached_image.dart';
 import 'package:flutter/material.dart';
-
-import '../../../../../../core/style/app_colors.dart';
-import '../../../../../../core/style/app_sizes.dart';
 import '../../../models/entities/group_member_entity.dart';
 
 class AddedMemberProfileItem extends StatelessWidget {
@@ -12,20 +10,8 @@ class AddedMemberProfileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Container(
-      width: AppSizes.size64,
-      height: AppSizes.size64,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(member.profileAvatar),
-          fit: BoxFit.cover,
-        ),
-        border: Border.all(
-          color: AppColors.lSurfaceLow,
-          width: AppSizes.size2,
-        ),
-        shape: BoxShape.circle,
-      )
+    return CommonCachedImage(
+      imageUrl: member.profileAvatar ?? "",
     );
   }
 }

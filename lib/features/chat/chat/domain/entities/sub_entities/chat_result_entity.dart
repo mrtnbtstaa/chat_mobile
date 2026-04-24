@@ -15,9 +15,9 @@ class ChatResultEntity {
     required this.id,
     required this.roomType,
     required this.createdAt,
-    required this.unreadCount,
+    this.unreadCount = 0,
     required this.recipient,
-    required this.lastMessage
+    this.lastMessage
   });
 
   factory ChatResultEntity.fromJson(Map<String, dynamic> json) {
@@ -27,7 +27,7 @@ class ChatResultEntity {
       createdAt: DateTime.parse(json["created_at"]),
       unreadCount: json["unread_count"],
       recipient: ChatRecipient.fromJson(json["recipient"]),
-      lastMessage: ChatLastMessage.fromJson(json["last_message"])
+      lastMessage: json["last_message"] != null ? ChatLastMessage.fromJson(json["last_message"]) : null
     );
   }
 

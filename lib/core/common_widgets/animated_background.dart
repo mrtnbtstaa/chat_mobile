@@ -37,13 +37,15 @@ class _AnimatedBackgroundState extends State<AnimatedBackground> with SingleTick
 
   @override
   Widget build(BuildContext context){
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return CustomPaint(
-          painter: BackgroundPainter(offset: _animation.value),
-        );
-      },
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return CustomPaint(
+            painter: BackgroundPainter(offset: _animation.value),
+          );
+        },
+      ),
     );
   }
 }

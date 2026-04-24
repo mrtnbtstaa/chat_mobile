@@ -24,10 +24,9 @@ class ListSelectedMemberSection extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
             shrinkWrap: true,
-            itemBuilder: (context, index) => MemberProfileItem(member: state.addedGroupMembers[index]),
-            separatorBuilder: (context, index) =>
-                Padding(padding: AppInsets.h8),
-            itemCount: state.addedGroupMembers.length,
+            itemBuilder: (context, index) => MemberProfileItem(member: state.addedGroupMembers?[index]),
+            separatorBuilder: (context, index) => Padding(padding: AppInsets.h8),
+            itemCount: state.addedGroupMembers?.length ?? 0,
           ),
         ),
       ],

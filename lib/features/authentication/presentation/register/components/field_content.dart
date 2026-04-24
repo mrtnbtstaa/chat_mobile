@@ -33,7 +33,7 @@ class FieldContent extends StatelessWidget {
           CommonTextField(
             hintText: "John Doe",
             text: "FULL NAME",
-            onChanged: (username) => registerBloc.add(OnFullNameChanged(fullName: username)),
+            onChanged: (fullName) => registerBloc.add(OnFullNameChanged(fullName: fullName)),
             controller: controllers.fullName,
             errorText: registerBloc.state.fullNameError ?? "",
             prefixIconWidget: CommonIcon(iconData: IonIcons.person)
@@ -53,7 +53,6 @@ class FieldContent extends StatelessWidget {
             text: "PASSWORD",
             controller: controllers.password,
             isObsecure: !registerBloc.state.isPasswordVisible,
-            hasSuffixIcon: true,
             onSuffixButtonPressed: () => registerBloc.add(TogglePasswordVisibility()),
             iconSuffixData: registerBloc.state.isPasswordVisible ? Iconsax.eye_bold : Iconsax.eye_slash_bold,
             errorText: registerBloc.state.passwordError ?? "",
@@ -66,7 +65,6 @@ class FieldContent extends StatelessWidget {
             onSuffixButtonPressed: () => registerBloc.add(ToggleConfirmPasswordVisibility()), 
             controller: controllers.confirmPassword,
             isObsecure: !registerBloc.state.isConfirmPasswordVisible,
-            hasSuffixIcon: true,
             iconSuffixData: registerBloc.state.isConfirmPasswordVisible ? Iconsax.eye_bold : Iconsax.eye_slash_bold,
             textInputAction: TextInputAction.done,
             errorText: registerBloc.state.confirmPasswordError ?? "",

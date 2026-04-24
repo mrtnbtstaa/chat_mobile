@@ -3,23 +3,24 @@ import 'package:chat/core/style/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class StaggeredDotPainter extends CustomPainter{
+
   final List<Animation<double>> animations;
   StaggeredDotPainter({required this.animations});
+
+  final Paint _dotPaint = Paint()..style = PaintingStyle.fill;
 
 
   @override
   void paint(Canvas canvas, Size size) {
 
-    final paint = Paint()
-    ..shader = LinearGradient(
+    _dotPaint.shader ??= LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [
-        AppColors.primaryBrandColor.withValues(alpha: 0.4),
-        AppColors.primaryBrandColor.withValues(alpha: 0.3),
+        AppColors.primaryBrandColor,
+        AppColors.primaryBrandColor,
       ]
-    )
-    .createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+    ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
 
     const dotCount = 3.0;
     const dotRadius = 6.0;
@@ -43,13 +44,13 @@ class StaggeredDotPainter extends CustomPainter{
       canvas.drawCircle(
         Offset(xPos, yCenter - yOffset), 
         dotRadius,
-        paint
+        _dotPaint
       ); 
     }
 
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant StaggeredDotPainter oldDelegate) => true;
 
 }

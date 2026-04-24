@@ -1,13 +1,10 @@
-import 'package:chat/core/config/app_config.dart';
-import 'package:chat/features/chat/chat_message/infrastructure/dtos/response/paginated_chat_message_response_dto.dart';
-import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
-
 import '../../../../../core/constants/api_constant.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/network/network_client.dart';
 import '../dtos/request/chat_message_request_dto.dart';
 import '../dtos/response/chat_message_response_dto.dart';
+import '../dtos/response/paginated_chat_message_response_dto.dart';
 import 'i_chat_message_remote_data_source.dart';
 
 class ChatMessageRemoteDataSource extends NetworkClient implements IChatMessageRemoteDataSource{
@@ -15,11 +12,12 @@ class ChatMessageRemoteDataSource extends NetworkClient implements IChatMessageR
   ChatMessageRemoteDataSource({super.client});
 
   @override
-  Future<Either<Failure, ChatMessageResponseDto>> sendMessage(ChatMessageRequestDto chatMessageDto) async =>
-  await post(
+  Future<Either<Failure, Unit>> sendMessage(ChatMessageRequestDto chatMessageDto) async =>
+  await post<Unit>(
+    statusCode: 201,
     ApiConstant.chatMessageApi,
     body: chatMessageDto.toJson(),
-    onSuccess: (json) => ChatMessageResponseDto.fromJson(json)
+    onSuccess: (_) => unit
   );
   
   @override
@@ -30,7 +28,6 @@ class ChatMessageRemoteDataSource extends NetworkClient implements IChatMessageR
     return await get(
       path,
       onSuccess: (json){
-        if (kDebugMode) print("Raw JSON: $json");
         return PaginatedChatMessageResponseDto<ChatMessageResponseDto>(
           next: json["next"],
           previous: json["previous"],

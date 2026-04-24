@@ -14,7 +14,6 @@ import 'i_remote_auth_data_source.dart';
 
 class AuthRemoteDataSourceImpl extends NetworkClient implements IRemoteAuthDataSource {
   
-
   AuthRemoteDataSourceImpl({super.client});
 
   @override

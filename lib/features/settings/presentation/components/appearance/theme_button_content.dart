@@ -46,7 +46,7 @@ class ThemeButtonContent extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(AppSizes.size16),
                     child: CommonImage(
-                      image: AssetImage(AppImages.mountain)
+                      image: AssetImage(AppImages.profile)
                     ),
                   ),
                 ),

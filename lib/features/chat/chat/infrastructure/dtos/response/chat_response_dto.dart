@@ -10,9 +10,6 @@ class ChatResponseDto extends ChatEntity {
   });
 
   factory ChatResponseDto.fromJson(Map<String, dynamic> json){
-
-    print("Chat response dto: ${json["results"]}");
-
     return ChatResponseDto(
       previous: json["previous"] ?? "",
       next: json["next"] ?? "",
@@ -21,5 +18,4 @@ class ChatResponseDto extends ChatEntity {
   }
 
   ChatEntity toEntity() => this;
-
 }

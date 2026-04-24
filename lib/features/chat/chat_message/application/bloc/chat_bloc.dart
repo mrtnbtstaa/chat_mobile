@@ -1,15 +1,9 @@
 import 'dart:async';
-
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat/core/common/core_transformers.dart';
-import 'package:chat/core/extensions/int_extension.dart';
-import 'package:chat/features/chat/chat_message/domain/entities/paginated_messages.dart';
-import 'package:chat/features/chat/chat_message/infrastructure/services/chat_socket_service.dart';
-import '../../../../../core/usecases/base_usecase.dart';
-import '../../domain/params/chat_message_param.dart';
+import '../../../../../core/common/core_transformers.dart';
+import '../../../../../core/di/di_exports.dart';
+import '../../../../../core/extensions/int_extension.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../infrastructure/datasources/web_sockent_client.dart';
-import '../../domain/entities/chat_message_entity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 part 'chat_event.dart';
@@ -18,7 +12,7 @@ part 'chat_state.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   
   final WebSockentClient _client;
-  final BaseUsecase<ChatMessageEntity, ChatMessageParam> _chatMessageUseCase;
+  final BaseUsecase<Unit, ChatMessageParam> _chatMessageUseCase;
   final BaseUsecase<PaginatedMessages, String?> _chatMessageListUseCase;
   final ChatSocketService _chatSocketService;
   final String _receiverId;
@@ -28,7 +22,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc({
     required WebSockentClient client,
     required String receiverId,
-    required BaseUsecase<ChatMessageEntity, ChatMessageParam> chatMessageUsecase,
+    required BaseUsecase<Unit, ChatMessageParam> chatMessageUsecase,
     required BaseUsecase<PaginatedMessages, String?> chatMessageListUseCase,
     required ChatSocketService chatSocketService
   }) :
@@ -45,6 +39,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<RefreshMessages>(_onRefreshMessages, transformer: droppable());
     on<MessageTypingChanged>(_onMessageTypingChanged, transformer: CoreTransformers.debounceRestartable(500.milliseconds()));
     on<RemoteUserTypingChanged>(_onRemoteUserTypingChanged);
+    on<SearchEnabled>(_onSearchEnabled);
   }
 
   FutureOr<void> _onConnectToChat(ConnectToChat event, Emitter<ChatState> emit) async {
@@ -61,40 +56,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if(data["type"] == "typing"){
 
         final String? senderId = data["user_id"]?.toString();
-        final String senderName = data['username'] ?? "Someone";
+        final String senderName = data['email'] ?? "Someone";
         final bool isTyping = data['is_typing'] ?? false;
-
-        print("we are currently qwewqewqe");
-
         // Only trigger the event if its not from the current user
         if(_chatSocketService.isNotMe(senderId)){
-          add(RemoteUserTypingChanged(username: senderName, isTyping: isTyping));
+          add(RemoteUserTypingChanged(email: senderName, isTyping: isTyping));
         }
 
       }else{
         add(MessageReceived(jsonMessages: data));
       }
-
-        // if(kDebugMode){
-        //   print("DEBUG: Raw data received from stream: $jsonData");
-        // }
-        
       });
 
       // Initialize the socket
       await _client.initializeSocketClient(_receiverId);
 
       return await listMessageUseCase.fold(
-        (failure) async{
-          if(kDebugMode){
-            print("On Connect To Chat: ${failure.message}, ${failure.error}");
-          }
-          emit(ChatError(status: SocketStatus.offline));
-        },
+        (failure) async => emit(ChatError(status: SocketStatus.offline)),
         (listEntity) async{
-          if(kDebugMode){
-            print("Next cursor: ${listEntity.next}, Previous cursor: ${listEntity.previous}");
-          }
           emit(ChatConnected(
             messages: listEntity.results,
             status: SocketStatus.online,
@@ -118,7 +97,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   FutureOr<void> _onMessageReceived(MessageReceived event, Emitter<ChatState> emit) {
 
     if(kDebugMode){
-      print("Raw JSON from server: ${event.jsonMessages}}");
+      // print("Raw JSON from server: ${event.jsonMessages}}");
     }
 
     try{
@@ -148,12 +127,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       return await chatMessageUsecase.fold(
         (failure) async{
           if(kDebugMode){
-            print("Failure: ${failure.message}, ${failure.error}");
+            print("Failure: ${failure.message}, ${failure.error}, ${failure.code}");
           }
           emit(ChatError());
         },
         (entity) async {
-          emit((state as ChatConnected).copyWith(status: state.status, messages: state.messages));
+          if(kDebugMode){
+            print("Entity: $entity");
+          }
+          emit((state as ChatConnected).copyWith(status: state.status));
         }
       );
     }catch(e){
@@ -172,8 +154,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     if(currentState is ChatConnected && currentState.nextCursor != null && currentState.nextCursor!.isNotEmpty && !currentState.isLoadingMore){
 
       emit(currentState.copyWith(isLoadingMore: true));
-
-      await Future.delayed(2.seconds());
 
       final result = await _chatMessageListUseCase(currentState.nextCursor ?? "");
 
@@ -275,8 +255,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     if(state is ChatConnected){
       final currentState = state as ChatConnected;
 
-      emit(currentState.copyWith(typingUsername: event.isTyping ? event.username : null, status: state.status));
+      emit(currentState.copyWith(typingUsername: event.isTyping ? event.email : null, status: state.status));
     }
 
+  }
+
+  FutureOr<void> _onSearchEnabled(SearchEnabled event, Emitter<ChatState> emit) {
+    if(state is ChatConnected){
+      final currentState = state as ChatConnected;
+      emit(currentState.copyWith(
+        isSearchEnable: !state.isSearchEnable
+      ));
+    }
   }
 }

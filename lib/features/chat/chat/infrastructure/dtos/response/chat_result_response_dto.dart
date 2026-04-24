@@ -1,6 +1,6 @@
-import 'package:chat/features/chat/chat/domain/entities/sub_entities/chat_result_entity.dart';
-import 'package:chat/features/chat/chat/infrastructure/dtos/response/chat_last_message_response_dto.dart';
-import 'package:chat/features/chat/chat/infrastructure/dtos/response/chat_recipient_response_dto.dart';
+import '../../../domain/entities/sub_entities/chat_result_entity.dart';
+import 'chat_last_message_response_dto.dart';
+import 'chat_recipient_response_dto.dart';
 
 class ChatResultResponseDto extends ChatResultEntity{
 

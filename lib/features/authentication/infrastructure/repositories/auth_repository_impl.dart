@@ -1,7 +1,7 @@
-import 'package:chat/core/contracts/i_token_storage.dart';
-import 'package:chat/core/contracts/i_user_storage.dart';
+import '../../../../core/contracts/i_token_storage.dart';
+import '../../../../core/contracts/i_user_storage.dart';
+import '../../domain/value_objects/email.dart';
 import 'package:fpdart/fpdart.dart';
-
 import '../../../../core/errors/failure.dart';
 import '../../domain/entities/auth_entity.dart';
 import '../../domain/entities/token_entity.dart';
@@ -26,10 +26,10 @@ class AuthRepositoryImpl implements IAuthRepository {
   );
 
   @override
-  Future<Either<Failure, AuthEntity>> login(String email, String password) async {
+  Future<Either<Failure, AuthEntity>> login(Email email, String password) async {
 
     // Create a request DTO
-    final request = LoginRequestDto(email: email, password: password);
+    final request = LoginRequestDto(email: email.value, password: password);
 
     // Call the datasource login and capture the result
     final result = await _authRemoteDataSource.login(request);
@@ -42,14 +42,13 @@ class AuthRepositoryImpl implements IAuthRepository {
           dto.tokens.accessToken,
           dto.tokens.refreshToken
         );
-
         await _userStorage.saveUser(
           dto.userId,
-          dto.email,
+          dto.email.value,
           dto.fullName,
-          dto.profile,
           dto.isOnline
         );
+        await _userStorage.saveProfile(dto.profile.toString());
         return right(dto.toEntity());
       }
     );

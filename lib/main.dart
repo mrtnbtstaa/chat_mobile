@@ -1,20 +1,19 @@
-import 'package:chat/core/common/bloc/theme_bloc.dart';
-import 'package:chat/core/enum/app_theme.dart';
-import 'package:chat/features/settings/application/bloc/settings_bloc.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
+import 'core/common/bloc/theme_bloc.dart';
 import 'core/config/app_config.dart';
 import 'core/config/environment.dart';
 import 'core/contracts/i_token_storage.dart';
 import 'core/di/di.dart';
+import 'core/enum/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'core/services/session_manager.dart';
 import 'core/style/app_theme.dart';
 import 'core/usecases/base_usecase.dart';
 import 'core/utils/settings_manager.dart';
 import 'features/authentication/application/auth/bloc/auth_bloc.dart';
+import 'features/settings/application/bloc/settings_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +28,8 @@ void main() async {
 
   await SettingsManager().initialize();
   await sl<SessionManager>().initialize();
+
+  // debugRepaintRainbowEnabled = true;
 
   runApp(
     MultiBlocProvider(
@@ -60,12 +61,13 @@ class MyApp extends StatelessWidget {
               routerConfig: router,
               title: 'Flutter Demo',
               debugShowCheckedModeBanner: false,
+              // showPerformanceOverlay: true,
               theme: lightTheme,
               darkTheme: darkTheme,
               themeMode: isDarkmode
                   ? ThemeMode.dark
                   : ThemeMode.light,
-
+            
               builder: (context, child) {
                 double scaleFactor = (0.99 + (settingState.fontSizeSliderValue * 0.5)).clamp(0.99, 1.25);
                 return MediaQuery(

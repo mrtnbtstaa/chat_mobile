@@ -1,4 +1,5 @@
 import 'package:chat/core/extensions/int_extension.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 extension DatetimeExtension on DateTime {
 
@@ -9,6 +10,10 @@ extension DatetimeExtension on DateTime {
     final dbDateUTC = toUtc();
 
     final difference = nowUTC.difference(dbDateUTC);
+
+    if(kDebugMode){
+      print("Year, ${nowUTC.year}, ${dbDateUTC.year}");
+    }
 
     if(difference.inSeconds < 60){
       return "Just now";

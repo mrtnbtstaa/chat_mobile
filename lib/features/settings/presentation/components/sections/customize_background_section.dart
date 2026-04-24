@@ -44,7 +44,7 @@ const CustomizeBackgroundSection({ super.key });
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(AppSizes.size8),
                   child: CommonImage(
-                    image: AssetImage(AppImages.mountain)
+                    image: AssetImage(AppImages.profile)
                   )
                 )
               )

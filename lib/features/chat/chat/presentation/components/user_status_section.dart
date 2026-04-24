@@ -1,3 +1,4 @@
+import 'package:chat/core/common_widgets/common_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +8,6 @@ import '../../../../../core/extensions/double_extension.dart';
 import '../../../../../core/extensions/string_extension.dart';
 import '../../../../../core/router/app_routes.dart';
 import '../../../../../core/style/app_colors.dart';
-import '../../../../../core/style/app_images.dart';
 import '../../../../../core/style/app_insets.dart';
 import '../../../../../core/style/app_sizes.dart';
 import '../../application/bloc/chat_bloc.dart';
@@ -19,12 +19,24 @@ class UserStatusSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.watch<ChatBloc>();
-    final results = bloc.state.chatEntity?.results;
+    final results = bloc.state.chatUserEntity?.results;
     return BlocBuilder<ChatBloc, ChatState>(
-      buildWhen: (previous, current) => previous.runtimeType != current.runtimeType,
+      // buildWhen: (previous, current) => previous.chatUserEntity?.results.length != current.chatUserEntity?.results.length,
       builder: (context, state) {
 
         if(state is ChatLoading){
+          return SizedBox(
+            height: context.height / 7.5 + AppSizes.size16,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => UserStatusShimmering(),
+              separatorBuilder: (context, index) => Padding(padding: AppInsets.a8),
+              itemCount: 4
+            ),
+          );
+        }
+
+        if(state is ChatError){
           return SizedBox(
             height: context.height / 7.5 + AppSizes.size16,
             child: ListView.separated(
@@ -57,54 +69,40 @@ class UserStatusSection extends StatelessWidget {
                               AppRoutes.chatMessage,
                               extra: chat,
                             ),
-                            child: Container(
+                            child: CommonCachedImage(
+                              imageUrl: chat?.recipient.profileImage ?? "",
                               width: context.width / 5,
-                              height: context.height / 11,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: AssetImage(AppImages.mountain),
-                                  fit: BoxFit.cover,
-                                ),
-                                border: Border.all(
-                                  color: context.isDarkMode
-                                      ? AppColors.dSurfaceMedium
-                                      : AppColors.lSurfaceLow,
-                                  width: AppSizes.size4 - 1,
-                                ),
-                              ),
+                              height: context.height / 13,
+                              radius: AppSizes.size32,
                             ),
                           ),
                           Positioned(
                             bottom: 2,
-                            right: 10,
+                            right: chat?.recipient.profileImage?.isNotEmpty ?? false ? 10 : 3,
                             child: Container(
                               width: AppSizes.size16 - 2,
                               height: AppSizes.size16 - 2,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: chat?.recipient.isOnline ?? false
-                                    ? AppColors.success
-                                    : AppColors.error,
-                              ),
-                            ),
-                          ),
-                        ],
+                                color: chat?.recipient.isOnline ?? false ? AppColors.success : AppColors.error,
+                              )
+                            )
+                          )
+                        ]
                       ),
                       CommonText(
-                        text: chat?.recipient.displayFullName.firstname ?? "",
+                        text: chat?.recipient.displayFullName.firstname.capitalize ?? "",
                         fontWeight: FontWeight.w600,
-                      ),
-                    ],
+                      )
+                    ]
                   );
                 },
-                separatorBuilder: (context, index) =>
-                    Padding(padding: AppInsets.a8),
-              ),
-            ),
-          ],
+                separatorBuilder: (context, index) => Padding(padding: AppInsets.a8)
+              )
+            )
+          ]
         );
-      },
+      }
     );
   }
 }

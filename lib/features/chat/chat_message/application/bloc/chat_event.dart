@@ -33,11 +33,14 @@ final class MessageTypingChanged extends ChatEvent{
   const MessageTypingChanged(this.textMessage);
 }
 final class RemoteUserTypingChanged extends ChatEvent{
-  final String username;
+  final String email;
   final bool isTyping;
 
   const RemoteUserTypingChanged({
-    required this.username,
+    required this.email,
     required this.isTyping
   });
+}
+final class SearchEnabled extends ChatEvent{
+  const SearchEnabled();
 }

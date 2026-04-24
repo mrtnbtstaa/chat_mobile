@@ -14,6 +14,7 @@ class CommonContainer extends StatelessWidget {
   final BoxDecoration? boxDecoration;
   final BoxShape shape;
   final BorderRadiusGeometry? radiusGeometry;
+  final AlignmentGeometry? alignment;
 
   const CommonContainer({
     super.key,
@@ -25,12 +26,14 @@ class CommonContainer extends StatelessWidget {
     this.height,
     this.boxDecoration,
     this.radiusGeometry,
-    this.shape = BoxShape.rectangle
+    this.shape = BoxShape.rectangle,
+    this.alignment
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      alignment: alignment,
       width: width,
       height: height,
       padding: padding ?? AppInsets.a16,

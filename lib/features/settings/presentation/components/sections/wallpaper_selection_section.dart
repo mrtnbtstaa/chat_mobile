@@ -38,7 +38,7 @@ const WallpaperSelectionSection({ super.key });
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(AppSizes.size32),
                     image: DecorationImage(
-                      image: AssetImage(AppImages.mountain),
+                      image: AssetImage(AppImages.profile),
                       fit: BoxFit.cover
                     )
                   )

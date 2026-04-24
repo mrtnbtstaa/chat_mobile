@@ -14,10 +14,12 @@ class ListChatConversationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final bloc = context.watch<ChatBloc>();
     final results = bloc.state.chatEntity?.results;
+    print("List chat conversation Len: ${results?.length}");
     return BlocBuilder<ChatBloc, ChatState>(
       builder: (context, state) {
 
         if(state is ChatLoading) return ListChatConversationShimmering();
+        if(state is ChatError) return ListChatConversationShimmering();
 
         return Expanded(
           child: Column(

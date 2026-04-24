@@ -1,3 +1,4 @@
+import 'package:chat/core/common_widgets/common_cached_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,7 @@ import '../../../models/entities/group_member_entity.dart';
 
 class MemberProfileItem extends StatelessWidget {
 
-  final GroupMemberEntity member;
+  final GroupMemberEntity? member;
 
   const MemberProfileItem({ super.key, required this.member });
 
@@ -23,20 +24,8 @@ class MemberProfileItem extends StatelessWidget {
           alignment: Alignment.center,
           clipBehavior: Clip.none,
           children: <Widget>[
-            Container(
-              width: AppSizes.size64,
-              height: AppSizes.size64,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(member.profileAvatar),
-                  fit: BoxFit.cover,
-                ),
-                border: Border.all(
-                  color: AppColors.lSurfaceLow,
-                  width: AppSizes.size2,
-                ),
-                shape: BoxShape.circle,
-              )
+            CommonCachedImage(
+              imageUrl: member?.profileAvatar ?? "",
             ),
             Positioned(
               top: -5,
@@ -46,7 +35,7 @@ class MemberProfileItem extends StatelessWidget {
                   if(kDebugMode){
                     print("Should remove this member");
                   }
-                  context.read<ChatGroupBloc>().add(RemoveMember(selectedId: member.id));
+                  context.read<ChatGroupBloc>().add(RemoveMember(selectedId: member?.userId ?? ""));
                 },
                 child: Container(
                   padding: AppInsets.a4,

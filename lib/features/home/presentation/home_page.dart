@@ -5,7 +5,7 @@ import '../../../core/style/app_sizes.dart';
 import '../../chat/chat/presentation/chat_content.dart';
 import 'components/bottom_tabbar_constants.dart';
 import 'package:flutter/material.dart';
-import '../../profile/presentation/profile_content.dart';
+import '../../profile/profile/presentation/profile_content.dart';
 import '../../settings/presentation/settings_content.dart';
 import 'components/bottom_tabbar.dart';
 
@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         physics: NeverScrollableScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(child: AppSizes.size16.height()),
-          CommonSliverAppBar(text: "Home"),
+          CommonSliverAppBar(),
           SliverFillRemaining(
             child: Builder(
               builder: (context) {

@@ -5,6 +5,7 @@
             "name": "App (Dev)",
             "request": "launch",
             "type": "dart",
+            "flutterMode": "debug",
             "args": ["--dart-define-from-file", "config/dev.json"]
         },
         {

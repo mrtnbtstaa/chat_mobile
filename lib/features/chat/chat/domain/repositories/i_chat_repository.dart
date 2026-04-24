@@ -6,4 +6,5 @@ import 'package:fpdart/fpdart.dart';
 
 abstract interface class IChatRepository {
   Future<Either<Failure, ChatEntity>> chats();
+  Future<Either<Failure, ChatEntity>> getChatStatus();
 }

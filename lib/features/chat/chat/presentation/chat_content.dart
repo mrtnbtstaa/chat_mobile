@@ -22,10 +22,10 @@ class ChatContent extends StatelessWidget {
             AppSizes.size16.height(),
             SearchSection(),
             UserStatusSection(),
-            ListChatConversationSection(),
-          ],
-        ),
-      ),
+            ListChatConversationSection()
+          ]
+        )
+      )
     );
   }
 }

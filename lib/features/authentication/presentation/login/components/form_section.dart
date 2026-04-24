@@ -1,3 +1,5 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
+
 import '../../../../../core/common_widgets/common_icon.dart';
 import '../../../../../core/common_widgets/common_loading_indicator.dart';
 import '../../../../../core/common_widgets/common_text.dart';
@@ -13,77 +15,90 @@ import '../../../../../core/style/app_insets.dart';
 import '../../../../../core/style/app_sizes.dart';
 import '../../../application/login/bloc/login_bloc.dart';
 import '../../../domain/enums/login_status.dart';
-import '../controllers/login_controller.dart';
 
-class FormSection extends StatelessWidget {
-
+class FormSection extends HookWidget {
   const FormSection({super.key});
 
   @override
-  Widget build(BuildContext context){
-    final controllers = context.read<LoginController>();
-    final loginBloc = context.watch<LoginBloc>();
-    final state = loginBloc.state;
-    final bool isLoading = state.loginStatus == LoginStatus.loading;
+  Widget build(BuildContext context) {
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final formKey = useMemoized(() => GlobalKey<FormState>(), []);
     return Form(
-      key: controllers.formKey,
+      key: formKey,
       child: Column(
         spacing: AppSizes.size16,
         children: <Widget>[
           AppSizes.size24.height(),
-          CommonTextField(
-            hintText: "alex@example.com",
-            text: "EMAIL",
-            onChanged: (email) => loginBloc.add(OnEmailChanged(email: email)),
-            controller: controllers.emailController,
-            errorText: loginBloc.state.emailError ?? "",
-            textInputType: TextInputType.emailAddress,
-            prefixIconWidget: CommonIcon(iconData: IonIcons.person)
+          BlocSelector<LoginBloc, LoginState, String?>(
+            selector: (state) => state.emailError,
+            builder: (context, emailError) {
+              return CommonTextField(
+                hintText: "alex@example.com",
+                text: "EMAIL",
+                onChanged: (email) => context.read<LoginBloc>().add(OnEmailChanged(email: email)),
+                controller: emailController,
+                errorText: emailError ?? "",
+                textInputType: TextInputType.emailAddress,
+                prefixIconWidget: CommonIcon(iconData: IonIcons.person),
+              );
+            },
           ),
-          CommonTextField(
-            hintText: "********",
-            onChanged: (password) => loginBloc.add(OnPasswordChanged(password: password)),
-            text: "PASSWORD",
-            controller: controllers.passwordController,
-            isObsecure: !loginBloc.state.isPasswordVisible,
-            hasSuffixIcon: true,
-            iconSuffixData: loginBloc.state.isPasswordVisible ? Iconsax.eye_bold : Iconsax.eye_slash_bold,
-            onSuffixButtonPressed: () => loginBloc.add(TogglePasswordVisibility()),
-            textInputAction: TextInputAction.done,
-            errorText: loginBloc.state.passwordError ?? "",
-            prefixIconWidget: CommonIcon(iconData: IonIcons.lock_closed),
+          // Will only rebuild if the password visibility changed or the error changed.
+          BlocBuilder<LoginBloc, LoginState>(
+            buildWhen: (previous, current) => previous.isPasswordVisible != current.isPasswordVisible || previous.passwordError != current.passwordError,
+            builder: (context, state) {
+              return CommonTextField(
+                hintText: "********",
+                onChanged: (password) => context.read<LoginBloc>().add(OnPasswordChanged(password: password)),
+                text: "PASSWORD",
+                controller: passwordController,
+                isObsecure: !state.isPasswordVisible,
+                iconSuffixData: state.isPasswordVisible ? Iconsax.eye_bold : Iconsax.eye_slash_bold,
+                onSuffixButtonPressed: () => context.read<LoginBloc>().add(TogglePasswordVisibility()),
+                textInputAction: TextInputAction.done,
+                errorText: state.passwordError ?? "",
+                prefixIconWidget: CommonIcon(iconData: IonIcons.lock_closed),
+              );
+            }
           ),
-          CommonElevatedButton(
-            elevatedPadding: EdgeInsets.zero,
-            onButtonPressed: () => isLoading ? null : {              // commonShowDialog(context),
-              if(controllers.formKey.currentState?.validate() ?? true){
-                loginBloc.add(
-                  LoginSubmitted(
-                    email: controllers.emailController.text,
-                    password: controllers.passwordController.text
+          // Only rebuild when loginStatus == loading state
+          BlocSelector<LoginBloc, LoginState, bool>(
+            selector: (state) => state.loginStatus == LoginStatus.loading,
+            builder: (context, isLoading) {
+              return CommonElevatedButton(
+                elevatedPadding: EdgeInsets.zero,
+                onButtonPressed: (){
+                  if(!isLoading && (formKey.currentState?.validate() ?? true)){
+                    context.read<LoginBloc>().add(
+                      LoginSubmitted(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      )
+                    );
+                  }
+                },
+                child_: Container(
+                  width: context.width,
+                  height: AppSizes.size64,
+                  padding: AppInsets.h4,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryBrandColor,
+                    borderRadius: BorderRadius.circular(AppSizes.size16),
+                  ),
+                  child: isLoading ? CommonLoadingIndicator() : CommonText(
+                    text: "Sign in",
+                    fontColor: AppColors.lSurfaceLow,
+                    fontSize: AppSizes.size16,
+                    fontWeight: FontWeight.w500,
                   )
                 )
-              }
-            },
-            child_: Container(
-              width: context.width,
-              height: AppSizes.size64,
-              padding: AppInsets.h4,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.primaryBrandColor,
-                borderRadius: BorderRadius.circular(AppSizes.size16)
-              ),
-              child: isLoading ? CommonLoadingIndicator() : CommonText(
-                text: "Sign in",
-                fontColor: AppColors.lSurfaceLow,
-                fontSize: AppSizes.size16,
-                fontWeight: FontWeight.w500,
-              ),
-            )
+              );
+            }
           )
         ]
-      ),
+      )
     );
   }
 }
