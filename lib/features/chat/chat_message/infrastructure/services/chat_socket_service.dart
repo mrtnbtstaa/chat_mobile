@@ -21,7 +21,7 @@ class ChatSocketService {
     await _prepareUerInfo();
 
     final data = {
-      "type": "typing", // Keep this consistent with your Django "type" check
+      "type": "typing",
       "user_id": _cachedUserId,
       "email": _cachedEmail,
       "is_typing": isTyping
